@@ -1,0 +1,6 @@
+#!/usr/bin/env node
+
+require('../lib/mochiscript');
+
+var file = process.env['PWD'] + '/' + process.argv[process.argv.length-1];
+require(file);

@@ -1,0 +1,7 @@
+#!/usr/bin/env node
+
+var $m = require('../lib/mochiscript').mochi;
+var fs = require('fs');
+
+var file = process.argv[process.argv.length-1];
+console.log($m.parse(fs.readFileSync(file, 'utf8')));
