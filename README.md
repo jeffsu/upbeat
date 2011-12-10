@@ -110,7 +110,7 @@ The redis strategy will connect to a redis server and issue an "ECHO hello" comm
  
 Examples:
   
-  services:
-    redis:
-      - host: 127.0.0.1
-        port: 6537
+    services:
+      redis:
+        - host: 127.0.0.1
+          port: 6537
