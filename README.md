@@ -6,11 +6,15 @@ Useful for health and performance checking and then distributing the data in a q
 Installation
 ------------
 
+Assuming you have node and npm installed, run:
+
     npm-g install upbeat
     upbeat ./my/upbeat-config.yml
 
-Examples:
----------
+Now an http server will be running that you can query for health statuses
+
+Example Config File:
+--------------------
 
     port: 2468
     host: 127.0.0.1
