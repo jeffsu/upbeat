@@ -23,7 +23,7 @@ Examples:
             KEY: <my key>
             q:   starbucks 
       google.com:
-        - name: google
+        - name: homepage
           url: http://www.google.com
           strategy: http
 
