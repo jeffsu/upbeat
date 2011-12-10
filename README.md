@@ -96,6 +96,7 @@ Examples:
     services:
       my-process:
         - pidfile: /tmp/my.pid
+          strategy: process
 
 **http**
 
@@ -110,16 +111,20 @@ Examples:
     services:
       http-actions:
         - url: http://www.google.com
+          strategy: http
 
         - name: test-google
           url: http://www.google.com
+          strategy: http
 
         - name: test-search
           url: http://www.google.com
+          strategy: http
           get:
             q: upbeat
 
         - name: test-google
+          strategy: http
           url: http://www.google.com
           rise: 3
           fall: 1
@@ -137,3 +142,4 @@ Examples:
       redis:
         - host: 127.0.0.1
           port: 6537
+          strategy: redis
