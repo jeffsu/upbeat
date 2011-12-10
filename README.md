@@ -74,6 +74,8 @@ how to test a particular service.
 
 **optional fields**
   
+  * rise: number of times action has to pass before action can be upgraded from "down" to "up"
+  * fall: number of times action has to fail before action can be downgraded from "up" to "down"
   * interval: time between passed or failed checks (in milliseconds)
   * timeout: time allowed for the request to pass otherwise, its canceled and marked as failed (in milliseconds)
   * name: vanity name for the action used in reports
@@ -103,6 +105,11 @@ Examples:
           url: http://www.google.com
           get:
             q: upbeat
+
+        - name: test-google
+          url: http://www.google.com
+          rise: 3
+          fall: 1
 
 **redis**
 

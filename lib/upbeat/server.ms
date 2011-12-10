@@ -19,12 +19,23 @@ export class Server {
       this.servicesArray.push(service);
     }
 
-    this.statusTemplate = new Status();
+    this._status = new Status();
   }
 
   function addService(name, service) {
     this.services[name] = service;
     service.name = name;
+  }
+
+  function getActions() {
+    var ret = [];
+    foreach (var s in this.servicesArray) {
+      foreach (var a in s.actions) {
+        ret.push(a);
+      }
+    }
+
+    return ret;
   }
 
   function start() {
@@ -42,9 +53,33 @@ export class Server {
       app.use(express.static(__dirname + "/static"));
     });
 
+    app.get("/", #(req, res) {
+      res.render('status.jade', { services: $this.servicesArray });
+    });
+
+
+    app.get("/health", #(req, res) {
+      res.writeHead(200, {"Content-type": "text/plain"});
+      res.end("OK");
+    });
+
+    app.get("/health.strict", #(req, res) {
+      var passed = true;
+      foreach (var a in $this.getActions()) {
+        if (! a.meta.up) {
+          passed = false;
+          break;
+        }
+      }
+
+      res.writeHead(passed ? 200 : 400, {"Content-type": "application/json"});
+      res.end($this._status.json($this.serviceArray));
+    });
+
+
     app.get("/status.:format?", #(req, res) {
       if (req.params.format == 'json') {
-        res.end($this.statusTemplate.json($this.services));
+        res.end($this._status.json($this.services));
       } else {
         res.render('status.jade', { services: $this.servicesArray });
       }

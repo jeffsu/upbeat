@@ -15,6 +15,9 @@ for service in services
         td #{action.meta.lastResponse || '0'} ms
         td #{action.meta.avgResponse || '0'} ms
         td #{Math.round(action.meta.passedCount / action.meta.count * 100)}%
-        td #{action.meta.up ? 'Up' : ('Down: ' + action.meta.lastErrorMsg)}
+        td 
+          #{action.meta.up ? 'Up' : ('Down: ' + action.meta.lastErrorMsg)}
+          if ! action.meta.up
+            \(#{action.meta.riseCount}/#{action.rise})
         td 
         td #{action.meta.id}

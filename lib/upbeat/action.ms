@@ -1,13 +1,25 @@
 var http     = require('http');
 
 export class Action {
+
   function initialize(config, listener) {
     this.listener = listener;
     this.alive = true;
-    this.meta = { count: 0, passedCount: 0, up: false, lastErrorMsg: "Not Started" };
+
+    this.meta = {
+      count        : 0,
+      passedCount  : 0,
+      up           : false,
+      lastErrorMsg : "Not Started",
+      riseCount    : 0,
+      fallCount    : 0
+    };
 
     this.timeout  = config.timeout  || 5000;
     this.interval = config.interval || 5000;
+
+    this.rise = config.rise || 1;
+    this.fall = config.fall || 1;
 
     if (config.strategy == 'http') {
       var Http = require('./http');
@@ -38,13 +50,13 @@ export class Action {
     var start = (new Date()).getMilliseconds();
     var $this = this;
     this.meta.count++;
-
+    
     var timeoutId = null;
     if (this.timeout) {
       timeoutId = setTimeout(#{ 
-        $this.log('error', "Timeout: " + $this.strategy.id);
+        $this.log('info', "Timeout: " + $this.strategy.id);
         $this.strategy.clear(); 
-        $this.meta.up = false;
+        $this.updateStatus(false);
         $this.meta.lastErrorMsg = "Timed Out";
         callback();
       }, this.timeout);
@@ -53,13 +65,13 @@ export class Action {
     try { 
       this.strategy.check(#(passed) {
         if (passed) {
-          $this.log('info', "Passed: " + $this.strategy.id);
+          $this.log('debug', "Passed: " + $this.strategy.id);
         } else {
-          $this.log('error', "Failed: " + $this.strategy.id);
+          $this.log('info', "Failed: " + $this.strategy.id);
           $this.meta.lastErrorMsg = "Failed";
         }
 
-        $this.meta.up = passed;
+        $this.updateStatus(passed);
 
         if (timeoutId) clearTimeout(timeoutId);
         if (passed) $this.updateResponse(start, (new Date()).getMilliseconds());
@@ -68,6 +80,24 @@ export class Action {
     } catch(e) {
       $this.log('error', "Error: " + $this.strategy.id + "\n" + e.stack);
     }
+  }
+
+  function updateStatus(passed) {
+    if (passed) {
+      this.meta.riseCount += 1;
+      if (this.meta.up) this.meta.fallCount = 0;
+    } else {
+      this.meta.fallCount += 1;
+      if (! this.meta.up) this.meta.riseCount = 0;
+    }
+
+    if (this.meta.riseCount >= this.rise && ! this.meta.up) {
+      this.meta.up = true;
+      this.meta.fallCount = 0;
+    } else if (this.meta.fallCount >= this.fall && this.meta.up) {
+      this.meta.up = false;
+      this.meta.riseCount = 0;
+    } 
   }
 
   function run() {
