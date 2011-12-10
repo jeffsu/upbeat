@@ -1,0 +1,8 @@
+#!/usr/bin/env node
+var upbeat  = require('../lib/index');
+
+var file = process.argv[process.argv.length-1];
+if (! file.match(/^\//)) file = process.cwd() + '/' + file;
+
+var server = new upbeat.Server(file);
+server.start();

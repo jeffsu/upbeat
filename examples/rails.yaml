@@ -1,9 +1,0 @@
-services:
-  myrails:
-    - url: "http://localhost:3000/"
-      name: root
-
-    - url: "http://localhost:3000/hello"
-      name: hello
-      post: 
-        hello: "world"

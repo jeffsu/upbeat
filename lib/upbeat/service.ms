@@ -1,27 +1,35 @@
 var http = require('http');
-var Checker = require('./checker');
+var Action = require('./action');
 
 export class Service {
   function initialize(actions) {
-    this._status = false;
-
-    this.checkers = [];
+    this.actions = [];
     foreach (var action in actions) {
-      this.checkers.push(new Checker(action, this));
+      this.actions.push(new Action(action, this));
     }
   }
 
-  function setStatus(bool) {
-    this._status = bool;
+  function start() {
+    foreach (var action in this.actions) {
+      action.run();
+    }
   }
 
   function respond(res) {
-    var code = $this._status ? 200 : 400;
+    var passed = true;
+    foreach (var action in this.actions) {
+      if (! action.up) {
+        passed = false;
+        break;
+      }
+    }
+
+    var code = passed ? 200 : 400;
     res.writeHead(code, {'Content-Type':'text/plain'});
     var out = [];
 
-    foreach (var checker in $this.checkers) {
-      out.push(checker.toString()); 
+    foreach (var action in this.actions) {
+      out.push(action.toString()); 
     }
 
     res.end(out.join("\n"));

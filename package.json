@@ -1,0 +1,21 @@
+{
+  "name":         "upbeat",
+  "description":  "Fast health and performance monitoring",
+  "keywords":     ["javascript", "performance", "health", "monitoring", "monit", "haproxy"],
+  "author":       "Jeff Su <me@jeffsu.com>",
+  "version":      "0.1.0",
+  "licenses":     [{ "type": "MIT" }],
+  "engines":      { "node":  ">=0.5.0" },
+  "directories" : { "lib" : "./lib/upbeat" },
+  "main" : "./lib/upbeat/index",
+  "bin":   { "upbeat": "./bin/upbeat" },
+  "dependencies": { 
+    "jade": ">=0.19.0",
+    "mochiscript": ">=0.4.3",
+    "js-yaml": ">=0.3.1"
+  },
+  "repository":   {
+    "type": "git",
+    "url": "git://github.com/jeffsu/upbeat.git"
+  }
+}
