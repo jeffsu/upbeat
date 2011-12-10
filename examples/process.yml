@@ -1,0 +1,6 @@
+services:
+  myprocess:
+    - strategy: process
+      pidfile: /tmp/foo.pid
+      interval: 2000
+      timeout:  1000

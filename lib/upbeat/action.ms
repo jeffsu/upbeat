@@ -30,6 +30,11 @@ export class Action {
       var Redis = require('./redis');
       this.strategy = new Redis(config);
     }
+
+    else if (config.strategy == 'process') {
+      var Process = require('./process');
+      this.strategy = new Process(config);
+    }
     
     else {
       this.strategy = config.strategy;

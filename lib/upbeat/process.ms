@@ -1,18 +1,24 @@
 var Base  = require('./base-strategy');
 var spawn = require('child_process').spawn;
+var fs    = require('fs');
 
-class Process extends Base {
-  function intialize(config) {  
-    this.pidFile = config.pidFile;
-    this.id = this.pidFile;
+export class Process extends Base {
+  function initialize(config) {  
+    this.pidfile = config.pidfile;
+    this.id      = this.pidfile;
   }
 
   function check(callback) {
-    var pid = null;
-    this.kill = spawn('kill', ['-0',pid]);
-    var passed = true;
-    this.kill.stderr.on('data', #{ passed = false });
-    this.kill.stderr.on('exit', #{ callback(true) });
+    var $this = this;
+    fs.readFile(this.pidfile, 'utf8', #(err, data) {
+      if (err) {
+        $this.log("error", "Error: File doesn't exist");
+        callback(false);
+      } else {
+        $this.kill = spawn('kill', [data.replace(/\s+/g, '')]);
+        $this.kill.on('exit', #(code){ callback(code == 0); });
+      }
+    });
   }
 
   function clear() {

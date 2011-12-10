@@ -39,6 +39,8 @@ Example Config File:
 Status Pages:
 -------------
 
+  * http://localhost:2468/health - health check returns 200 
+  * http://localhost:2468/health.strict - returns 400 if any action is down
   * http://localhost:2468/status - status page
   * http://localhost:2468/status.json - status in json format
   * http://localhost:2468/factual-api
@@ -76,12 +78,24 @@ how to test a particular service.
   
   * rise: number of times action has to pass before action can be upgraded from "down" to "up"
   * fall: number of times action has to fail before action can be downgraded from "up" to "down"
-  * interval: time between passed or failed checks (in milliseconds)
-  * timeout: time allowed for the request to pass otherwise, its canceled and marked as failed (in milliseconds)
+  * interval: time between passed or failed checks (defaults to 5000 milliseconds) 
+  * timeout: time allowed for the request to pass otherwise, its canceled and marked as failed (defaults to 10000 milliseconds)
   * name: vanity name for the action used in reports
 
 Strategies:
 -----------
+
+**process**
+
+Checks to see if a process is running via pidfile:
+
+  * pidfile: file with the pid written in it
+
+Examples:
+    
+    services:
+      my-process:
+        - pidfile: /tmp/my.pid
 
 **http**
 
@@ -94,7 +108,6 @@ The http strategy will send a request to the server. Fields:
 Examples:
 
     services:
-  
       http-actions:
         - url: http://www.google.com
 

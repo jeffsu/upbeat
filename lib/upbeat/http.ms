@@ -16,6 +16,7 @@ export class Http extends Base {
       this.method = 'put';
     } 
 
+    // setup data
     this.params = config[this.method];
     for (var key in this.params) {
       if (typeof this.params[key] == 'object') {
@@ -41,6 +42,7 @@ export class Http extends Base {
 
     console.log("Setup Action:");
     console.log(this.options);
+
     this.id = this.url;
   }
 
