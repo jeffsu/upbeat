@@ -72,7 +72,7 @@ Actions:
 Actions are a hash that have one required field: strategy. Stragety is used to tell upbeat
 how to test a particular service.  
 
-*optional fields*
+**optional fields**
   
   * interval: time between passed or failed checks (in milliseconds)
   * timeout: time allowed for the request to pass otherwise, its canceled and marked as failed (in milliseconds)
@@ -81,7 +81,8 @@ how to test a particular service.
 Strategies:
 -----------
 
-*http*
+**http**
+
 The http strategy will send a request to the server. Fields:
 
   * url: The url of the request to use
@@ -102,7 +103,8 @@ Examples:
         get:
           q: upbeat
 
-*redis*
+**redis**
+
 The redis strategy will connect to a redis server and issue an "ECHO hello" command. Fields:
 
   * host: host of redis server
