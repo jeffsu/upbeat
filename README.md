@@ -91,17 +91,18 @@ The http strategy will send a request to the server. Fields:
 
 Examples:
 
-  services:
-    http-actions:
-      - url: http://www.google.com
+    services:
+  
+      http-actions:
+        - url: http://www.google.com
 
-      - name: test-google
-        url: http://www.google.com
+        - name: test-google
+          url: http://www.google.com
 
-      - name: test-search
-        url: http://www.google.com
-        get:
-          q: upbeat
+        - name: test-search
+          url: http://www.google.com
+          get:
+            q: upbeat
 
 **redis**
 
