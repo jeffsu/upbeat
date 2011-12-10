@@ -1,0 +1,20 @@
+h1 Status Page
+for service in services
+  h3 #{service.name}
+  table.bordered-table.zebra-striped
+    tr
+      th Last Resp Time
+      th Avg Resp Time
+      th Passed Percentage
+      th Status
+      th Last Failure
+      th Action
+
+    for action in service.actions
+      tr
+        td #{action.meta.lastResponse || '0'} ms
+        td #{action.meta.avgResponse || '0'} ms
+        td #{Math.round(action.meta.passedCount / action.meta.count * 100)}%
+        td #{action.meta.up ? 'Up' : ('Down: ' + action.meta.lastErrorMsg)}
+        td 
+        td #{action.meta.id}

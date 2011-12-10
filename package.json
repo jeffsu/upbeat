@@ -3,7 +3,7 @@
   "description":  "Fast health and performance monitoring",
   "keywords":     ["javascript", "performance", "health", "monitoring", "monit", "haproxy"],
   "author":       "Jeff Su <me@jeffsu.com>",
-  "version":      "0.1.1",
+  "version":      "0.1.2",
   "licenses":     [{ "type": "MIT" }],
   "engines":      { "node":  ">=0.5.0" },
   "directories" : { "lib" : "./lib/upbeat" },
@@ -12,6 +12,7 @@
   "dependencies": { 
     "jade": ">=0.19.0",
     "mochiscript": ">=0.4.3",
+    "express": ">=2.5.1",
     "js-yaml": ">=0.3.1"
   },
   "repository":   {

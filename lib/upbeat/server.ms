@@ -1,5 +1,6 @@
 require('js-yaml');
 
+var express = require('express');
 var Service = require('./service');
 var http    = require('http');
 var Status  = require('./status');
@@ -27,36 +28,44 @@ export class Server {
   }
 
   function start() {
-    if (this.server) this.server.close();
+    if (this.app) this.app.close();
 
     for (var name in this.services) {
       this.services[name].start();
     }
 
     var $this = this;
-    this.server = http.createServer(#(req, res) {
-      var paths = req.url.split(/\//);
-      var service = $this.services[paths[1]];
 
-      if (service) {
-        service.respond(res);
-      } else if (paths[1] == 'status') {
-        res.writeHead(200, { 'Content-type': 'text/html' });
-        res.end($this.statusTemplate.show($this.servicesArray));
-      } else if (paths[1] == 'status.json') {
-        res.writeHead(200, { 'Content-type': 'application/json' });
+    var app = express.createServer();
+    app.configure(#{
+      app.set("views", __dirname + "/views");
+      app.use(express.static(__dirname + "/static"));
+    });
+
+    app.get("/status.:format?", #(req, res) {
+      if (req.params.format == 'json') {
         res.end($this.statusTemplate.json($this.services));
       } else {
-        res.writeHead(404);
-        res.end();
+        res.render('status.jade', { services: $this.servicesArray });
       }
     });
 
-    console.log('Starting upbeat server: http://' + this.host + ':' + this.port);
-    this.server.listen(this.port, this.host);
+    app.get("/:service", #(req, res) {
+      var service = $this.services[req.params.service];
+      if (! service) {
+        res.send(404);
+      } else {
+        service.respond(res);
+      }
+    });
+    
+    console.log('Starting upbeat app: http://' + this.host + ':' + this.port);
+
+    app.listen(this.port);
+    this.app = app;
   }
 
   function stop() {
-    if (this.server) this.server.close();
+    if (this.app) this.app.close();
   }
 }

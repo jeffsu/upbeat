@@ -4,7 +4,7 @@ export class Action {
   function initialize(config, listener) {
     this.listener = listener;
     this.alive = true;
-    this.meta = { count: 0, passedCount: 0, up: false, errorMsg: "Not Started" };
+    this.meta = { count: 0, passedCount: 0, up: false, lastErrorMsg: "Not Started" };
 
     this.timeout  = config.timeout  || 5000;
     this.interval = config.interval || 5000;
@@ -45,7 +45,7 @@ export class Action {
         $this.log('error', "Timeout: " + $this.strategy.id);
         $this.strategy.clear(); 
         $this.meta.up = false;
-        $this.meta.errorMsg = "Timed Out";
+        $this.meta.lastErrorMsg = "Timed Out";
         callback();
       }, this.timeout);
     }
@@ -56,7 +56,7 @@ export class Action {
           $this.log('info', "Passed: " + $this.strategy.id);
         } else {
           $this.log('error', "Failed: " + $this.strategy.id);
-          $this.meta.errorMsg = "Failed";
+          $this.meta.lastErrorMsg = "Failed";
         }
 
         $this.meta.up = passed;
