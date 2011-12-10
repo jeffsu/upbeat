@@ -1,21 +1,8 @@
-var QS  = require('querystring');
-var URL = require('url');
+var Base = require('./base-strategy');
+var QS   = require('querystring');
+var URL  = require('url');
 
-class Base {
-  function check(callback) {
-    if (callback) callback(true);
-  }
-
-  function log(type, msg) {
-    if (this.logger) {
-      this.logger[type](msg);
-    } else {
-      console.log(type, msg);
-    }
-  }
-}
-
-public class Http extends Base {
+export class Http extends Base {
   function initialize(config) {
     this.interval = config.interval || 5000;
     this.url      = config.url      || 'http://localhost:3000/';
@@ -77,46 +64,4 @@ public class Http extends Base {
   }
 }
 
-public class Redis extends Base {
-  private {
-    var REDIS = null;
-  }
 
-  function initialize(config) {
-    this.host = config.host;
-    this.port = config.port;
-
-    this.running = false;
-    this.createClient();
-    this.id = 'redis://' + this.host + ':' + this.port;
-  }
-
-  function createClient() {
-    var $this = this;
-
-    try {
-      this.client = require('redis').createClient(this.port, this.host);
-    } catch(e) {
-      console.log("Couldn't find the redis package: npm-g install redis or npm install redis.");
-    }
-
-    this.client.on('error',   #{ $this.running = false })
-    this.client.on('connect', #{ $this.running = true })
-  }
-
-  function check(callback) {
-    if (! this.running) return callback(false);
-
-    this.client.echo("hello", #(err, reply) {
-      if (err) {
-        callback(false);
-      } else {
-        callback(true);
-      }
-    });
-  }
-
-  function clear() {
-    this.client.end();
-  }
-}

@@ -1,29 +1,29 @@
 var http     = require('http');
-var Strategy = require('./strategies');
 
 export class Action {
   function initialize(config, listener) {
     this.listener = listener;
     this.alive = true;
-    this.meta = { count: 0, passedCount: 0 };
+    this.meta = { count: 0, passedCount: 0, up: false, errorMsg: "Not Started" };
 
-    this.timeout  = config.timeout  || 10000;
+    this.timeout  = config.timeout  || 5000;
     this.interval = config.interval || 5000;
-    this.up = false;
 
     if (config.strategy == 'http') {
-      this.strategy = new Strategy.Http(config);
+      var Http = require('./http');
+      this.strategy = new Http(config);
     } 
 
     else if (config.strategy == 'redis') {
-      this.strategy = new Strategy.Redis(config);
+      var Redis = require('./redis');
+      this.strategy = new Redis(config);
     }
     
     else {
       this.strategy = config.strategy;
     }
 
-    this.id = config.name || this.strategy.id;
+    this.meta.id = this.id = config.name || this.strategy.id;
   }
 
   function log(type, msg) {
@@ -44,9 +44,10 @@ export class Action {
       timeoutId = setTimeout(#{ 
         $this.log('error', "Timeout: " + $this.strategy.id);
         $this.strategy.clear(); 
-        $this.up = false;
+        $this.meta.up = false;
+        $this.meta.errorMsg = "Timed Out";
         callback();
-      });
+      }, this.timeout);
     }
 
     try { 
@@ -55,9 +56,10 @@ export class Action {
           $this.log('info', "Passed: " + $this.strategy.id);
         } else {
           $this.log('error', "Failed: " + $this.strategy.id);
+          $this.meta.errorMsg = "Failed";
         }
 
-        $this.up = passed;
+        $this.meta.up = passed;
 
         if (timeoutId) clearTimeout(timeoutId);
         if (passed) $this.updateResponse(start, (new Date()).getMilliseconds());
@@ -68,16 +70,12 @@ export class Action {
     }
   }
 
-  function run(notFirst) {
+  function run() {
     var $this = this;
     if (! $this.alive) return;
 
     // first time so just run it
-    if (notFirst) {
-      $this.timeoutId = setTimeout(#{ $this.check(#{ $this.run(true) }) }, $this.interval);
-    } else {
-      $this.check(#{ $this.run(true) });
-    }
+    $this.timeoutId = setTimeout(#{ $this.check(#{ $this.run() }) }, $this.interval);
   }
 
   function stop() {
@@ -103,7 +101,7 @@ export class Action {
   }
 
   function toString() {
-    JSON.stringify(this.meta);
+    return JSON.stringify(this.meta);
   }
 
   function flush() {

@@ -18,7 +18,7 @@ export class Service {
   function respond(res) {
     var passed = true;
     foreach (var action in this.actions) {
-      if (! action.up) {
+      if (! action.meta.up) {
         passed = false;
         break;
       }

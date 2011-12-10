@@ -35,7 +35,6 @@ export class Server {
 
     var $this = this;
     this.server = http.createServer(#(req, res) {
-      console.log(req.url);
       var paths = req.url.split(/\//);
       var service = $this.services[paths[1]];
 
@@ -44,6 +43,9 @@ export class Server {
       } else if (paths[1] == 'status') {
         res.writeHead(200, { 'Content-type': 'text/html' });
         res.end($this.statusTemplate.show($this.servicesArray));
+      } else if (paths[1] == 'status.json') {
+        res.writeHead(200, { 'Content-type': 'application/json' });
+        res.end($this.statusTemplate.json($this.services));
       } else {
         res.writeHead(404);
         res.end();
