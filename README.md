@@ -18,7 +18,16 @@ Example Config File:
 
     port: 2468
     host: 127.0.0.1
+
     services:
+      rails-process:
+        - strategy: mysql
+          socket: /tmp/mysql.sock
+        - strategy: process
+          pidfile: /tmp/rails.pid
+        - strategy: http
+          url: http://localhost:3000/
+
       factual-api:
         - name: places
           strategy: http
@@ -26,6 +35,7 @@ Example Config File:
           get:
             KEY: <my key>
             q:   starbucks 
+
       google.com:
         - name: homepage
           url: http://www.google.com
@@ -35,6 +45,10 @@ Example Config File:
         - strategy: redis
           port: 6537
           host: 127.0.0.1
+
+      mysql:
+        - strategy: mysql
+          socket: /tmp/mysql.sock
 
 Status Pages:
 -------------
@@ -128,6 +142,27 @@ Examples:
           url: http://www.google.com
           rise: 3
           fall: 1
+
+**mysql**
+
+The mysql strategy will connect to a mysql server and perform a query. Filds:
+
+  * sql: sql to send - defaults to "SHOW DATABASES LIMIT 1"
+  * database: selects database to use - defaults to "MYSQL"
+
+connecting - either use the socket field or:
+
+  * host: defaults to '127.0.0.1'
+  * port: defaults to 3306
+  * user
+  * password
+ 
+Examples:
+  
+    services:
+      mysql:
+        - strategy: mysql
+          socket: /tmp/mysql.sock
 
 **redis**
 

@@ -35,9 +35,18 @@ export class Action {
       var Process = require('./process');
       this.strategy = new Process(config);
     }
+
+    else if (config.strategy == 'mysql') {
+      var Mysql = require('./mysql');
+      this.strategy = new Mysql(config);
+    }
     
-    else {
+    else if (typeof config.strategy == 'object') {
       this.strategy = config.strategy;
+    }
+
+    else {
+      throw "Could not find strategy: " + config.strategy;
     }
 
     this.meta.id = this.id = config.name || this.strategy.id;

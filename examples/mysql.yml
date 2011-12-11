@@ -1,0 +1,7 @@
+services:
+  mysql:
+    - strategy: mysql # custom query
+      sql: "SELECT * FROM USERS"
+      socket: /tmp/mysql.sock
+    - strategy: mysql # default
+      socket: /tmp/mysql.sock
