@@ -1,6 +1,19 @@
 var http     = require('http');
 
 export class Action {
+  private {
+    var Strategies = {
+      http:    './http',
+      redis:   './redis',
+      process: './process',
+      mysql:   './mysql',
+      upbeat:  './upbeat'
+    };
+  }
+
+  static function registerStrategy(name, req) {
+    Strategies[name] = req;
+  }
 
   function initialize(config, listener) {
     this.listener = listener;
@@ -21,24 +34,9 @@ export class Action {
     this.rise = config.rise || 1;
     this.fall = config.fall || 1;
 
-    if (config.strategy == 'http') {
-      var Http = require('./http');
-      this.strategy = new Http(config);
-    } 
-
-    else if (config.strategy == 'redis') {
-      var Redis = require('./redis');
-      this.strategy = new Redis(config);
-    }
-
-    else if (config.strategy == 'process') {
-      var Process = require('./process');
-      this.strategy = new Process(config);
-    }
-
-    else if (config.strategy == 'mysql') {
-      var Mysql = require('./mysql');
-      this.strategy = new Mysql(config);
+    if (Strategies[config.strategy]) {
+      var Strategy  = require(Strategies[config.strategy]);
+      this.strategy = new Strategy(config);
     }
     
     else if (typeof config.strategy == 'object') {

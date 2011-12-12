@@ -3,12 +3,15 @@ var QS   = require('querystring');
 var URL  = require('url');
 
 export class Http extends Base {
+  private {
+    var http = require('http');
+  }
+
   function initialize(config) {
     this.interval = config.interval || 5000;
     this.url      = config.url      || 'http://localhost:3000/';
     this.timeout  = config.timeout  || 1000;
     this.method   = 'get';
-    this.http     = require('http');
 
     if (config.post) {
       this.method = 'post';
@@ -49,16 +52,21 @@ export class Http extends Base {
   function check(callback) {
     var $this = this;
 
-    this.req = this.http.request(this.options, #(resp) { 
-      var passed = resp.statusCode == '200';
-      callback(passed);
-      if (!passed) console.log("Failed to get 200 from: " + $this.url + " --- " + resp.statusCode);
+    this.req = http.request(this.options, #(resp) { 
+      $this.calculatePass(resp, #(passed) {
+        callback(passed);
+        if (!passed) console.log("Failed to get 200 from: " + $this.url + " --- " + resp.statusCode);
+      });
     });
 
     if (this.data) this.req.write(this.data + "\n");
 
     this.req.on('error', #{ callback(false) });
     this.req.end();
+  }
+
+  function calculatePass(resp, callback) {
+    return callback(resp.statusCode == '200');
   }
 
   function clear() {

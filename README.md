@@ -106,7 +106,7 @@ Actions:
 --------
 
 Actions are a hash that have one required field: strategy. Stragety is used to tell upbeat
-how to test a particular service.  
+how to test a particular service.  Every action has these fields available to it:
 
 **optional fields**
   
@@ -125,7 +125,7 @@ Checks to see if a process is running via pidfile:
 
   * pidfile: file with the pid written in it
 
-Examples:
+Example:
     
     services:
       my-process:
@@ -140,7 +140,7 @@ The http strategy will send a request to the server. Fields:
   * post or put: hash of key/value pairs to use as the data of the request
   * get: hash of key/value parise to use as the query string
 
-Examples:
+Example:
 
     services:
       http-actions:
@@ -163,6 +163,20 @@ Examples:
           rise: 3
           fall: 1
 
+**upbeat**
+
+Yes, upbeat can monitor other upbeat servers. Fields:
+
+  * port: port of upbeat server to monitor
+  * host: host of upbeat server to monitor
+
+Example:
+
+    port: 2467
+    services:
+      upbeat:
+        - strategy: upbeat
+
 **mysql**
 
 The mysql strategy will connect to a mysql server and perform a query. Filds:
@@ -177,7 +191,7 @@ connecting - either use the socket field or:
   * user
   * password
  
-Examples:
+Example:
   
     services:
       mysql:
@@ -191,10 +205,33 @@ The redis strategy will connect to a redis server and issue an "ECHO hello" comm
   * host: host of redis server
   * port: port of redis server
  
-Examples:
+Example:
   
     services:
       redis:
         - host: 127.0.0.1
           port: 6537
           strategy: redis
+
+Custom Strategies
+-----------------
+
+Its pretty simple to register a custom strategy.  There are 3 things the object needs to have:
+
+  1. an instantiator where the only paramater is a config hash (action)
+  1. check(callback): the callback is function that expects a boolean
+  1. clear(): a function that should halt any asynchronus activity
+
+Example:   
+
+    var AlwaysPass = function (config) { this.config };
+    AlwaysPass.prototype.check = function (callback) {
+      callback(true);
+    };
+
+    AlwaysPass.prototype.clear = function () { 
+      // no op
+    };
+
+    require('./upbeat').registerCallback('always-pass', AlwaysPass);
+
