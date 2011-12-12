@@ -2,6 +2,7 @@
   
   * adding historical response times
   * adding max-response-time option
+  * default banner for executable
 
 ** 0.1.6 **
 
