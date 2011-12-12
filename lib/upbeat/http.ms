@@ -43,9 +43,6 @@ export class Http extends Base {
       method: this.method.toUpperCase()
     };
 
-    console.log("Setup Action:");
-    console.log(this.options);
-
     this.id = this.url;
   }
 
