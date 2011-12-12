@@ -5,10 +5,10 @@ Scalable and distributable health/performance checking.
 
 Upbeat provides several useful features:
 
-**Complex Healthcheck Strategies**
+**Complex healthcheck strategies**
 
 For accurate healthchecks, sometimes the likes of monit, nagios and/or haproxy is not enough.  An example
-would be testing a mysql server to see if 1) the process is running 2) a query works 3) how fast the query was.
+would be testing a mysql server to see if 1) the process is running 2) a query works 3) how fast the query was
 This is just and example of what upbeat is meant to do.  It is not meant to replace the tools mentioned previously, 
 but to actually play nicely with them.
 
