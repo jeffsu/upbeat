@@ -18,8 +18,8 @@ export class Action {
     Strategies[name] = req;
   }
 
-  function initialize(config, listener) {
-    this.listener = listener;
+  function initialize(config, service) {
+    this.service = service;
     this.alive = true;
 
     this.meta = {
@@ -62,10 +62,11 @@ export class Action {
   }
 
   function log(type, msg) {
+    var str = msg + " (" + this.service.name + "): " + this.strategy.id;
     if (this.logger) {
-      this.logger[type](msg);
+      this.logger[type](str);
     } else {
-      console.log(type, msg);
+      console.log(type, str);
     }
   }
 
@@ -77,7 +78,7 @@ export class Action {
     var timeoutId = null;
     if (this.timeout) {
       timeoutId = setTimeout(#{ 
-        $this.log('info', "Timeout: " + $this.strategy.id);
+        $this.log('info', "Failed - Timed Out");
         $this.strategy.clear(); 
         $this.updateStatus(false);
         $this.meta.lastErrorMsg = "Timed Out";
@@ -88,9 +89,9 @@ export class Action {
     try { 
       this.strategy.check(#(passed) {
         if (passed) {
-          $this.log('debug', "Passed: " + $this.strategy.id);
+          $this.log('debug', "Passed");
         } else {
-          $this.log('info', "Failed: " + $this.strategy.id);
+          $this.log('info', "Failed");
           $this.meta.lastErrorMsg = "Failed";
         }
 
@@ -99,7 +100,7 @@ export class Action {
         if (passed) {
           var responseTime = $this.updateResponse(start, (new Date()).getMilliseconds());
           if ($this.maxResponse < responseTime) {
-            $this.log('info', "Failed: response time too slow.");
+            $this.log('info', "Failed - Too Slow");
             $this.meta.lastErrorMsg = "Too slow";
             $this.updateStatus(false);
           } else {
@@ -147,7 +148,8 @@ export class Action {
 
   function updateResponse(start, end) {
     var time = end - start;
-    if (time < 0) time = 0;
+    if (time < 0) return 0;
+
     this.meta.lastResponse = time;
 
     var avg   = this.meta.avgResponse;

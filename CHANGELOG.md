@@ -1,3 +1,16 @@
+** 0.1.8 **
+
+  * fixing various bugs in http options
+  * allow for multiple hosts per service
+    
+    services:
+      myserver:
+        hosts: 
+          - 127.0.0.1
+          - 192.168.1.2
+        actions:
+          - strategy: http
+
 ** 0.1.7 **
   
   * adding historical response times

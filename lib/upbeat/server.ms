@@ -7,24 +7,59 @@ var Status  = require('./status');
 
 export class Server {
   function initialize(file) {
-    var config = require(file).shift();
+    var config = (typeof file == 'object') ? file : require(file).shift();
+
     this.port  = config.port || '2468';
     this.host  = config.host || '127.0.0.1';
 
     this.services = {};
     this.servicesArray = [];
+
     for (var name in config.services) {
-      var service = new Service(config.services[name]); 
-      this.addService(name, service);
-      this.servicesArray.push(service);
+      this.handleServiceConfig(name, config.services[name]); 
     }
 
     this._status = new Status();
   }
 
+  function handleServiceConfig(name, config) {
+    var services = [];
+
+    if (config.actions && config.hosts) {
+      foreach (var host in config.hosts) {
+        var actions = [];
+        foreach (var a in config.actions) {
+          var newAction = {};  
+          for (var k in a) newAction[k] = a[k];
+          var conf = host.split(':');
+
+          if (conf.length == 2) {
+            newAction['host'] = conf[0];
+            newAction['port'] = conf[1];
+          } else {
+            newAction['host'] = conf[0];
+          }
+
+          actions.push(newAction);
+        }
+
+        var newName = name + ':' + host;
+        var service = new Service(newName, actions);
+        this.addService(newName, service);
+      }
+    }
+
+    else {
+      var service = new Service(name, config);
+      this.addService(name, service);
+    }
+  }
+
   function addService(name, service) {
+    console.log("Adding service: " + name);
     this.services[name] = service;
     service.name = name;
+    this.servicesArray.push(service);
   }
 
   function getActions() {

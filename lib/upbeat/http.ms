@@ -27,20 +27,21 @@ export class Http extends Base {
         this.params[key] = JSON.stringify(this.params[key]);
       }
     }
+
     var data = this.params ? QS.stringify(this.params) : null;
 
     if (this.method == 'get' && data) {
       this.url = this.url + '?' + data; 
     } else if (data) {
-      this.data = QS.stringify(this.params);
+      this.data = data;
     }
 
     var url = URL.parse(this.url, false);
 
     this.options = {
-      host: url.host,
-      port: url.port || '80',
-      path: url.pathname + (url.querystring || ''),
+      host: config.host || url.host || '127.0.0.1',
+      port: config.port || url.port || 80,
+      path: url.pathname + (url.query ? '?' + url.query: ''),
       method: this.method.toUpperCase()
     };
 

@@ -2,7 +2,8 @@ var http = require('http');
 var Action = require('./action');
 
 export class Service {
-  function initialize(actions) {
+  function initialize(name, actions) {
+    this.name    = name;
     this.actions = [];
     foreach (var action in actions) {
       this.actions.push(new Action(action, this));
