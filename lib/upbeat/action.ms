@@ -10,6 +10,8 @@ export class Action {
       tcp:     './tcp',
       upbeat:  './upbeat'
     };
+
+    var N_HOSTORICAL_TICKS = 100;
   }
 
   static function registerStrategy(name, req) {
@@ -26,7 +28,8 @@ export class Action {
       up           : false,
       lastErrorMsg : "Not Started",
       riseCount    : 0,
-      fallCount    : 0
+      fallCount    : 0,
+      responseTimes: []
     };
 
     this.timeout  = config.timeout;
@@ -53,6 +56,7 @@ export class Action {
 
     this.timeout  = this.timeout  || 5000;
     this.interval = this.interval || 10000;
+    this.maxResponse = config['max-response-time'] || this.timeout;
 
     this.meta.id = this.id = config.name || this.strategy.id;
   }
@@ -90,10 +94,19 @@ export class Action {
           $this.meta.lastErrorMsg = "Failed";
         }
 
-        $this.updateStatus(passed);
 
         if (timeoutId) clearTimeout(timeoutId);
-        if (passed) $this.updateResponse(start, (new Date()).getMilliseconds());
+        if (passed) {
+          var responseTime = $this.updateResponse(start, (new Date()).getMilliseconds());
+          if ($this.maxResponse < responseTime) {
+            $this.log('info', "Failed: response time too slow.");
+            $this.meta.lastErrorMsg = "Too slow";
+            $this.updateStatus(false);
+          } else {
+            $this.updateStatus(true);
+          }
+        }
+
         callback();
       });
     } catch(e) {
@@ -147,6 +160,12 @@ export class Action {
     }
 
     this.meta.passedCount = count + 1;
+
+    var times = this.meta.responseTimes;
+    while (times.length > N_HOSTORICAL_TICKS) times.shift();
+    times.push(time);
+
+    return time;
   }
 
   function toString() {

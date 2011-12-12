@@ -1,3 +1,8 @@
+** 0.1.7 **
+  
+  * adding historical response times
+  * adding max-response-time option
+
 ** 0.1.6 **
 
   * tcp connection strategy

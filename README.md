@@ -119,6 +119,7 @@ how to test a particular service.  Every action has these fields available to it
   * fall: number of times action has to fail before action can be downgraded from "up" to "down"
   * interval (in millisecondes): time between passed or failed checks (default depends on the strategy) 
   * timeout (in milliseconds): time allowed for the request to pass otherwise, its canceled and marked as failed (defaults depends on the strategy)
+  * max-response-time: similar to timeout. If an action returns before timeout but is greater than max-response-time, it will still count as a failure
   * name: vanity name for the action used in reports
 
 Strategies:
