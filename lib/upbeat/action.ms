@@ -148,7 +148,11 @@ export class Action {
 
   function updateResponse(start, end) {
     var time = end - start;
-    if (time < 0) return 0;
+
+    if (time < 0) {
+      this.meta.count--;
+      return 0;
+    }
 
     this.meta.lastResponse = time;
 

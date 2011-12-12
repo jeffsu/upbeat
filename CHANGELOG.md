@@ -1,3 +1,7 @@
+** 0.1.9 **
+
+  * fixed passed percentage on status page
+
 ** 0.1.8 **
 
   * fixing various bugs in http options
