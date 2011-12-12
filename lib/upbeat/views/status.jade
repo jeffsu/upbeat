@@ -20,4 +20,7 @@ for service in services
           if ! action.meta.up
             \(#{action.meta.riseCount}/#{action.rise})
         td 
+          if action.meta.lastFailure
+            \(#{(new Date(action.meta.lastFailure)).toString()})
+            
         td #{action.meta.id}

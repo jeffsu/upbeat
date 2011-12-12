@@ -27,6 +27,7 @@ export class Action {
       passedCount  : 0,
       up           : false,
       lastErrorMsg : "Not Started",
+      lastFailure  : null,
       riseCount    : 0,
       fallCount    : 0,
       responseTimes: []
@@ -71,7 +72,7 @@ export class Action {
   }
 
   function check(callback) {
-    var start = (new Date()).getMilliseconds();
+    var start = (new Date()).getTime();
     var $this = this;
     this.meta.count++;
     
@@ -82,6 +83,7 @@ export class Action {
         $this.strategy.clear(); 
         $this.updateStatus(false);
         $this.meta.lastErrorMsg = "Timed Out";
+        $this.meta.lastFailure = start;
         callback();
       }, this.timeout);
     }
@@ -93,15 +95,19 @@ export class Action {
         } else {
           $this.log('info', "Failed");
           $this.meta.lastErrorMsg = "Failed";
+          $this.meta.lastFailure = start;
+          $this.updateStatus(false);
         }
 
 
         if (timeoutId) clearTimeout(timeoutId);
         if (passed) {
-          var responseTime = $this.updateResponse(start, (new Date()).getMilliseconds());
+          var endTime = (new Date()).getTime();
+          var responseTime = $this.updateResponse(start, endTime); 
           if ($this.maxResponse < responseTime) {
             $this.log('info', "Failed - Too Slow");
             $this.meta.lastErrorMsg = "Too slow";
+            $this.meta.lastFailure = start;
             $this.updateStatus(false);
           } else {
             $this.updateStatus(true);

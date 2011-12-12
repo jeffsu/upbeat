@@ -1,3 +1,8 @@
+** 0.1.10 **
+
+  * fixed timing bug
+  * added lastFailure time
+
 ** 0.1.9 **
 
   * fixed passed percentage on status page
