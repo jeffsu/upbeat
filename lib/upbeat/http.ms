@@ -1,11 +1,12 @@
 var Base = require('./base-strategy');
 var QS   = require('querystring');
 var URL  = require('url');
+var http = require('http');
 
 export class Http extends Base {
-  private {
-    var http = require('http');
-  }
+
+  static var TIMEOUT  = 10000;
+  static var INTERVAL = 10000;
 
   function initialize(config) {
     this.interval = config.interval || 5000;

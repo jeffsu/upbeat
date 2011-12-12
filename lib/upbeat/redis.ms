@@ -2,6 +2,10 @@ var Base  = require('./base-strategy');
 var redis = require('redis');
 
 export class Redis extends Base {
+
+  static var TIMEOUT  = 2000;
+  static var INTERVAL = 10000;
+
   function initialize(config) {
     this.host = config.host;
     this.port = config.port;

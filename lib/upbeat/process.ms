@@ -3,6 +3,9 @@ var spawn = require('child_process').spawn;
 var fs    = require('fs');
 
 export class Process extends Base {
+  static var TIMEOUT  = 5000;
+  static var INTERVAL = 5000;
+
   function initialize(config) {  
     this.pidfile = config.pidfile;
     this.id      = this.pidfile;

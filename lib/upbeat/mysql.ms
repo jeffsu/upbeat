@@ -1,6 +1,10 @@
 var Base = require('./base-strategy');
 
 export class Mysql extends Base {
+
+  static var TIMEOUT  = 5000;
+  static var INTERVAL = 10000;
+
   function initialize(config) {
     this.sql = config.sql || "SHOW DATABASES LIMIT 1";
     this.config = config;

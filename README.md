@@ -47,6 +47,11 @@ Example Config File:
           pidfile: /tmp/rails.pid
         - strategy: http
           url: http://localhost:3000/
+        - strategy: http
+          port: 3000
+          host: 127.0.0.1
+          interval: 3000
+          timeout:  1000
 
       factual-api:
         - name: places
@@ -112,8 +117,8 @@ how to test a particular service.  Every action has these fields available to it
   
   * rise: number of times action has to pass before action can be upgraded from "down" to "up"
   * fall: number of times action has to fail before action can be downgraded from "up" to "down"
-  * interval: time between passed or failed checks (defaults to 5000 milliseconds) 
-  * timeout: time allowed for the request to pass otherwise, its canceled and marked as failed (defaults to 10000 milliseconds)
+  * interval (in millisecondes): time between passed or failed checks (default depends on the strategy) 
+  * timeout (in milliseconds): time allowed for the request to pass otherwise, its canceled and marked as failed (defaults depends on the strategy)
   * name: vanity name for the action used in reports
 
 Strategies:
@@ -139,6 +144,8 @@ The http strategy will send a request to the server. Fields:
   * url: The url of the request to use
   * post or put: hash of key/value pairs to use as the data of the request
   * get: hash of key/value parise to use as the query string
+  * timeout: defaults to 10000
+  * interval: defaults to 10000
 
 Example:
 
@@ -169,6 +176,8 @@ Yes, upbeat can monitor other upbeat servers. Fields:
 
   * port: port of upbeat server to monitor
   * host: host of upbeat server to monitor
+  * timeout: defaults to 5000
+  * interval: defaults to 5000
 
 Example:
 
@@ -177,9 +186,18 @@ Example:
       upbeat:
         - strategy: upbeat
 
+**tcp**
+
+Strategy to check if a connection to a port can be established. Fields:
+ 
+  * port: port of service
+  * host: host of service
+  * timeout: defaults to 2000
+  * interval: defaults to 3000
+
 **mysql**
 
-The mysql strategy will connect to a mysql server and perform a query. Filds:
+The mysql strategy will connect to a mysql server and perform a query. Fields:
 
   * sql: sql to send - defaults to "SHOW DATABASES LIMIT 1"
   * database: selects database to use - defaults to "MYSQL"
@@ -190,6 +208,8 @@ connecting - either use the socket field or:
   * port: defaults to 3306
   * user
   * password
+  * timeout: defaults to 5000
+  * interval: defaults to 10000
  
 Example:
   
@@ -204,6 +224,8 @@ The redis strategy will connect to a redis server and issue an "ECHO hello" comm
 
   * host: host of redis server
   * port: port of redis server
+  * timeout: defaults to 2000
+  * interval: defaults to 10000
  
 Example:
   

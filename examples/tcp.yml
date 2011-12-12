@@ -1,0 +1,5 @@
+services:
+  myserver:
+    - strategy: tcp
+      port: 6000
+      host: 127.0.0.1

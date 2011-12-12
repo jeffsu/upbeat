@@ -7,6 +7,7 @@ export class Action {
       redis:   './redis',
       process: './process',
       mysql:   './mysql',
+      tcp:     './tcp',
       upbeat:  './upbeat'
     };
   }
@@ -28,8 +29,8 @@ export class Action {
       fallCount    : 0
     };
 
-    this.timeout  = config.timeout  || 5000;
-    this.interval = config.interval || 5000;
+    this.timeout  = config.timeout;
+    this.interval = config.interval;
 
     this.rise = config.rise || 1;
     this.fall = config.fall || 1;
@@ -37,6 +38,9 @@ export class Action {
     if (Strategies[config.strategy]) {
       var Strategy  = require(Strategies[config.strategy]);
       this.strategy = new Strategy(config);
+
+      this.timeout  = this.timeout  || Strategy.TIMEOUT;
+      this.interval = this.interval || Strategy.INTERVAL;
     }
     
     else if (typeof config.strategy == 'object') {
@@ -46,6 +50,9 @@ export class Action {
     else {
       throw "Could not find strategy: " + config.strategy;
     }
+
+    this.timeout  = this.timeout  || 5000;
+    this.interval = this.interval || 10000;
 
     this.meta.id = this.id = config.name || this.strategy.id;
   }

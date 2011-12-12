@@ -2,6 +2,9 @@
 var Http = require('./http');
 
 export class Upbeat extends Http {
+  static var TIMEOUT  = 5000;
+  static var INTERVAL = 5000;
+
   function initialize(config) {
     this.options = {
       path: "/status.json",
