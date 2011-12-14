@@ -8,42 +8,47 @@ export class Http extends Base {
   static var TIMEOUT  = 10000;
   static var INTERVAL = 10000;
 
+  static function getRequestOptions(config) {
+    var method = 'get';
+
+    if (config.post) {
+      method = 'post';
+    } else if (config.put) {
+      method = 'put';
+    } 
+
+    // setup data
+    var params = config[method];
+    for (var key in params) {
+      if (typeof params[key] == 'object') {
+        params[key] = JSON.stringify(this.params[key]);
+      }
+    }
+
+    var data = params ? QS.stringify(params) : null;
+    var url  = config.url;
+
+    if (method == 'get' && data) {
+      url = url + '?' + data; 
+    } 
+
+    var parsedUrl = URL.parse(url, false);
+
+    return {
+      host: config.host || parsedUrl.host || '127.0.0.1',
+      port: config.port || parsedUrl.port || 80,
+      path: parsedUrl.pathname + (parsedUrl.query ? '?' + parsedUrl.query: ''),
+      method: method.toUpperCase()
+    };
+  }
+
   function initialize(config) {
     this.interval = config.interval || 5000;
     this.url      = config.url      || 'http://localhost:3000/';
     this.timeout  = config.timeout  || 1000;
     this.method   = 'get';
 
-    if (config.post) {
-      this.method = 'post';
-    } else if (config.put) {
-      this.method = 'put';
-    } 
-
-    // setup data
-    this.params = config[this.method];
-    for (var key in this.params) {
-      if (typeof this.params[key] == 'object') {
-        this.params[key] = JSON.stringify(this.params[key]);
-      }
-    }
-
-    var data = this.params ? QS.stringify(this.params) : null;
-
-    if (this.method == 'get' && data) {
-      this.url = this.url + '?' + data; 
-    } else if (data) {
-      this.data = data;
-    }
-
-    var url = URL.parse(this.url, false);
-
-    this.options = {
-      host: config.host || url.host || '127.0.0.1',
-      port: config.port || url.port || 80,
-      path: url.pathname + (url.query ? '?' + url.query: ''),
-      method: this.method.toUpperCase()
-    };
+    this.options = KLASS.getRequestOptions(config);
 
     this.id = this.url;
   }

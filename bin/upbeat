@@ -2,7 +2,7 @@
 var upbeat  = require('../lib/index');
 
 if (process.argv.length <= 2) {
-  console.log("Upbeat 0.1.7");
+  console.log("Upbeat 0.1.11");
   console.log("USAGE: upbeat <config file>");
   process.exit(0);
 }

@@ -1,0 +1,12 @@
+#!/usr/bin/env node
+
+function banner() {
+  console.log("Tempo: A node benchmarking tool.");
+  console.log("Usage: nb [options] <yaml file>");
+  console.log("Options:");
+  console.log("  --cpu N:      Number of cpus to utilize (defaults to 1)");
+  console.log("  --clients N:  Number of clients (defaults to 1)");
+  console.log("  --requests N: Number of requests per client (defaults to 100)");
+}
+
+banner();

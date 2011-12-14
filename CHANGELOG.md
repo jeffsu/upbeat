@@ -1,3 +1,7 @@
+** 0.1.11 **
+
+  * Adding performance testing
+
 ** 0.1.10 **
 
   * fixed timing bug
