@@ -128,8 +128,13 @@ export class Server {
     app.get("/benchmark/:service/:actionIdx.:format?", #(req, res) {
       var params = req.params;
       var url = require('url').parse(req.url, true);
-      var count   = parseInt(url.query.count || 1);
-      var clients = parseInt(url.query.clients || 1);
+      var count   = parseInt(url.query.count || 0);
+      var clients = parseInt(url.query.clients || 0);
+
+      if (count == 0) {
+        res.render("benchmark-form.jade", params);
+        return;
+      }
 
       $this.benchmark(params.service, params.actionIdx, count, clients, req, #{
         if (params.format == 'json') {
