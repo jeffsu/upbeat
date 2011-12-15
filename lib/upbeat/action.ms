@@ -145,30 +145,42 @@ export class Action {
     } 
   }
 
-  function benchmark(count, callback, meta) {
-    console.log('benchmark');
+  function benchmark(count, emitter, callback) {
     count = count || 1; 
 
-    if (! meta) {
-      meta = { 
-        count: 0,
-        strategy:  this.getStrategy(this.config),
-        startTime: (new Date()).getTime()
-      };
-    } 
+    var meta = { 
+      count: 0,
+      errors: 0
+    };
     
-    else if (meta.count >= count) {
-      meta.endTime = (new Date()).getTime();
-      callback(meta);
-      return;
-    }
+    var strategy  = this.getStrategy(this.config);
+    var startTime = (new Date()).getTime()
 
-    var $this = this;
+    var alive = true;
+    if (emitter) emitter.on('end', #{ alive = false });
 
-    meta.strategy.check(#{ 
-      meta.count += 1;
-      $this.benchmark(count, callback, meta); 
-    });
+    var recurse = #{
+      if (!alive || meta.count == count) {
+        meta.totalTime = (new Date()).getTime() - startTime;
+        callback(meta);
+      }
+
+      try {
+        strategy.check(#(passed){ 
+          if (!passed) meta.errors++;
+          recurse(); 
+        });
+      } 
+      
+      catch(e) {
+        meta.errors++;
+        recurse(); 
+      }
+
+      meta.count++;
+    };
+
+    recurse();
   }
 
   function run() {

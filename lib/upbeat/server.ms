@@ -111,16 +111,20 @@ export class Server {
       res.end($this._status.json($this.serviceArray));
     });
 
-    app.get("/benchmark/:service/:actionIdx", #(req, res) {
+    app.get("/benchmark/:service/:actionIdx.:format?", #(req, res) {
       var params = req.params;
       var url = require('url').parse(req.url, true);
       var count   = parseInt(url.query.count || 1);
       var clients = parseInt(url.query.clients || 1);
 
-      this.benchmark(params.service, params.actionIdx, count, clients, #{
-        res.writeHead(200, {"Content-type": "application/json"});
-        res.end(JSON.stringify($1));
-      };
+      $this.benchmark(params.service, params.actionIdx, count, clients, req, #{
+        if (params.format == 'json') {
+          res.writeHead(200, {"Content-type": "application/json"});
+          res.end(JSON.stringify($1));
+        } else {
+          res.render("benchmark.jade", $1);
+        }
+      });
     });
 
     app.get("/status.:format?", #(req, res) {
@@ -146,29 +150,37 @@ export class Server {
     this.app = app;
   }
 
-  function benchmark(service, actionIdx, requests, clients, callback) {
+  function benchmark(service, actionIdx, requests, clients, req, callback) {
     var action = this.services[service].actions[parseInt(actionIdx)];
 
     var meta = {
       count: 0,
-      totalTime: 0
+      totalTime: 0,
+      errors: 0,
+      action: action
     };
 
     var finished = 0;
     var $this = this;
+    var startTime = (new Date()).getTime();
+    req.setMaxListeners(clients);
+
     for (var i=0; i<clients; i++) {
-      action.benchmark(parseInt(url.query.count), #{ 
+      action.benchmark(parseInt(requests), req, #{ 
         $this.mergeBenchmark(meta, $1);
         finished += 1; 
-        if (finished == clients) callback(meta);
+        if (finished == clients) {
+          meta.totalTime = (new Date()).getTime() - startTime;
+          meta.avgTime   = Math.round(meta.totalTime/meta.count);
+          callback(meta);
+        }
       });
     }
   }
 
   function mergeBenchmark(meta, clientMeta) {
-    meta.count += clientMeta.count;
-    var clientTime = clientMeta.endTime - clientMeta.startTime;
-    if (meta.totalTime < clientTime) meta.totalTime = clientTime;
+    meta.count  += clientMeta.count;
+    meta.errors += clientMeta.errors;
   }
 
   function stop() {

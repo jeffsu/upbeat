@@ -1,0 +1,38 @@
+#!/usr/bin/env node
+var upbeat       = require('../lib/index');
+var EventEmitter = require('events').EventEmitter;
+
+if (process.argv.length <= 6) {
+  console.log("Tempo: 0.1.12");
+  console.log("USAGE: tempo <clients> <requests> <service> <actionIdx> <config file>");
+  console.log("EXAMPLE: tempo 3 5 google 0 ./examples/google.yml");
+  console.log("Arguments:");
+  console.log("  clients:     number of concurrent clients to use");
+  console.log("  requests:    number of serial requests to make per client");
+  console.log("  service:     upbeat service");
+  console.log("  actionIdx:   nth action for service (zero based)");
+  console.log("  config file: yaml config file to use");
+  process.exit(0);
+}
+
+var argv = process.argv;
+var file = argv.pop();
+var actionIdx = parseInt(argv.pop());
+var service   = argv.pop();
+var requests  = parseInt(argv.pop());
+var clients   = parseInt(argv.pop());
+
+if (! file.match(/^\//)) file = process.cwd() + '/' + file;
+
+var Runner = function () { };
+Runner.prototype = new EventEmitter;
+var runner = new Runner();
+
+var server = new upbeat.Server(file);
+server.benchmark(service, actionIdx, requests, clients, runner, function (meta) {
+  delete meta['action'];
+  console.log(JSON.stringify(meta));
+  process.exit(0);
+});
+
+process.on('SIGINT', function () { runner.emit('end'); });

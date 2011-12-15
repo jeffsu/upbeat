@@ -1,3 +1,8 @@
+** 0.1.12 **
+  
+  * benchmarking on webserver - http://localhost:2468/benchmark/<service>/<action idx>?count=5&clients=2
+  * benchmarking on commandline - tempo <clients> <count> <service> <action idx> <yaml file>
+  
 ** 0.1.11 **
 
   * Adding performance testing
