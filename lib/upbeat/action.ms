@@ -69,7 +69,7 @@ export class Action {
   }
 
   function log(type, msg) {
-    var str = msg + " (" + this.service.name + "): " + this.strategy.id;
+    var str = msg + " (" + this.service.name + "): " + this.id;
     if (this.logger) {
       this.logger[type](str);
     } else {
@@ -163,6 +163,7 @@ export class Action {
       if (!alive || meta.count == count) {
         meta.totalTime = (new Date()).getTime() - startTime;
         callback(meta);
+        return;
       }
 
       try {

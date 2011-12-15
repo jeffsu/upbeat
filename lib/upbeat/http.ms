@@ -21,7 +21,7 @@ export class Http extends Base {
     var params = config[method];
     for (var key in params) {
       if (typeof params[key] == 'object') {
-        params[key] = JSON.stringify(this.params[key]);
+        params[key] = JSON.stringify(params[key]);
       }
     }
 
