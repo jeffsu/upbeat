@@ -111,27 +111,16 @@ export class Server {
       res.end($this._status.json($this.serviceArray));
     });
 
-    app.get("/benchmark/:service/:action_idx", #(req, res) {
+    app.get("/benchmark/:service/:actionIdx", #(req, res) {
       var params = req.params;
-      var action = $this.services[params.service].actions[parseInt(params.action_idx)];
-
       var url = require('url').parse(req.url, true);
       var count   = parseInt(url.query.count || 1);
       var clients = parseInt(url.query.clients || 1);
 
-      var finished = 0;
-
-      var done = function () {
+      this.benchmark(params.service, params.actionIdx, count, clients, #{
         res.writeHead(200, {"Content-type": "application/json"});
-        res.end("{}");
+        res.end(JSON.stringify($1));
       };
-
-      for (var i=0; i<clients; i++) {
-        action.benchmark(parseInt(url.query.count), #{ 
-          finished += 1; 
-          if (finished == clients) done();
-        });
-      }
     });
 
     app.get("/status.:format?", #(req, res) {
@@ -155,6 +144,31 @@ export class Server {
 
     app.listen(this.port);
     this.app = app;
+  }
+
+  function benchmark(service, actionIdx, requests, clients, callback) {
+    var action = this.services[service].actions[parseInt(actionIdx)];
+
+    var meta = {
+      count: 0,
+      totalTime: 0
+    };
+
+    var finished = 0;
+    var $this = this;
+    for (var i=0; i<clients; i++) {
+      action.benchmark(parseInt(url.query.count), #{ 
+        $this.mergeBenchmark(meta, $1);
+        finished += 1; 
+        if (finished == clients) callback(meta);
+      });
+    }
+  }
+
+  function mergeBenchmark(meta, clientMeta) {
+    meta.count += clientMeta.count;
+    var clientTime = clientMeta.endTime - clientMeta.startTime;
+    if (meta.totalTime < clientTime) meta.totalTime = clientTime;
   }
 
   function stop() {

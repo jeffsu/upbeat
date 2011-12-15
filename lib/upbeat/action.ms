@@ -152,12 +152,14 @@ export class Action {
     if (! meta) {
       meta = { 
         count: 0,
-        strategy: this.getStrategy(this.config)
+        strategy:  this.getStrategy(this.config),
+        startTime: (new Date()).getTime()
       };
     } 
     
     else if (meta.count >= count) {
-      callback();
+      meta.endTime = (new Date()).getTime();
+      callback(meta);
       return;
     }
 
