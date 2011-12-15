@@ -111,6 +111,28 @@ export class Server {
       res.end($this._status.json($this.serviceArray));
     });
 
+    app.get("/benchmark/:service/:action_idx", #(req, res) {
+      var params = req.params;
+      var action = $this.services[params.service].actions[parseInt(params.action_idx)];
+
+      var url = require('url').parse(req.url, true);
+      var count   = parseInt(url.query.count || 1);
+      var clients = parseInt(url.query.clients || 1);
+
+      var finished = 0;
+
+      var done = function () {
+        res.writeHead(200, {"Content-type": "application/json"});
+        res.end("{}");
+      };
+
+      for (var i=0; i<clients; i++) {
+        action.benchmark(parseInt(url.query.count), #{ 
+          finished += 1; 
+          if (finished == clients) done();
+        });
+      }
+    });
 
     app.get("/status.:format?", #(req, res) {
       if (req.params.format == 'json') {

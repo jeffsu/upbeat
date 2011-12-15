@@ -21,6 +21,7 @@ export class Action {
   function initialize(config, service) {
     this.service = service;
     this.alive = true;
+    this.config = config;
 
     this.meta = {
       count        : 0,
@@ -33,33 +34,38 @@ export class Action {
       responseTimes: []
     };
 
+    this.strategy = this.getStrategy(config);
     this.timeout  = config.timeout;
     this.interval = config.interval;
 
     this.rise = config.rise || 1;
     this.fall = config.fall || 1;
 
-    if (Strategies[config.strategy]) {
-      var Strategy  = require(Strategies[config.strategy]);
-      this.strategy = new Strategy(config);
-
-      this.timeout  = this.timeout  || Strategy.TIMEOUT;
-      this.interval = this.interval || Strategy.INTERVAL;
-    }
-    
-    else if (typeof config.strategy == 'object') {
-      this.strategy = config.strategy;
-    }
-
-    else {
-      throw "Could not find strategy: " + config.strategy;
-    }
-
     this.timeout  = this.timeout  || 5000;
     this.interval = this.interval || 10000;
     this.maxResponse = config['max-response-time'] || this.timeout;
 
     this.meta.id = this.id = config.name || this.strategy.id;
+  }
+
+  function getStrategy(config) {
+    if (Strategies[config.strategy]) {
+      var Strategy  = require(Strategies[config.strategy]);
+      strategy = new Strategy(config);
+
+      this.timeout  = this.timeout  || Strategy.TIMEOUT;
+      this.interval = this.interval || Strategy.INTERVAL;
+
+      return strategy;
+    }
+    
+    else if (typeof config.strategy == 'object') {
+      return config.strategy;
+    }
+
+    else {
+      throw "Could not find strategy: " + config.strategy;
+    }
   }
 
   function log(type, msg) {
@@ -137,6 +143,30 @@ export class Action {
       this.meta.up = false;
       this.meta.riseCount = 0;
     } 
+  }
+
+  function benchmark(count, callback, meta) {
+    console.log('benchmark');
+    count = count || 1; 
+
+    if (! meta) {
+      meta = { 
+        count: 0,
+        strategy: this.getStrategy(this.config)
+      };
+    } 
+    
+    else if (meta.count >= count) {
+      callback();
+      return;
+    }
+
+    var $this = this;
+
+    meta.strategy.check(#{ 
+      meta.count += 1;
+      $this.benchmark(count, callback, meta); 
+    });
   }
 
   function run() {

@@ -10,6 +10,10 @@ export class Service {
     }
   }
 
+  function getAction(idx) {
+    return this.actions[idx];
+  }
+
   function start() {
     foreach (var action in this.actions) {
       action.run();
