@@ -1,0 +1,10 @@
+services:
+  requests:
+    interval: 1000
+    actions:
+      - name: google 
+        strategy: http
+        url: http://www.google.com 
+      - name: msn 
+        strategy: http
+        url: http://www.msn.com 

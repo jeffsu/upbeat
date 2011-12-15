@@ -5,6 +5,7 @@ export class Service {
   function initialize(name, actions) {
     this.name    = name;
     this.actions = [];
+
     foreach (var action in actions) {
       this.actions.push(new Action(action, this));
     }

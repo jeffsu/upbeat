@@ -25,7 +25,16 @@ export class Server {
   function handleServiceConfig(name, config) {
     var services = [];
 
-    if (config.actions && config.hosts) {
+    if (config.actions) {
+      for (var k in config) {
+        if (k == 'hosts' || k == 'actions') continue;
+        foreach (var action in config.actions) {
+          if (!(k in action)) action[k] = config[k];
+        }
+      }
+    }
+
+    if (config.hosts) {
       foreach (var host in config.hosts) {
         var actions = [];
         foreach (var a in config.actions) {
@@ -47,6 +56,11 @@ export class Server {
         var service = new Service(newName, actions);
         this.addService(newName, service);
       }
+    }
+
+    else if (config.actions) {
+      var service = new Service(name, config.actions);
+      this.addService(name, service);
     }
 
     else {
