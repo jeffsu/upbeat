@@ -4,7 +4,7 @@ var NodeOAuth = require('./node-oauth/oauth').OAuth;
 export class OAuth extends Http {
   function initialize(config) {
     this.$super(config);
-    this.securer = new NodeOAuth(null, null, config.oauth.key, config.oauth.secret, '1.0', null, 'HMAC-SHA1');
+    this.securer = new NodeOAuth(null, null, config.key, config.secret, '1.0', null, 'HMAC-SHA1');
   }
 
   function check(callback) {

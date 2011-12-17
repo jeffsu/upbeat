@@ -236,6 +236,24 @@ Example:
           port: 6537
           strategy: redis
 
+**oauth**
+
+Upbeat supports basic OAuth get requests. Fields:
+
+  * url
+  * key: oauth key
+  * secret: oauth secret
+
+Example:
+
+    services:
+      oauth:
+        - strategy: oauth
+          url: http://api.v3.factual.com/t/places
+          key: "My Key"
+          secret: "My Secret"
+            
+
 Custom Strategies
 -----------------
 
