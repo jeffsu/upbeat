@@ -1,4 +1,4 @@
-var http     = require('http');
+var http = require('http');
 
 export class Action {
   private {
@@ -8,7 +8,8 @@ export class Action {
       process: './process',
       mysql:   './mysql',
       tcp:     './tcp',
-      upbeat:  './upbeat'
+      upbeat:  './upbeat',
+      oauth:   './oauth'
     };
 
     var N_HOSTORICAL_TICKS = 100;

@@ -44,19 +44,23 @@ export class Http extends Base {
 
   function initialize(config) {
     this.interval = config.interval || 5000;
-    this.url      = config.url      || 'http://localhost:3000/';
     this.timeout  = config.timeout  || 1000;
     this.method   = 'get';
 
     this.options = KLASS.getRequestOptions(config);
+    this.url = "http://" + this.options.host + ':' + this.options.port + this.options.path;
 
     this.id = this.url;
   }
 
+  function getRequest(callback) {
+    return http.request(this.options, callback);
+  }
+
   function check(callback) {
     var $this = this;
-
-    this.req = http.request(this.options, #(resp) { 
+    
+    this.req = this.getRequest(#(resp) { 
       $this.calculatePass(resp, #(passed) {
         callback(passed);
         if (!passed) console.log("Failed to get 200 from: " + $this.url + " --- " + resp.statusCode);

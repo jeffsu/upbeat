@@ -1,6 +1,7 @@
 ** 0.1.14 **
  
   * adding service level config for all actions
+  * adding oauth strategy
 
 ** 0.1.13 **
  
