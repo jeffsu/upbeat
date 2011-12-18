@@ -15,8 +15,10 @@ export class Server {
     this.services = {};
     this.servicesArray = [];
 
-    for (var name in config.services) {
-      this.handleServiceConfig(name, config.services[name]); 
+    if (config.services) {
+      for (var name in config.services) {
+        this.handleServiceConfig(name, config.services[name]); 
+      }
     }
 
     this._status = new Status();
@@ -136,7 +138,10 @@ export class Server {
         return;
       }
 
-      $this.benchmark(params.service, params.actionIdx, count, clients, req, #{
+
+      var action = $this.getAction(params.service, params.actionIdx);
+
+      $this.benchmark(action, count, clients, req, #{
         if (params.format == 'json') {
           res.writeHead(200, {"Content-type": "application/json"});
           res.end(JSON.stringify($1));
@@ -168,10 +173,12 @@ export class Server {
     app.listen(this.port);
     this.app = app;
   }
+  
+  function getAction(service, actionIdx) {
+    return this.services[service].actions[actionIdx];
+  }
 
-  function benchmark(service, actionIdx, requests, clients, req, callback) {
-    var action = this.services[service].actions[parseInt(actionIdx)];
-
+  function benchmark(action, requests, clients, req, callback) {
     var meta = {
       count: 0,
       totalTime: 0,
