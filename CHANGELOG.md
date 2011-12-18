@@ -2,6 +2,7 @@
  
   * adding service level config for all actions
   * adding oauth strategy
+  * changing tempo syntax
 
 ** 0.1.13 **
  
