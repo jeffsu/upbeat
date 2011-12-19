@@ -26,8 +26,13 @@ var file = argv.pop();
 var counts   = argv.shift().split('x');
 var clients  = parseInt(counts[0]);
 var requests = parseInt(counts[1]);
+var config   = null;
 
-if (! file.match(/^\//)) file = process.cwd() + '/' + file;
+if (file.match(/^\{/)) {
+  config = JSON.parse(file);
+} else if (! file.match(/^\//)) {
+  file = process.cwd() + '/' + file;
+}
 
 var Runner = function () { };
 Runner.prototype = new EventEmitter;
@@ -46,7 +51,7 @@ if (argv.length == 2) {
 
 else if (argv.length == 0) {
   var server = new upbeat.Server({});
-  var config = require(file)[0];
+  config     = config || require(file)[0];
   var action = new Action(config, { "name": "tempo" });
 
   server.benchmark(action, requests, clients, runner, function (meta) {
@@ -55,9 +60,5 @@ else if (argv.length == 0) {
     process.exit(0);
   });
 }
-
-
-
-
 
 process.on('SIGINT', function () { runner.emit('end'); });
