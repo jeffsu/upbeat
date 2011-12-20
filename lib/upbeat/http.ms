@@ -46,6 +46,16 @@ export class Http extends Base {
     this.interval = config.interval || 5000;
     this.timeout  = config.timeout  || 1000;
     this.method   = 'get';
+    this.matches  = config.matches ? new RegExp(config.matches) : null;
+    
+    if (config.test) {
+      try {
+        eval('this.test = ' + config.test);
+      } catch (e) {
+        console.log("Error in test: " + config.test);
+        console.log(e.stack);
+      }
+    }
 
     this.options = KLASS.getRequestOptions(config);
     this.url = "http://" + this.options.host + ':' + this.options.port + this.options.path;
@@ -61,10 +71,14 @@ export class Http extends Base {
     var $this = this;
     
     this.req = this.getRequest(#(resp) { 
-      $this.calculatePass(resp, #(passed) {
-        callback(passed);
-        if (!passed) console.log("Failed to get 200 from: " + $this.url + " --- " + resp.statusCode);
-      });
+      var data = [];
+      resp.on('data', #{ data.push($1) });
+      resp.on('end',  #{
+        $this.calculatePass(resp, data.join(''), #(passed) {
+          callback(passed);
+          if (!passed) console.log("Failed to get 200 from: " + $this.url + " --- " + resp.statusCode);
+        });
+      }); 
     });
 
     if (this.data) this.req.write(this.data + "\n");
@@ -73,8 +87,12 @@ export class Http extends Base {
     this.req.end();
   }
 
-  function calculatePass(resp, callback) {
-    return callback(resp.statusCode == '200');
+  function calculatePass(resp, data, callback) {
+    var matches = this.matches ? this.matches.test(data) : true;
+    var test    = this.test ? this.test(data) : true;
+    var stat    = resp.statusCode == '200';
+
+    return callback(matches && test && stat);
   }
 
   function clear() {

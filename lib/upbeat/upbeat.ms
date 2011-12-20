@@ -16,18 +16,13 @@ export class Upbeat extends Http {
     this.id = "http://" + this.options.host + ':' + this.options.port + this.options.path;
   }
 
-  function calculatePass(resp, callback) {
-    var data = [];
-    resp.on('data', #{ data.push($1); });
-
-    resp.on('end', #{
-      var services = JSON.parse(data.join(""));
-      foreach (var s in services) {
-        foreach (var a in s.actions) {
-          if (! a.up) return callback(false);
-        }
+  function calculatePass(resp, data, callback) {
+    var services = JSON.parse(data);
+    foreach (var s in services) {
+      foreach (var a in s.actions) {
+        if (! a.up) return callback(false);
       }
-      return callback(true);
-    });
+    }
+    return callback(true);
   }
 }

@@ -147,6 +147,8 @@ The http strategy will send a request to the server. Fields:
   * get: hash of key/value parise to use as the query string
   * timeout: defaults to 10000
   * interval: defaults to 10000
+  * matches: regular expression to test against the returned http payload
+  * test: a function that should return a boolean (if its matches is not enough)
 
 Example:
 
@@ -154,6 +156,8 @@ Example:
       http-actions:
         - url: http://www.google.com
           strategy: http
+          matches: html
+          test: "function (data) { return data.match(/html/); }"
 
         - name: test-google
           url: http://www.google.com

@@ -4,6 +4,7 @@
   * adding oauth strategy
   * changing tempo syntax
   * adding json to tempo
+  * adding matches and test to http
 
 ** 0.1.13 **
  
