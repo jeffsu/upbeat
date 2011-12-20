@@ -148,7 +148,7 @@ The http strategy will send a request to the server. Fields:
   * timeout: defaults to 10000
   * interval: defaults to 10000
   * matches: regular expression to test against the returned http payload
-  * test: a function that should return a boolean (if its matches is not enough)
+  * lambda: a function that should return a boolean (if its matches is not enough)
 
 Example:
 
@@ -157,7 +157,7 @@ Example:
         - url: http://www.google.com
           strategy: http
           matches: html
-          test: "function (data) { return data.match(/html/); }"
+          lambda: "function (data) { return data.match(/html/); }"
 
         - name: test-google
           url: http://www.google.com

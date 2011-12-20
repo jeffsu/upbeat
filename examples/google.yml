@@ -2,6 +2,6 @@ services:
   google:
     - strategy: http
       url: http://www.google.com
-      test: "function (data) { return data.match(/html/) }"
+      lambda: "function (data) { return data.match(/html/) }"
       matches: html
       interval: 1000

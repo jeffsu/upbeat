@@ -48,11 +48,11 @@ export class Http extends Base {
     this.method   = 'get';
     this.matches  = config.matches ? new RegExp(config.matches) : null;
     
-    if (config.test) {
+    if (config.lambda) {
       try {
-        eval('this.test = ' + config.test);
+        eval('this.lambda = ' + config.lambda);
       } catch (e) {
-        console.log("Error in test: " + config.test);
+        console.log("Error in test: " + config.lambda);
         console.log(e.stack);
       }
     }
@@ -89,7 +89,7 @@ export class Http extends Base {
 
   function calculatePass(resp, data, callback) {
     var matches = this.matches ? this.matches.test(data) : true;
-    var test    = this.test ? this.test(data) : true;
+    var test    = this.lambda ? this.lambda(data) : true;
     var stat    = resp.statusCode == '200';
 
     return callback(matches && test && stat);
