@@ -21,6 +21,13 @@ export class Service {
     }
   }
 
+  function stop() {
+    console.log('hey');
+    foreach (var action in this.actions) {
+      action.clear();
+    }
+  }
+
   function respond(res) {
     var passed = true;
     foreach (var action in this.actions) {

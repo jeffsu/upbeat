@@ -89,6 +89,14 @@ export class Server {
     return ret;
   }
 
+  function stop() {
+    if (this.app) this.app.close();
+
+    for (var name in this.services) {
+      this.services[name].stop();
+    }
+  }
+
   function start() {
     if (this.app) this.app.close();
 
@@ -207,9 +215,5 @@ export class Server {
   function mergeBenchmark(meta, clientMeta) {
     meta.count  += clientMeta.count;
     meta.errors += clientMeta.errors;
-  }
-
-  function stop() {
-    if (this.app) this.app.close();
   }
 }

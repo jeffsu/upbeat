@@ -130,6 +130,10 @@ export class Action {
     }
   }
 
+  function clear() {
+    if (this.timeoutId) clearTimeout(this.timeoutId);
+  }
+
   function updateStatus(passed) {
     if (passed) {
       this.meta.riseCount += 1;
