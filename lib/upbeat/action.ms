@@ -186,16 +186,20 @@ export class Action {
   }
 
   function run() {
-    var $this = this;
-    if (! $this.alive) return;
+    if (! this.alive) return;
 
     // first time run immediately
-    var callback = setTimeout(#{ $this.run() }, this.interval);
-    $this.timeoutId = this.check(#{ callback });
+    if (this.firstTime) {
+      this.firstTime = false;
+      this.check(#{ $this.run() });
+    } else {
+      var $this = this;
+      this.timeoutId = setTimeout(#{ $this.check(#{ $this.run() }) }, this.interval);
+    }
   }
 
   function stop() {
-    clearTimeout($this.timeoutId);
+    if (this.timeoutId) clearTimeout(this.timeoutId);
     this.alive = false;
   }
 
