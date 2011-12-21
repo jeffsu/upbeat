@@ -33,9 +33,11 @@ export class Http extends Base {
     } 
 
     var parsedUrl = URL.parse(url, false);
+    var host = config.host || parsedUrl.host || '127.0.0.1';
+    host = host.replace(/\:\d+$/, '');
 
     return {
-      host: config.host || parsedUrl.host || '127.0.0.1',
+      host: host,
       port: config.port || parsedUrl.port || 80,
       path: parsedUrl.pathname + (parsedUrl.query ? '?' + parsedUrl.query: ''),
       method: method.toUpperCase()

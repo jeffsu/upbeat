@@ -5,6 +5,7 @@
   * changing tempo syntax
   * adding json to tempo
   * adding matches and lambda to http
+  * fixed host parsing bug
 
 ** 0.1.13 **
  
