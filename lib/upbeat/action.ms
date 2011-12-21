@@ -189,8 +189,9 @@ export class Action {
     var $this = this;
     if (! $this.alive) return;
 
-    // first time so just run it
-    $this.timeoutId = setTimeout(#{ $this.check(#{ $this.run() }) }, $this.interval);
+    // first time run immediately
+    var callback = setTimeout(#{ $this.run() }, this.interval);
+    $this.timeoutId = this.check(#{ callback });
   }
 
   function stop() {
