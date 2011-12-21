@@ -101,5 +101,3 @@ export class Http extends Base {
     if (this.req) this.req.end();
   }
 }
-
-
