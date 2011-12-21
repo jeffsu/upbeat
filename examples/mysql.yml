@@ -5,3 +5,6 @@ services:
       socket: /tmp/mysql.sock
     - strategy: mysql # default
       socket: /tmp/mysql.sock
+      #user: root
+      #password: root
+      #database: mysql
