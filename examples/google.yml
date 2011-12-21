@@ -4,4 +4,4 @@ services:
       url: http://www.google.com
       lambda: "function (data) { return data.match(/html/) }"
       matches: html
-      interval: 1000
+      interval: 5000

@@ -6,6 +6,7 @@
   * adding json to tempo
   * adding matches and lambda to http
   * fixed host parsing bug
+  * making first check happen immediately followed by proper interval
 
 ** 0.1.13 **
  

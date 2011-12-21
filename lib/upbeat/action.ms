@@ -21,8 +21,10 @@ export class Action {
 
   function initialize(config, service) {
     this.service = service;
-    this.alive = true;
-    this.config = config;
+    this.config  = config;
+
+    this.alive     = true;
+    this.firstTime = true;
 
     this.meta = {
       count        : 0,
@@ -188,12 +190,13 @@ export class Action {
   function run() {
     if (! this.alive) return;
 
+    var $this = this;
+
     // first time run immediately
     if (this.firstTime) {
       this.firstTime = false;
       this.check(#{ $this.run() });
     } else {
-      var $this = this;
       this.timeoutId = setTimeout(#{ $this.check(#{ $this.run() }) }, this.interval);
     }
   }
