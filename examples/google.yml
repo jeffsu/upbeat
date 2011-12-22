@@ -4,4 +4,5 @@ services:
       url: http://www.google.com
       lambda: "function (data) { return data.match(/html/) }"
       matches: html
+      status: 302
       interval: 5000
