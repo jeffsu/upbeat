@@ -44,21 +44,32 @@ export class Http extends Base {
     };
   }
 
+  function execute(values, data, fn) {
+    if (values == null) {
+      return true;
+    }
+
+    else if (typeof values == "string") {
+      return fn(values, data);
+    }
+
+    else {
+      var ret = true;
+      for (var i in values) {
+        ret = ret && fn(values[i], data);
+      }
+      return ret;
+    }
+  }
+
   function initialize(config) {
     this.interval = config.interval || 5000;
     this.timeout  = config.timeout  || 1000;
     this.method   = 'get';
-    this.matches  = config.matches ? new RegExp(config.matches) : null;
+    this.matches  = config.matches;
+    this.lambda   = config.lambda;
     this.status   = config.status || '200';
     
-    if (config.lambda) {
-      try {
-        eval('this.lambda = ' + config.lambda);
-      } catch (e) {
-        console.log("Error in test: " + config.lambda);
-        console.log(e.stack);
-      }
-    }
 
     this.options = KLASS.getRequestOptions(config);
     this.url = "http://" + this.options.host + ':' + this.options.port + this.options.path;
@@ -90,10 +101,23 @@ export class Http extends Base {
   }
 
   function calculatePass(resp, data, callback) {
-    var matches = this.matches ? this.matches.test(data) : true;
-    var test    = this.lambda ? this.lambda(data) : true;
-    var stat    = resp.statusCode == this.status;
+    var matches = this.execute(this.matches, data, #(regex, data) {
+      var match = new RegExp(regex);
+      return match.test(data);
+    });
 
+    var test = this.execute(this.lambda, data, #(fn, data) {
+      try {
+        eval('var lambda = ' + fn);
+        var ret = lambda(data);
+        return ret;
+      } catch (e) {
+        console.log("Error in test: " + config.lambda);
+        console.log(e.stack);
+      }
+    });
+
+    var stat    = resp.statusCode == this.status;
 
     if (!matches) console.log("Failed to match regex " + this.matches.toString());
     if (!test) console.log("Failed to pass the given lambda!");
