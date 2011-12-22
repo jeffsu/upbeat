@@ -147,8 +147,8 @@ The http strategy will send a request to the server. Fields:
   * get: hash of key/value parise to use as the query string
   * timeout: defaults to 10000
   * interval: defaults to 10000
-  * matches: regular expression to test against the returned http payload
-  * lambda: a function that should return a boolean (if its matches is not enough)
+  * matches: (array or string) regular expression to test against the returned http payload. 
+  * lambda: (array or string) a function that should return a boolean (if its matches is not enough)
 
 Example:
 

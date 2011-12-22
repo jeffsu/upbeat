@@ -44,37 +44,50 @@ export class Http extends Base {
     };
   }
 
-  function execute(values, data, fn) {
-    if (values == null) {
-      return true;
-    }
-
-    else if (typeof values == "string") {
-      return fn(values, data);
-    }
-
-    else {
-      var ret = true;
-      for (var i in values) {
-        ret = ret && fn(values[i], data);
-      }
-      return ret;
-    }
-  }
-
   function initialize(config) {
     this.interval = config.interval || 5000;
     this.timeout  = config.timeout  || 1000;
     this.method   = 'get';
-    this.matches  = config.matches;
-    this.lambda   = config.lambda;
     this.status   = config.status || '200';
     
+    this.matches  = this.getRegexes(config.matches);
+    this.lambdas  = this.getLambdas(config.lambda);
 
     this.options = KLASS.getRequestOptions(config);
     this.url = "http://" + this.options.host + ':' + this.options.port + this.options.path;
 
     this.id = this.url;
+  }
+
+  function getRegexes(regexStrings) {
+    if (regexStrings === null) return [];
+    if (typeof regexStrings == 'string') regexStrings = [ regexStrings ];
+
+    var ret = [];
+    foreach (var rs in regexStrings) {
+      try {
+        ret.push(new RegExp(rs));
+      } catch(e) {
+        throw "Failed to compile regex: \n" + rs;
+      }
+    }
+
+    return ret;
+  }
+
+  function getLambdas(lambdaStrings) {
+    if (lambdaStrings === null) return [];
+    if (typeof lambdaStrings == 'string') lambdaStrings = [ lambdaStrings ];
+
+    var ret = [];
+    foreach (var s in lambdaStrings) {
+      try {
+        eval("var l = " + s + "; ret.push(l)");
+      } catch(e) {
+        throw "Error evaluating lambda: \n" + s;
+      }
+    }
+    return ret;
   }
 
   function getRequest(callback) {
@@ -101,29 +114,32 @@ export class Http extends Base {
   }
 
   function calculatePass(resp, data, callback) {
-    var matches = this.execute(this.matches, data, #(regex, data) {
-      var match = new RegExp(regex);
-      return match.test(data);
-    });
+    var passedMatch  = true;
+    var passedLambda = true;
 
-    var test = this.execute(this.lambda, data, #(fn, data) {
-      try {
-        eval('var lambda = ' + fn);
-        var ret = lambda(data);
-        return ret;
-      } catch (e) {
-        console.log("Error in test: " + config.lambda);
-        console.log(e.stack);
+    foreach (var m in this.matches) {
+      if (! m.test(data)) {
+         passedMatch = false;
+         break;
       }
-    });
+    }
 
-    var stat    = resp.statusCode == this.status;
+    if (passedMatch) {
+      foreach (var l in this.lambdas) {
+        if (! l(data, resp)) {
+           passedLambda = false;
+           break;
+        }
+      }
+    }
 
-    if (!matches) console.log("Failed to match regex " + this.matches.toString());
-    if (!test) console.log("Failed to pass the given lambda!");
+    var stat = resp.statusCode == this.status;
+
+    if (!passedMatch) console.log("Failed to match regex.");
+    if (!passedLambda) console.log("Failed to pass the given lambda.");
     if (!stat) console.log("Failed to get " + this.status + " from: " + this.url + " --- " + resp.statusCode);
 
-    return callback(matches && test && stat);
+    return callback(passedMatch && passedLambda && stat);
   }
 
   function clear() {
