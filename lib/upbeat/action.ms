@@ -3,13 +3,13 @@ var http = require('http');
 export class Action {
   private {
     var Strategies = {
-      http:    './http',
-      redis:   './redis',
-      process: './process',
-      mysql:   './mysql',
-      tcp:     './tcp',
-      upbeat:  './upbeat',
-      oauth:   './oauth'
+      http:    './strategies/http',
+      redis:   './strategies/redis',
+      process: './strategies/process',
+      mysql:   './strategies/mysql',
+      tcp:     './strategies/tcp',
+      upbeat:  './strategies/upbeat',
+      oauth:   './strategies/oauth'
     };
 
     var N_HOSTORICAL_TICKS = 100;

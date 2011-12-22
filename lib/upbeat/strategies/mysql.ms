@@ -6,9 +6,9 @@ export class Mysql extends Base {
   static var INTERVAL = 10000;
 
   function initialize(config) {
-    this.sql = config.sql || "SHOW DATABASES LIMIT 1";
+    this.sql    = config.sql || "SHOW DATABASES LIMIT 1";
     this.config = config;
-    this.id = this.sql;
+    this.id     = this.sql;
     this.connect();
   }
 
@@ -21,7 +21,9 @@ export class Mysql extends Base {
 
     if (this.config.socket) {
       this.client = mysql.createClient({
-        socket: this.config.socket
+        socket:   this.config.socket,
+        user:     this.config.user,
+        password: this.config.password
       });
     } else {
       this.client = mysql.createClient({

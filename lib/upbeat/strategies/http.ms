@@ -49,6 +49,7 @@ export class Http extends Base {
     this.timeout  = config.timeout  || 1000;
     this.method   = 'get';
     this.matches  = config.matches ? new RegExp(config.matches) : null;
+    this.code     = config.code || '200';
     
     if (config.lambda) {
       try {
@@ -78,7 +79,6 @@ export class Http extends Base {
       resp.on('end',  #{
         $this.calculatePass(resp, data.join(''), #(passed) {
           callback(passed);
-          if (!passed) console.log("Failed to get 200 from: " + $this.url + " --- " + resp.statusCode);
         });
       }); 
     });
@@ -92,7 +92,12 @@ export class Http extends Base {
   function calculatePass(resp, data, callback) {
     var matches = this.matches ? this.matches.test(data) : true;
     var test    = this.lambda ? this.lambda(data) : true;
-    var stat    = resp.statusCode == '200';
+    var stat    = resp.statusCode == this.code;
+
+
+    if (!matches) console.log("Failed to match regex " + this.matches.toString());
+    if (!test) console.log("Failed to pass the given lambda!");
+    if (!stat) console.log("Failed to get " + this.code + " from: " + this.url + " --- " + resp.statusCode);
 
     return callback(matches && test && stat);
   }
@@ -101,5 +106,3 @@ export class Http extends Base {
     if (this.req) this.req.end();
   }
 }
-
-
