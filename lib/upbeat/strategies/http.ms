@@ -60,7 +60,7 @@ export class Http extends Base {
   }
 
   function getRegexes(regexStrings) {
-    if (regexStrings === null) return [];
+    if (regexStrings == null) return [];
     if (typeof regexStrings == 'string') regexStrings = [ regexStrings ];
 
     var ret = [];
@@ -76,7 +76,7 @@ export class Http extends Base {
   }
 
   function getLambdas(lambdaStrings) {
-    if (lambdaStrings === null) return [];
+    if (lambdaStrings == null) return [];
     if (typeof lambdaStrings == 'string') lambdaStrings = [ lambdaStrings ];
 
     var ret = [];
