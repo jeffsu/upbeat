@@ -1,5 +1,5 @@
 var Http  = require('./http');
-var NodeOAuth = require('./node-oauth/oauth').OAuth;
+var NodeOAuth = require('../node-oauth/oauth').OAuth;
 
 export class OAuth extends Http {
   function initialize(config) {
