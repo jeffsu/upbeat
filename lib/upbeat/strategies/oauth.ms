@@ -8,6 +8,8 @@ export class OAuth extends Http {
   }
 
   function check(callback) {
+    var $this = this;
+
     this.req = this.securer.get(this.url, null, null, #(err, data, resp) {
       $this.calculatePass(resp, JSON.stringify(data), #(passed){ callback(passed) });
     });
