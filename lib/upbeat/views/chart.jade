@@ -1,0 +1,5 @@
+h1 Chart
+
+div#chart
+
+script!= "$(function () { $.jqplot('chart', [" + JSON.stringify(action.meta.responseTimes) + " ]) });"

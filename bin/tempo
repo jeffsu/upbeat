@@ -3,7 +3,7 @@ var upbeat       = require('../lib/index');
 var EventEmitter = require('events').EventEmitter;
 
 if (process.argv.length != 6 && process.argv.length != 4) {
-  console.log("Tempo: 0.1.15");
+  console.log("Tempo: 0.1.16");
   console.log("USAGE: tempo <clients>x<requests> <service> <actionIdx> <config file>");
   console.log("   OR: tempo <clients>x<requests> <action config file>");
   console.log("EXAMPLE: tempo 3x5 google 0 ./examples/google.yml");

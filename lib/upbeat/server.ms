@@ -117,6 +117,11 @@ export class Server {
     });
 
 
+    app.get("/services/:service/:action/chart", #(req, res) {
+      var params = { action: $this.services[req.params.service].getAction(parseInt(req.params.action)) }; 
+      res.render('chart.jade', params); 
+    });
+
     app.get("/health", #(req, res) {
       res.writeHead(200, {"Content-type": "text/plain"});
       res.end("OK");
