@@ -1,3 +1,7 @@
+** 0.1.16 **
+
+  * charting added
+
 ** 0.1.14 **
  
   * adding service level config for all actions
