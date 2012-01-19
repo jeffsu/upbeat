@@ -117,9 +117,17 @@ export class Server {
     });
 
 
-    app.get("/services/:service/:action/chart", #(req, res) {
-      var params = { action: $this.services[req.params.service].getAction(parseInt(req.params.action)) }; 
-      res.render('chart.jade', params); 
+    app.get("/services/:service/response-times", #(req, res) {
+      var actions = $this.services[req.params.service].actions;
+
+      var charts = [];
+      foreach (var action in actions) {
+        var chart = { name: action.meta.id };
+        chart.params = JSON.stringify([ action.meta.responseTimes ]);
+        charts.push(chart);
+      }
+
+      res.render('chart.jade', { charts: charts }); 
     });
 
     app.get("/health", #(req, res) {
