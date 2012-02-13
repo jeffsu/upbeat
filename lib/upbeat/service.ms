@@ -30,6 +30,7 @@ export class Service {
 
   function respond(res) {
     var passed = true;
+
     foreach (var action in this.actions) {
       if (! action.meta.up) {
         passed = false;
@@ -38,13 +39,14 @@ export class Service {
     }
 
     var code = passed ? 200 : 400;
-    res.writeHead(code, {'Content-Type':'text/plain'});
-    var out = [];
+    res.writeHead(code, {'Content-Type':'application/json'});
+    res.write('[');
 
-    foreach (var action in this.actions) {
-      out.push(action.toString()); 
+    foreach (var action:i in this.actions) {
+      if (i!=0) res.write(',');
+      res.write(action.toString()); 
     }
 
-    res.end(out.join("\n"));
+    res.end(']');
   }
 }

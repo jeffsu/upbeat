@@ -46,6 +46,7 @@ export class Action {
 
     this.timeout  = this.timeout  || 5000;
     this.interval = this.interval || 10000;
+
     this.maxResponse = config['max-response-time'] || this.timeout;
 
     this.meta.id = this.id = config.name || this.strategy.id;
@@ -80,50 +81,48 @@ export class Action {
     }
   }
 
+  function processCheck(startTime, error, cb) {
+    this.log("debug", error ? 'Failed' : 'Passed');
+    if (error) {
+      this.strategy.clear(); 
+      this.meta.lastErrorMsg = error;
+      this.meta.lastFailure  = startTime;
+      this.updateStatus(false);
+    } else {
+      var endTime = (new Date()).getTime();
+      var responseTime = this.updateResponse(startTime, endTime); 
+      if (this.maxResponse < responseTime) {
+         this.log('info', "Failed - Too Slow");
+         this.meta.lastErrorMsg = "Too slow";
+         this.meta.lastFailure  = startTime;
+         this.updateStatus(false);
+      } else {
+         this.updateStatus(true);
+      }
+    }
+    cb();
+  }
+
   function check(callback) {
     var start = (new Date()).getTime();
     var $this = this;
     this.meta.count++;
     
     var timeoutId = null;
+
     if (this.timeout) {
       timeoutId = setTimeout(#{ 
-        $this.log('info', "Failed - Timed Out");
-        $this.strategy.clear(); 
-        $this.updateStatus(false);
-        $this.meta.lastErrorMsg = "Timed Out";
-        $this.meta.lastFailure = start;
-        callback();
+        $this.processCheck(start, "Timed Out", callback);
+        timeoutId = null;
       }, this.timeout);
     }
 
     try { 
       this.strategy.check(#(passed) {
-        if (passed) {
-          $this.log('debug', "Passed");
-        } else {
-          $this.log('info', "Failed");
-          $this.meta.lastErrorMsg = "Failed";
-          $this.meta.lastFailure = start;
-          $this.updateStatus(false);
-        }
-
-
-        if (timeoutId) clearTimeout(timeoutId);
-        if (passed) {
-          var endTime = (new Date()).getTime();
-          var responseTime = $this.updateResponse(start, endTime); 
-          if ($this.maxResponse < responseTime) {
-            $this.log('info', "Failed - Too Slow");
-            $this.meta.lastErrorMsg = "Too slow";
-            $this.meta.lastFailure = start;
-            $this.updateStatus(false);
-          } else {
-            $this.updateStatus(true);
-          }
-        }
-
-        callback();
+        if (timeoutId) {
+          clearTimeout(timeoutId);
+          $this.processCheck(start, passed ? false : 'Failed', callback);
+        } 
       });
     } catch(e) {
       $this.log('error', "Error: " + $this.strategy.id + "\n" + e.stack);
@@ -200,14 +199,17 @@ export class Action {
     if (this.firstTime) {
       this.firstTime = false;
       this.check(#{ $this.run() });
-    } else {
+    } 
+    
+    else {
       this.timeoutId = setTimeout(#{ $this.check(#{ $this.run() }) }, this.interval);
     }
   }
 
   function stop() {
     if (this.timeoutId) clearTimeout(this.timeoutId);
-    this.alive = false;
+    this.firstTime = true;
+    this.alive     = false;
   }
 
   function updateResponse(start, end) {
@@ -232,7 +234,7 @@ export class Action {
     this.meta.passedCount = count + 1;
 
     var times = this.meta.responseTimes;
-    while (times.length > N_HOSTORICAL_TICKS) times.shift();
+    while (times.length >= N_HOSTORICAL_TICKS) times.shift();
     times.push(time);
 
     return time;

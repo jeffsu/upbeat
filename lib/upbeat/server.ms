@@ -117,19 +117,6 @@ export class Server {
     });
 
 
-    app.get("/services/:service/response-times", #(req, res) {
-      var actions = $this.services[req.params.service].actions;
-
-      var charts = [];
-      foreach (var action in actions) {
-        var chart = { name: action.meta.id };
-        chart.params = JSON.stringify([ action.meta.responseTimes ]);
-        charts.push(chart);
-      }
-
-      res.render('chart.jade', { charts: charts }); 
-    });
-
     app.get("/health", #(req, res) {
       res.writeHead(200, {"Content-type": "text/plain"});
       res.end("OK");
@@ -148,7 +135,7 @@ export class Server {
       res.end($this._status.json($this.serviceArray));
     });
 
-    app.get("/benchmark/:service/:actionIdx.:format?", #(req, res) {
+    app.get("/services/:service/benchmarks/:actionIdx.:format?", #(req, res) {
       var params = req.params;
       var url = require('url').parse(req.url, true);
       var count   = parseInt(url.query.count || 0);
@@ -172,6 +159,29 @@ export class Server {
       });
     });
 
+    app.get("/services/:service/health", #(req, res) {
+      var service = $this.services[req.params.service];
+
+      if (! service) {
+        res.send(404);
+      } else {
+        service.respond(res);
+      }
+    });
+
+    app.get("/services/:service", #(req, res) {
+      var actions = $this.services[req.params.service].actions;
+
+      var charts = [];
+      foreach (var action in actions) {
+        var chart = { name: action.meta.id };
+        chart.params = JSON.stringify([ action.meta.responseTimes ]);
+        charts.push(chart);
+      }
+
+      res.render('chart.jade', { charts: charts }); 
+    });
+
     app.get("/status.:format?", #(req, res) {
       if (req.params.format == 'json') {
         res.end($this._status.json($this.services));
@@ -180,15 +190,7 @@ export class Server {
       }
     });
 
-    app.get("/:service", #(req, res) {
-      var service = $this.services[req.params.service];
-      if (! service) {
-        res.send(404);
-      } else {
-        service.respond(res);
-      }
-    });
-    
+   
     console.log('Starting upbeat app: http://' + this.host + ':' + this.port);
 
     app.listen(this.port);

@@ -99,6 +99,7 @@ export class Http extends Base {
     
     this.req = this.getRequest(#(resp) { 
       var data = [];
+      $this.resp = resp;
       resp.on('data', #{ data.push($1) });
       resp.on('end',  #{
         $this.calculatePass(resp, data.join(''), #(passed) {
@@ -143,6 +144,7 @@ export class Http extends Base {
   }
 
   function clear() {
-    if (this.req) this.req.end();
+    if (this.resp) this.resp.close();
+    if (this.req) this.req.abort();
   }
 }
