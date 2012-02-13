@@ -82,9 +82,12 @@ Status Pages:
   * http://localhost:2468/health.strict - returns 400 if any action is down
   * http://localhost:2468/status - status page
   * http://localhost:2468/status.json - status in json format
-  * http://localhost:2468/factual-api
-  * http://localhost:2468/google.com
-  * http://localhost:2468/redis
+  * http://localhost:2468/services/factual-api
+  * http://localhost:2468/services/factual-api/health
+  * http://localhost:2468/services/google.com
+  * http://localhost:2468/services/google.com/health
+  * http://localhost:2468/services/redis
+  * http://localhost:2468/services/redis/health
 
 Configuration:
 --------------

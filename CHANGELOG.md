@@ -1,5 +1,7 @@
 ** 0.1.16 **
 
+  * refactored routes
+  * fixed recursive timeout bug
   * charting added
 
 ** 0.1.14 **
