@@ -1,0 +1,19 @@
+!!!
+html
+  head
+    title Upbeat
+
+    script(src='/javascripts/jquery.js')
+    script(src='/javascripts/sparkline.js')
+    script(src='/highcharts/js/highcharts.js')
+
+    link(rel='stylesheet', href='/stylesheets/bootstrap/bootstrap.css')
+
+  body( style="padding-top: 60px" )
+    .navbar.navbar-fixed-top
+      .navbar-inner
+        .container
+          a.brand( href="#" ) Dashboard
+          .nav-collapse
+            ul.nav
+    .container!= body

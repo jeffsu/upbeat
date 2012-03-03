@@ -1,0 +1,10 @@
+services:
+  simple:
+    - strategy: http
+      url: http://localhost:1337
+      status: 200
+      interval: 3000
+    - strategy: http
+      url: http://localhost:1337/hello
+      status: 200
+      interval: 3000

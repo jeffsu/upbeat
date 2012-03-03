@@ -240,8 +240,25 @@ export class Action {
     return time;
   }
 
-  function toString() {
+  function averageTime() {
+    return this.meta.avgResponse || null;
+  }
+
+  function times(n) {
+    var times = this.meta.responseTimes || [];
+    if (n) {
+      return times.slice(times.length-n); 
+    } else {
+      return times;
+    }
+  }
+
+  function toJSON() {
     return JSON.stringify(this.meta);
+  }
+
+  function isUp() {
+    return this.meta.up;
   }
 
   function flush() {

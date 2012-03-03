@@ -1,0 +1,57 @@
+
+h3: a(href="/services/#{service.name}")= service.name
+h2= action.id
+
+h3 Attributes
+table.table.table-condensed.table-bordered.table-striped
+  thead
+    tr
+      th Attribute
+      th Value
+  each value, key in action
+    - if (typeof value == 'string' || typeof value == 'number')
+      tr
+        td= key
+        td= value
+
+  each value, key in action.meta
+    - if (typeof value == 'string' || typeof value == 'number')
+      tr
+        td= key
+        td= value
+
+h3 Performance
+#container(style="width:100%;height:500px")
+
+script
+  $(function () { getData(); });
+
+  function getData() {
+    setInterval(function () { $.get(location.href + '.json', buildChart) }, 2000);
+  }
+
+  var chart = null;
+  function buildChart(meta) {
+    if (chart) {
+      chart.series[0].setData(meta.responseTimes, true);
+      return;
+    }
+
+    var data = meta.responseTimes;
+    chart = new Highcharts.Chart({
+      chart: { 
+        renderTo: 'container',
+        type: 'line'
+      }, 
+
+      xAxis: { title: { text: 'Last N Requests' } },
+      yAxis: { title: { text: 'Time in Milliseconds' } },
+
+      title: { text: '' },
+      plotOptions: {
+        pointInterval: 2000
+      },
+
+      series: [ { name: 'action', data: data } ]
+    });
+  }

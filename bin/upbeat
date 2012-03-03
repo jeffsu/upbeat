@@ -1,5 +1,6 @@
 #!/usr/bin/env node
-var upbeat  = require('../lib/index');
+require('js-yaml');
+var upbeat  = require('../lib/upbeat');
 
 if (process.argv.length <= 2) {
   console.log("Upbeat 0.1.16");
@@ -10,5 +11,5 @@ if (process.argv.length <= 2) {
 var file = process.argv[process.argv.length-1];
 if (! file.match(/^\//)) file = process.cwd() + '/' + file;
 
-var server = new upbeat.Server(file);
+var server = new upbeat.Server(require(file)[0]);
 server.start();

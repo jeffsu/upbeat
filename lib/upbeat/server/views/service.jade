@@ -1,0 +1,58 @@
+h1= service.name
+
+table.table
+  thead
+    tr
+      th id
+      th Avg Resp
+      th Status
+  each action, i in service.actions
+    tr
+      td: a(href="/services/#{service.name}/actions/#{i}")= action.id
+      td= action.averageTime() + 'ms'
+      td
+        = action.isUp() ? 'Up' : 'Down'
+        span(id="action#{i}", name=action.id)
+
+#chart
+
+script
+  var chart = null;
+
+  $(function () { 
+    buildChart();
+    setInterval(getData, 2000);
+  });
+
+  function getData() {
+    $.get(location.href + '/actions.json', function (data) { 
+      for (var i=0; i<data.length; i++) {
+        $('#action' + i).sparkline(data[i]);
+        var points = data[i];
+        var line = chart.series[i];
+        line.setData(points, false);
+      }
+      chart.redraw();
+    });
+  }
+
+  function buildChart() {
+    var count = #{service.actions.length};
+    var series = [];
+    for (var i=0; i<count; i++) {
+      series.push({ name: $('#action' + i).attr('name'), data: [] });
+    }
+
+    chart = new Highcharts.Chart({
+      chart: { 
+        renderTo: 'chart',
+        type: 'line' 
+      }, 
+
+      plotOptions: {
+        pointInterval: 2000
+      },
+
+      series: series
+    });
+  }

@@ -1,0 +1,18 @@
+- if (processes.length)
+  h1 Forever
+  table.table
+
+- if (hasService)
+  h1 Services
+  table.table
+    thead
+      tr
+        td Service
+        td Actions
+    each service, name in services
+      tr
+        td: a(href="/services/#{name}")= name
+        td
+          each action, i in service.actions
+            a(href="/services/#{name}/actions/#{i}")= action.id
+            br
