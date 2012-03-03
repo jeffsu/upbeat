@@ -272,6 +272,8 @@ Its pretty simple to register a custom strategy.  There are 3 things the object 
 
 Example:   
 
+always.js:
+
     var AlwaysPass = function (config) { this.config };
     AlwaysPass.prototype.check = function (callback) {
       callback(true);
@@ -281,5 +283,8 @@ Example:
       // no op
     };
 
-    require('./upbeat').registerCallback('always-pass', AlwaysPass);
+    module.exports = AlwaysPass;
 
+And then add to bin/upbeat, though the path is relative to lib/upbeat/ 
+
+    upbeat.registerStrategy('always-pass', '../../always.js');
