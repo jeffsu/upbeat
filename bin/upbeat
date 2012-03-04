@@ -1,5 +1,7 @@
 #!/usr/bin/env node
 require('js-yaml');
+require('mochiscript');
+
 var upbeat  = require('../lib/upbeat');
 
 if (process.argv.length <= 2) {
@@ -13,3 +15,4 @@ if (! file.match(/^\//)) file = process.cwd() + '/' + file;
 
 var server = new upbeat.Server(require(file)[0]);
 server.start();
+server.listen();

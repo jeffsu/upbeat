@@ -4,8 +4,8 @@
  */
 
 module.exports = #(app, upbeat) {
+
   app.get('/', #(req, res, next) {
-    console.log(upbeat.services['simple'].actions.length);
     res.render('index', { hasService: upbeat.servicesArray.length, services: upbeat.services, processes: upbeat.processes })
   });
 
@@ -28,6 +28,21 @@ module.exports = #(app, upbeat) {
     } else {
       res.send("Healthy (" + ratio + ")", 200);
     }
+  });
+
+  app.get('/processes/:idx.tail', #(req, res) {
+    var idx = parseInt(req.params.idx);
+    var process = upbeat.processes[idx];
+    res.writeHead(200, { 'Content-type': 'text/html', 'Transfer-encoding': 'chunked' });
+    res.write("<html><body>");
+    process.addListener(res, req);
+  });
+
+
+  app.get('/processes/:idx', #(req, res) {
+    var idx = parseInt(req.params.idx);
+    var process = upbeat.processes[idx];
+    res.render('process', { process: process }); 
   });
 
 };

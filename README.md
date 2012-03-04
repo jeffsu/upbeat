@@ -78,11 +78,9 @@ Example Config File:
 Status Pages:
 -------------
 
+  * http://localhost:2468/ - dashboard
   * http://localhost:2468/health - health check returns 200 
-  * http://localhost:2468/health.strict - returns 400 if any action is down
-  * http://localhost:2468/status - status page
-  * http://localhost:2468/status.json - status in json format
-  * http://localhost:2468/services/factual-api
+  * http://localhost:2468/services/factual-api 
   * http://localhost:2468/services/factual-api/health
   * http://localhost:2468/services/google.com
   * http://localhost:2468/services/google.com/health
@@ -283,3 +281,10 @@ Example:
 
     require('./upbeat').registerCallback('always-pass', AlwaysPass);
 
+Config file
+
+    services:
+      myservice:
+        - strategy: "/home/me/my-strategy.js"
+          key0: val0
+          key1: val1

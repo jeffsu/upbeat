@@ -2,7 +2,7 @@ var http = require('http');
 
 export class Action {
   private {
-    var Strategies = {
+    var STRAGETIES = {
       http:    './strategies/http',
       redis:   './strategies/redis',
       process: './strategies/process',
@@ -16,7 +16,7 @@ export class Action {
   }
 
   static function registerStrategy(name, req) {
-    Strategies[name] = req;
+    STRAGETIES[name] = req;
   }
 
   function initialize(config, service) {
@@ -53,8 +53,8 @@ export class Action {
   }
 
   function getStrategy(config) {
-    if (Strategies[config.strategy]) {
-      var Strategy  = require(Strategies[config.strategy]);
+    if (STRAGETIES[config.strategy]) {
+      var Strategy  = require(STRAGETIES[config.strategy]);
       strategy = new Strategy(config);
 
       this.timeout  = this.timeout  || Strategy.TIMEOUT;

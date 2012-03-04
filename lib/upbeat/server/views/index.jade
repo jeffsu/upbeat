@@ -1,6 +1,15 @@
 - if (processes.length)
   h1 Forever
   table.table
+    thead
+      tr 
+        th Command
+        th PID
+
+    each process, i in processes
+      tr
+        td: a(href="/processes/#{i}")= process.name
+        td= process.getPid()
 
 - if (hasService)
   h1 Services

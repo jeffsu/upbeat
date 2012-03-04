@@ -1,0 +1,24 @@
+
+h5 Details
+table.table
+  tr
+    th Command
+    td= process.name
+  tr
+    th Status
+    td= process.isUp() ? 'Up' : 'Down'
+  tr
+    th PID
+    td= process.getPid()
+
+- if (process.service)
+  h5 Health Check Service
+  a(href="/services/#{process.service.name}") process.service.name
+h5 Stdout
+pre.stdout!= process.stdout.join("")
+
+h5 Stderr
+pre.stderr!= process.stderr.join("")
+
+h5 Errors
+pre.stderr!= process.errors.join("")

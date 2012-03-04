@@ -41,8 +41,25 @@ export class Server {
 
   function addProcess(options) {
     var forever = require('forever');
-    var child = forever.start(options);
-    this.processes.push(new Process(child));
+    var command = [];
+
+    var name   = options.name;
+    var checks = options.checks;
+
+    delete options['name'];
+    delete options['checks'];
+
+    var service = null;
+    if (checks) {
+      service = this.addService(name, new Service(name, checks));
+    }
+
+    if (options.command) command.push(options.command);
+    if (options.options) command = command.concat(options.options);
+
+    console.log('Starting: ', command);
+    var child = forever.start(command, options);
+    this.processes.push(new Process(name, command.join(' '), child, service));
   }
 
   function addService(name, service) {
@@ -50,6 +67,7 @@ export class Server {
     this.services[name] = service;
     service.name = name;
     this.servicesArray.push(service);
+    return service;
   }
 
   function getActions() {

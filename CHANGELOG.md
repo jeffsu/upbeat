@@ -1,3 +1,8 @@
+** 0.2.0 **
+
+  * refactored server
+  * added forever integration
+
 ** 0.1.16 **
 
   * refactored routes

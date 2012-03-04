@@ -1,10 +1,13 @@
-services:
-  simple:
-    - strategy: http
-      url: http://localhost:1337
-      status: 200
-      interval: 3000
-    - strategy: http
-      url: http://localhost:1337/hello
-      status: 200
-      interval: 3000
+forever:
+  - name: Tail 
+    command: "/usr/local/bin/node"
+    options: [ '/Users/jeffsu/workspace/upbeat/examples/server.js' ]
+    checks:
+      - strategy: http
+        url: http://localhost:1337
+        status: 200
+        interval: 3000
+      - strategy: http
+        url: http://localhost:1337/hello
+        status: 200
+        interval: 3000
