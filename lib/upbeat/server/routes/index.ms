@@ -30,15 +30,6 @@ module.exports = #(app, upbeat) {
     }
   });
 
-  app.get('/processes/:idx.tail', #(req, res) {
-    var idx = parseInt(req.params.idx);
-    var process = upbeat.processes[idx];
-    res.writeHead(200, { 'Content-type': 'text/html', 'Transfer-encoding': 'chunked' });
-    res.write("<html><body>");
-    process.addListener(res, req);
-  });
-
-
   app.get('/processes/:idx', #(req, res) {
     var idx = parseInt(req.params.idx);
     var process = upbeat.processes[idx];

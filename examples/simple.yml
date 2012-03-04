@@ -1,5 +1,5 @@
 forever:
-  - name: Tail 
+  - name: Node Server
     command: "/usr/local/bin/node"
     options: [ '/Users/jeffsu/workspace/upbeat/examples/server.js' ]
     checks:
