@@ -33,7 +33,9 @@ export class Server {
     this.app = this.createServer();
 
     if (config.forever) {
-      foreach (var f in config.forever) {
+      for (var name in config.forever) {
+        var f = config.forever[name]
+        f.name = name;
         this.addProcess(f);
       }
     }

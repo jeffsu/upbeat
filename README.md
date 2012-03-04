@@ -21,7 +21,11 @@ non-trivial this becomes very useful.
 
 **Web interface**
 
-See your statuses on one page or use them for scripting through json rest api.
+See your statuses on one page or use them for scripting through an api.
+
+**Forever Integration**
+
+Define processes to be run and how to monitor them.
 
 Installation
 ------------
@@ -101,6 +105,25 @@ In the top level of the yaml configuration you have 3 main options:
   * host: the ip on which the upbeat http server binds to
   * port: the port on which the upbeat http server listens on
   * services: a key/value hash where the key is the name of the service and the value is an array of action definitions
+
+Forever:
+--------
+
+You can integrate forever by using the "forever" keyword in your config.
+
+    forever:
+      NodeServer:
+        command: "/usr/local/bin/node"
+        options: [ "server.js" ]
+        checks:
+          - strategy: http
+            url: http://localhost:1337
+            status: 200
+            interval: 3000
+          - strategy: http
+            url: http://localhost:1337/hello
+            status: 200
+            interval: 3000
 
 Services:
 ---------

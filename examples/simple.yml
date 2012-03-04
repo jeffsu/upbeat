@@ -1,5 +1,5 @@
 forever:
-  - name: Node Server
+  NodeServer:
     command: "/usr/local/bin/node"
     options: [ '/Users/jeffsu/workspace/upbeat/examples/server.js' ]
     checks:
