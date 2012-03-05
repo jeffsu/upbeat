@@ -1,9 +1,12 @@
+var forever = require('forever');
+
 // Wrapper around forever
 export class Process {
-  function initialize(name, command, child, service) {
-    this.name    = name || command;
-    this.command = command;
-    this.child   = child;
+  function initialize(name, options, service) {
+    this.command = this.parseCommand(options);
+    this.name    = name;
+
+    this.child   = forever.start(this.command, options);
     this.service = service;
 
     this.errors = [];
@@ -11,6 +14,17 @@ export class Process {
     this.stdout = [];
 
     this.setupChild(this.child);
+  }
+
+  function parseCommand(options) {
+    var cmd = [];
+    if (options.command) cmd.push(options.command);
+    if (options.options) cmd.concat(options.options);
+
+    delete options['command'];
+    delete options['options'];
+
+    return cmd;
   }
 
   function isUp() {

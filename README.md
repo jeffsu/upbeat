@@ -1,7 +1,6 @@
-Upbeat
-=======
+#Upbeat
 
-Scalable and distributable health/performance checking.
+Process monitoring with scalable health/performance checking.
 
 Upbeat provides several useful features:
 
@@ -12,14 +11,14 @@ would be testing a mysql server to see if 1) the process is running 2) a query w
 This is just and example of what upbeat is meant to do.  It is not meant to replace the tools mentioned previously, 
 but to actually play nicely with them.
 
-**Fast and scalable remote healthchecking**
+**Fast and scalable remote health checking**
 
 Upbeat leverages nodes quickness and allows service healthchecks to be temporarily cached allowing more throughout put 
 in your healthchecks.  This will enable every machine to know the status of every other machine in a cluster without doing
 an expotential number of "real" healthchecks.  In the context of cloud computing, where high throughput load balancing is 
 non-trivial this becomes very useful.
 
-**Web interface**
+**Web Dashboard**
 
 See your statuses on one page or use them for scripting through an api.
 
@@ -27,8 +26,27 @@ See your statuses on one page or use them for scripting through an api.
 
 Define processes to be run and how to monitor them.
 
-Installation
-------------
+#Documentation
+
+- [Installation](#installation)
+- [Sample Config](#sample)
+- [Dashboard](#dashboard)
+- [Configuration](#configuration)
+  - [Using Forever Process Monitoring](#forever)
+  - [Services](#services)
+  - [Actions](#actions)
+- [Strategies](#strategies)
+  - [process](#process)
+  - [upbeat](#upbeat)
+  - [tcp](#tcp)
+  - [http](#http)
+  - [redis](#redis)
+  - [mysql](#mysql)
+  - [oauth request](#oauth)
+- [api](#api)
+
+<a name="installation" />
+##Installation
 
 Assuming you have node and npm installed, run:
 
@@ -37,8 +55,8 @@ Assuming you have node and npm installed, run:
 
 Now an http server will be running that you can query for health statuses
 
-Example Config File:
---------------------
+<a name="sample" />
+##Example Config File:
 
     port: 2468
     host: 127.0.0.1
@@ -79,8 +97,8 @@ Example Config File:
         - strategy: mysql
           socket: /tmp/mysql.sock
 
-Status Pages:
--------------
+<a name="dashboard" />
+##Web Dashboard:
 
   * http://localhost:2468/ - dashboard
   * http://localhost:2468/health - health check returns 200 
@@ -91,14 +109,14 @@ Status Pages:
   * http://localhost:2468/services/redis
   * http://localhost:2468/services/redis/health
 
-Configuration:
---------------
+<a name="configuration" />
+##Configuration:
 
 Upbeat uses YAML for configuration.  There are several concepts to take note of when 
 running configuring upbeat: server, services, actions and strategies
 
-Global Server Configuration:
-----------------------------
+<a name="global" />
+###Global Server Configuration:
 
 In the top level of the yaml configuration you have 3 main options:
 
@@ -106,12 +124,12 @@ In the top level of the yaml configuration you have 3 main options:
   * port: the port on which the upbeat http server listens on
   * services: a key/value hash where the key is the name of the service and the value is an array of action definitions
 
-Forever:
---------
+<a name="forever" />
+###Forever:
 
-You can integrate forever by using the "forever" keyword in your config.
+You can integrate forever by using the "processes" keyword in your config.
 
-    forever:
+    processes:
       NodeServer:
         command: "/usr/local/bin/node"
         options: [ "server.js" ]
@@ -125,14 +143,14 @@ You can integrate forever by using the "forever" keyword in your config.
             status: 200
             interval: 3000
 
-Services:
----------
+<a name="services" />
+###Services:
 
 The services section in the global configuration has to be a hash where the key is 
 the name of the service and the value is an array of "actions" for the service to check.
 
-Actions:
---------
+<a name="actions" />
+###Actions:
 
 Actions are a hash that have one required field: strategy. Stragety is used to tell upbeat
 how to test a particular service.  Every action has these fields available to it:
@@ -146,9 +164,10 @@ how to test a particular service.  Every action has these fields available to it
   * max-response-time: similar to timeout. If an action returns before timeout but is greater than max-response-time, it will still count as a failure
   * name: vanity name for the action used in reports
 
-Strategies:
------------
+<a name="strategies" />
+##Strategies
 
+<a name="process" />
 **process**
 
 Checks to see if a process is running via pidfile:
@@ -162,6 +181,7 @@ Example:
         - pidfile: /tmp/my.pid
           strategy: process
 
+<a name="http" />
 **http**
 
 The http strategy will send a request to the server. Fields:
@@ -199,6 +219,7 @@ Example:
           rise: 3
           fall: 1
 
+<a name="upbeat" />
 **upbeat**
 
 Yes, upbeat can monitor other upbeat servers. Fields:
@@ -215,6 +236,7 @@ Example:
       upbeat:
         - strategy: upbeat
 
+<a name="tcp" />
 **tcp**
 
 Strategy to check if a connection to a port can be established. Fields:
@@ -224,6 +246,7 @@ Strategy to check if a connection to a port can be established. Fields:
   * timeout: defaults to 2000
   * interval: defaults to 3000
 
+<a name="mysql" />
 **mysql**
 
 The mysql strategy will connect to a mysql server and perform a query. Fields:
@@ -247,6 +270,7 @@ Example:
         - strategy: mysql
           socket: /tmp/mysql.sock
 
+<a name="redis" />
 **redis**
 
 The redis strategy will connect to a redis server and issue an "ECHO hello" command. Fields:
@@ -264,6 +288,7 @@ Example:
           port: 6537
           strategy: redis
 
+<a name="oauth" />
 **oauth**
 
 Upbeat supports basic OAuth get requests. Fields:

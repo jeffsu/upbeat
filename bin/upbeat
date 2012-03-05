@@ -13,6 +13,9 @@ if (process.argv.length <= 2) {
 var file = process.argv[process.argv.length-1];
 if (! file.match(/^\//)) file = process.cwd() + '/' + file;
 
-var server = new upbeat.Server(require(file)[0]);
+var configurer = new upbeat.Configurer();
+var server = new upbeat.Server();
+configurer.configure(require(file)[0], server));
+
 server.start();
 server.listen();

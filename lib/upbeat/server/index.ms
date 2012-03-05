@@ -7,6 +7,9 @@ var Status  = require('../status');
 var Process = require('../process');
 
 export class Server {
+
+  include $m.EventEmitter;
+
   private {
     var DEFAULT = {
       port: 2468,
@@ -19,68 +22,18 @@ export class Server {
     this.host  = config.host || DEFAULT.host;
 
     this.processes = [];
-
     this.services = {};
     this.servicesArray = [];
 
-    if (config.services) {
-      for (var name in config.services) {
-        this.addService(name, new Service(name, config.services[name])); 
-      }
-    }
-
     this._status = new Status();
     this.app = this.createServer();
-
-    if (config.forever) {
-      for (var name in config.forever) {
-        var f = config.forever[name]
-        f.name = name;
-        this.addProcess(f);
-      }
-    }
   }
 
-  function addProcess(options) {
-    var forever = require('forever');
-    var command = [];
-
-    var name   = options.name;
-    var checks = options.checks;
-
-    delete options['name'];
-    delete options['checks'];
-
-    var service = null;
-    if (checks) {
-      service = this.addService(name, new Service(name, checks));
-    }
-
-    if (options.command) command.push(options.command);
-    if (options.options) command = command.concat(options.options);
-
-    console.log('Starting: ', command);
-    var child = forever.start(command, options);
-    this.processes.push(new Process(name, command.join(' '), child, service));
-  }
-
-  function addService(name, service) {
-    console.log("Adding service: " + name);
-    this.services[name] = service;
-    service.name = name;
+  function addService(service) {
+    console.log("Adding service: " + service.name);
+    this.services[service.name] = service;
     this.servicesArray.push(service);
     return service;
-  }
-
-  function getActions() {
-    var ret = [];
-    foreach (var s in this.servicesArray) {
-      foreach (var a in s.actions) {
-        ret.push(a);
-      }
-    }
-
-    return ret;
   }
 
   function createServer() {
@@ -112,10 +65,26 @@ export class Server {
     foreach (var s in this.servicesArray) {
       s.start();
     }
+
+    this.checkInterval = setInterval(#{ self.check() }, 60000);
   }
 
-  function listen() {
-    this.app.listen(this.port);
+  function check() {
+    var ret = {};
+    var up  = true;
+
+    foreach (var service in this.servicesArray) {
+      var isUp = ret[service.name] = service.isUp();
+      if (!isUp) up = false
+    }
+    var code = up ? '200' : '400';
+
+    if (!up) this.emit('error', up, ret);
+    this.emit('check', up, ret);
+  }
+
+  function listen(port) {
+    this.app.listen(port || this.port);
   }
   
   function getAction(service, actionIdx) {
