@@ -30,9 +30,8 @@ module.exports = #(app, upbeat) {
     }
   });
 
-  app.get('/processes/:idx', #(req, res) {
-    var idx = parseInt(req.params.idx);
-    var process = upbeat.processes[idx];
+  app.get('/processes/:name', #(req, res) {
+    var process = upbeat.processes[req.params.name];
     res.render('process', { process: process }); 
   });
 

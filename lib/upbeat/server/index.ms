@@ -21,8 +21,8 @@ export class Server {
     this.port  = config.port || DEFAULT.port;
     this.host  = config.host || DEFAULT.host;
 
-    this.processes = [];
-    this.services = {};
+    this.processes = {};
+    this.services  = {};
     this.servicesArray = [];
 
     this._status = new Status();
@@ -34,6 +34,11 @@ export class Server {
     this.services[service.name] = service;
     this.servicesArray.push(service);
     return service;
+  }
+
+  function addProcess(process) {
+    console.log("Adding process: " + process.name);
+    this.processes[process.name] = process;
   }
 
   function createServer() {
@@ -84,6 +89,7 @@ export class Server {
   }
 
   function listen(port) {
+    console.log("listening on port: " + (port || this.port));
     this.app.listen(port || this.port);
   }
   

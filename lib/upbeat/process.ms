@@ -6,7 +6,7 @@ export class Process {
     this.command = this.parseCommand(options);
     this.name    = name;
 
-    this.child   = forever.start(this.command, options);
+    this.child    = forever.start(this.command, options);
     this.service = service;
 
     this.errors = [];
@@ -19,7 +19,7 @@ export class Process {
   function parseCommand(options) {
     var cmd = [];
     if (options.command) cmd.push(options.command);
-    if (options.options) cmd.concat(options.options);
+    if (options.options) cmd = cmd.concat(options.options);
 
     delete options['command'];
     delete options['options'];
@@ -28,11 +28,16 @@ export class Process {
   }
 
   function isUp() {
+    if (!this.child) return false;
     return this.service ? true : this.service.isUp();
   }
 
   function getPid() {
-    return this.child.child.pid;
+    try {
+      return this.child ? this.child.child.pid : null;
+    } catch(e) {
+      return null;
+    }
   }
 
   function setupChild(child) {

@@ -1,27 +1,33 @@
-- if (processes.length)
-  h1 Forever
-  table.table
-    thead
-      tr 
-        th Command
-        th PID
+h1 Processes
+table.table.table-bordered.table-condensed
+  thead
+    tr 
+      th Command
+      th Runnning
+      th PID
 
-    each process, i in processes
-      tr
-        td: a(href="/processes/#{i}")= process.name
-        td= process.getPid()
+  each process, name in processes
+    tr
+      td: a(href="/processes/#{name}")= name
+      td= process.child.running ? 'Yes' : 'No'
+      td= process.getPid()
 
 - if (hasService)
   h1 Services
-  table.table
+  table.table.table-bordered.table-condensed
     thead
       tr
-        td Service
-        td Actions
+        th Service
+        th Actions
+        th Status
     each service, name in services
       tr
         td: a(href="/services/#{name}")= name
         td
           each action, i in service.actions
-            a(href="/services/#{name}/actions/#{i}")= action.id
-            br
+            div 
+              a(href="/services/#{name}/actions/#{i}")= action.id
+              .sparkline= action.times(50).join(',')
+        td= service.isUp() ? 'Up' : 'Down'
+script
+  $(function () { $('.sparkline').sparkline() });

@@ -1,4 +1,4 @@
-forever:
+processes:
   NodeServer:
     command: "/usr/local/bin/node"
     options: [ '/Users/jeffsu/workspace/upbeat/examples/server.js' ]

@@ -2,6 +2,7 @@ var Process = require('./process');
 var Service = require('./service');
 
 export class Configurer {
+
   function configure(config, server) {
     this.addProcesses(config, server);
     this.addServices(config, server); 
@@ -21,7 +22,7 @@ export class Configurer {
     var p = config.processes;
     if (p) {
       for (var name in p) {
-        var options = p[name].options;
+        var options = p[name];
         var checks  = options.checks;
 
         delete options['checks'];
