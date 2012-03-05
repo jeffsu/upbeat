@@ -1,6 +1,9 @@
 ** 0.2.0 **
 
   * refactored server
+    * added graphs
+    * global health checks
+  * refactored configuration
   * added forever integration
 
 ** 0.1.16 **
