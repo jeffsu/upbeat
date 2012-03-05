@@ -144,7 +144,7 @@ export class Http extends Base {
   }
 
   function clear() {
-    if (this.resp) this.resp.close();
+    if (this.resp) this.resp.end();
     if (this.req) this.req.abort();
   }
 }
