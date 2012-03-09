@@ -35,9 +35,11 @@ export class Http extends Base {
     var parsedUrl = URL.parse(url, false);
     var host = config.host || parsedUrl.host || '127.0.0.1';
     host = host.replace(/\:\d+$/, '');
+    var headers = config.headers || {};
 
     return {
       host: host,
+      headers: headers,
       port: config.port || parsedUrl.port || 80,
       path: parsedUrl.pathname + (parsedUrl.query ? '?' + parsedUrl.query: ''),
       method: method.toUpperCase()
@@ -144,7 +146,6 @@ export class Http extends Base {
   }
 
   function clear() {
-    if (this.resp) this.resp.end();
     if (this.req) this.req.abort();
   }
 }

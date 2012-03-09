@@ -89,7 +89,7 @@ export class Action {
   function processCheck(startTime, error, cb) {
     this.log("debug", error ? 'Failed' : 'Passed');
     if (error) {
-      this.err((new Date()).toString() + ':' + error + ':' + this.service.name + ':' + this.id);
+      this.err((new Date()).toString() + '|' + error + '|' + this.service.name + '|' + this.id);
       this.strategy.clear(); 
       this.meta.lastErrorMsg = error;
       this.meta.lastFailure  = startTime;
@@ -98,7 +98,7 @@ export class Action {
       var endTime = (new Date()).getTime();
       var responseTime = this.updateResponse(startTime, endTime); 
       if (this.maxResponse < responseTime) {
-         this.err((new Date()).toString() + ':' + error + ':' + this.service.name + ':' + this.id);
+         this.err((new Date()).toString() + '|' + error + '|' + this.service.name + '|' + this.id);
          this.log('info', "Failed - Too Slow");
          this.meta.lastErrorMsg = "Too slow";
          this.meta.lastFailure  = startTime;

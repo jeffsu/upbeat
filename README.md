@@ -193,6 +193,7 @@ The http strategy will send a request to the server. Fields:
   * interval: defaults to 10000
   * matches: (array or string) regular expression to test against the returned http payload. 
   * lambda: (array or string) a function that should return a boolean (if its matches is not enough)
+  * headers: Hash of headers to be used
 
 Example:
 
@@ -206,6 +207,8 @@ Example:
         - name: test-google
           url: http://www.google.com
           strategy: http
+          headers:
+            Host: www.google.info
 
         - name: test-search
           url: http://www.google.com
