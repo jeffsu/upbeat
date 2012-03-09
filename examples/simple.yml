@@ -1,7 +1,7 @@
 processes:
   NodeServer:
-    command: "/usr/local/bin/node"
-    options: [ '/Users/jeffsu/workspace/upbeat/examples/server.js' ]
+    command: "/home/jeffsu/opt/local/node/bin/node"
+    options: [ '/home/jeffsu/workspace/upbeat/examples/server.js' ]
     checks:
       - strategy: http
         url: http://localhost:1337
