@@ -23,11 +23,12 @@ table.table.table-bordered.table-condensed
     each service, name in services
       tr
         td: a(href="/services/#{name}")= name
-        td
-          each action, i in service.actions
-            div 
-              a(href="/services/#{name}/actions/#{i}")= action.id
-              .sparkline= action.times(50).join(',')
+        td(style="padding: 0")
+          table(width="100%")
+            each action, i in service.actions
+              tr
+                td(width="50%"): a(href="/services/#{name}/actions/#{i}")= action.id
+                td.sparkline= action.times(50).join(',')
         td= service.isUp() ? 'Up' : 'Down'
 script
   $(function () { $('.sparkline').sparkline() });

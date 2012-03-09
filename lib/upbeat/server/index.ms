@@ -29,6 +29,16 @@ export class Server {
     this.app = this.createServer();
   }
 
+  function snapshot() {
+    foreach (var s in this.servicesArray) {
+      s.snapshot();
+    }
+  }
+
+  function getSnapshots() {
+    return this.servicesArray#map { $1.getSnapshots() }; 
+  }
+
   function addService(service) {
     console.log("Adding service: " + service.name);
     this.services[service.name] = service;

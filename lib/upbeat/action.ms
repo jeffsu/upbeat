@@ -20,9 +20,23 @@ export class Action {
     STRAGETIES[name] = req;
   }
 
+  function snapshot() {
+    var m = this.meta;
+    this.snapshots.push({
+      up: m.up,
+      responseTime: m.responseTimes[m.responseTimes.length-1],
+      time: new Date()
+    });
+  }
+
+  function getSnapshots() {
+    return this.snapshots;
+  }
+
   function initialize(config, service) {
     this.service = service;
     this.config  = config;
+    this.snapshots = [];
 
     this.alive     = true;
     this.firstTime = true;

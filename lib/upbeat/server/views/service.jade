@@ -1,18 +1,20 @@
-h1= service.name
+h1.name= service.name
 
-table.table
+table.table.table-bordered
   thead
     tr
       th id
       th Avg Resp
       th Status
+      th 
   each action, i in service.actions
     tr
       td: a(href="/services/#{service.name}/actions/#{i}")= action.id
       td= action.averageTime() + 'ms'
       td
         = action.isUp() ? 'Up' : 'Down'
-        span(id="action#{i}", name=action.id)
+      td
+        div(id="action#{i}", name=action.id)
 
 #chart
 
@@ -48,6 +50,8 @@ script
         renderTo: 'chart',
         type: 'line' 
       }, 
+
+      title: { text: $('h1.name').text() },
 
       plotOptions: {
         pointInterval: 2000

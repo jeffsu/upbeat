@@ -22,6 +22,16 @@ export class Service {
     }
   }
 
+  function snapshot() {
+    foreach (var a in this.actions) {
+      a.snapshot();
+    }
+  }
+
+  function getSnapshots() {
+    return this.actions#map { $1.getSnapshots() };
+  }
+
   function getAction(idx) {
     return this.actions[idx];
   }
