@@ -74,6 +74,9 @@ export class Server {
     for (var name in this.services) {
       this.services[name].stop();
     }
+
+    if (this.checkIntervalId) clearInterval(this.checkIntervalId); 
+    if (this.snapshotIntervalId) clearInterval(this.snapshotIntervalId); 
   }
 
   function start() {
@@ -81,7 +84,10 @@ export class Server {
       s.start();
     }
 
-    this.checkInterval = setInterval(#{ self.check() }, 60000);
+    this.checkIntervalId = setInterval(#{ self.check() }, this.checkInterval || 5000);
+
+    if (this.snapshotInterval) 
+      this.snapshotIntervalId = setInterval(#{ self.snapshot() }, this.snapshotInterval);
   }
 
   function check() {
@@ -96,6 +102,21 @@ export class Server {
 
     if (!up) this.emit('error', up, ret);
     this.emit('check', up, ret);
+  }
+
+  function snapshot() {
+    var ret = {};
+
+    for (var key in this.services) {
+      ret[key] = this.services[key].snapshot(); 
+    }
+
+    this.snapshots.push(ret);
+    this.logSnapshot();
+  }
+
+  function logSnapshot() {
+    // no op
   }
 
   function listen(port) {

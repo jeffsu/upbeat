@@ -6,6 +6,14 @@ export class Configurer {
   function configure(config, server) {
     this.addProcesses(config, server);
     this.addServices(config, server); 
+
+    if (config.snapshotInterval) {
+       server.snapshotInterval = parseInt(config.snapshotInterval);
+    }
+
+    if (config.checkInterval) {
+       server.checkInterval = parseInt(config.checkInterval);
+    }
   }
 
   function addServices(config, server) {
