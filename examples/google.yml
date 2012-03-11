@@ -1,3 +1,4 @@
+snapshotInterval: 5000
 services:
   google:
     - strategy: http

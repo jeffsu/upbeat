@@ -14,7 +14,8 @@
     "mochiscript": ">=0.4.6-pre-4",
     "express": ">=2.5.1",
     "forever": "",
-    "js-yaml": ">=0.3.1"
+    "js-yaml": ">=0.3.1",
+    "winston": ""
   },
   "repository":   {
     "type": "git",

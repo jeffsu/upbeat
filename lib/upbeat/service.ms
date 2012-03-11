@@ -2,13 +2,44 @@ var http = require('http');
 var Action = require('./action');
 
 export class Service {
+  include $m.EventEmitter;
+
   function initialize(name, actions) {
     this.name    = name;
     this.actions = [];
+    this.up = true;
 
     foreach (var action in actions) {
-      this.actions.push(new Action(action, this));
+      this.addAction(new Action(action, this));
     }
+  }
+
+  function addAction(action) {
+    this.actions.push(action);
+    var meta = action.meta;
+    var evt = { service: this, action: action };
+
+    action.on('down', #{ 
+      var wasUp = self.up;
+      self.up = false;
+      self.emit('down', evt) 
+      if (wasUp) self.emit('change', evt);
+    });
+
+    action.on('up', #{ 
+      var changed = false;
+      if (!self.up) {
+        foreach (var a in self.actions) {
+          if (! a.up) break;
+        }
+
+        self.up = true;
+        changed = true;
+      }
+
+      self.emit('up', evt) 
+      if (changed) self.emit('change', evt);
+    });
   }
 
   function handleConfig(config) {
@@ -28,35 +59,24 @@ export class Service {
     }
   }
 
-  function getSnapshots() {
-    return this.actions#map { $1.getSnapshots() };
-  }
-
   function getAction(idx) {
     return this.actions[idx];
   }
 
   function start() {
     foreach (var action in this.actions) {
-      action.run();
+      action.start();
     }
   }
 
   function stop() {
     foreach (var action in this.actions) {
-      action.clear();
+      action.stop();
     }
-  }
-
-  function isUp() {
-    foreach (var action in this.actions) {
-      if (! action.meta.up) return false;
-    }
-    return true;
   }
 
   function respondJSON(res) {
-    var code = this.isUp() ? 200 : 400;
+    var code = this.up ? 200 : 400;
     res.writeHead(code, {'Content-Type':'application/json'});
     res.write('[');
 

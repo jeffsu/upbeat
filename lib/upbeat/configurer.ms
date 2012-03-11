@@ -1,9 +1,15 @@
 var Process = require('./process');
 var Service = require('./service');
+var winston = require('winston');
+
 
 export class Configurer {
 
   function configure(config, server) {
+    var error  = winston;
+    var change = winston;
+    var snapshot = winston;
+    
     this.addProcesses(config, server);
     this.addServices(config, server); 
 
@@ -14,6 +20,11 @@ export class Configurer {
     if (config.checkInterval) {
        server.checkInterval = parseInt(config.checkInterval);
     }
+
+    server.on('down',     #{ winston.error($1.service.name + ' down.') });
+    server.on('up',       #{ winston.info($1.service.name + ' up: ' + $1.action.meta.lastResponseTime + 'ms.') });
+    server.on('change',   #{ winston.info($1.service.name + ' changed.') });
+    server.on('snapshot', #{ winston.info('Server snapshotted') });
   }
 
   function addServices(config, server) {

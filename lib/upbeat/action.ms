@@ -1,4 +1,5 @@
 var http = require('http');
+var MetaData = require('./meta-data');
 
 export class Action {
   private {
@@ -13,7 +14,6 @@ export class Action {
     };
 
     var N_HOSTORICAL_TICKS = 100;
-    var LOG = process.cwd() + '/upbeat.log';
   }
 
   static function registerStrategy(name, req) {
@@ -22,11 +22,7 @@ export class Action {
 
   function snapshot() {
     var m = this.meta;
-    this.snapshots.push({
-      up: m.up,
-      responseTime: m.responseTimes[m.responseTimes.length-1],
-      time: new Date()
-    });
+    this.meta.snapshot();
   }
 
   function getSnapshots() {
@@ -36,21 +32,9 @@ export class Action {
   function initialize(config, service) {
     this.service = service;
     this.config  = config;
-    this.snapshots = [];
+    this.running = false;
 
-    this.alive     = true;
-    this.firstTime = true;
-
-    this.meta = {
-      count        : 0,
-      passedCount  : 0,
-      up           : false,
-      lastErrorMsg : "Not Started",
-      lastFailure  : null,
-      riseCount    : 0,
-      fallCount    : 0,
-      responseTimes: []
-    };
+    this.meta = new MetaData();
 
     this.strategy = this.getStrategy(config);
     this.timeout  = config.timeout;
@@ -63,8 +47,12 @@ export class Action {
     this.interval = this.interval || 10000;
 
     this.maxResponse = config['max-response-time'] || this.timeout;
+    this.id = config.name || config.id || this.strategy.id;
+  }
 
-    this.meta.id = this.id = config.name || this.strategy.id;
+  function on() {
+    var meta = this.meta;
+    meta.on.apply(meta, arguments);
   }
 
   function getStrategy(config) {
@@ -87,202 +75,66 @@ export class Action {
     }
   }
 
-  function log(type, msg) {
-    var str = msg + " (" + this.service.name + "): " + this.id;
-    if (this.logger) {
-      this.logger[type](str);
-    } else {
-      console.log(type, str);
+  function processCheck(startTime, error) {
+    var resTime = (new Date()).getTime() - startTime;
+
+    if (! error && this.maxRepsonse < resTime) {
+      error = "Response time was " + resTime + "ms.";
     }
+
+    this.meta.setStatus(error, resTime);
   }
 
-  function err(msg) {
-    console.warn(msg); 
-  }
+  function check() {
+    if (this.checking) return;
 
-  function processCheck(startTime, error, cb) {
-    this.log("debug", error ? 'Failed' : 'Passed');
-    if (error) {
-      this.err((new Date()).toString() + '|' + error + '|' + this.service.name + '|' + this.id);
-      this.strategy.clear(); 
-      this.meta.lastErrorMsg = error;
-      this.meta.lastFailure  = startTime;
-      this.updateStatus(false);
-    } else {
-      var endTime = (new Date()).getTime();
-      var responseTime = this.updateResponse(startTime, endTime); 
-      if (this.maxResponse < responseTime) {
-         this.err((new Date()).toString() + '|' + error + '|' + this.service.name + '|' + this.id);
-         this.log('info', "Failed - Too Slow");
-         this.meta.lastErrorMsg = "Too slow";
-         this.meta.lastFailure  = startTime;
-         this.updateStatus(false);
-      } else {
-         this.updateStatus(true);
-      }
-    }
-    cb();
-  }
-
-  function check(callback) {
-    var start = (new Date()).getTime();
-    var $this = this;
-    this.meta.count++;
-    
     var timeoutId = null;
 
+    var startTime = (new Date()).getTime();
+
     if (this.timeout) {
-      timeoutId = setTimeout(#{ 
-        $this.processCheck(start, "Timed Out", callback);
+      timeoutId = this.timeoutId = setTimeout(#{ 
+        self.strategy.clear();
+        self.processCheck(startTime, "Timed Out");
+        self.checking = false;
         timeoutId = null;
       }, this.timeout);
     }
 
     try { 
-      this.strategy.check(#(passed) {
-        if (timeoutId) {
-          clearTimeout(timeoutId);
-          $this.processCheck(start, passed ? false : 'Failed', callback);
-        } 
+      this.checking = true;
+      this.strategy.check(#(passed, errorMsg) {
+        self.checking = false;
+
+        if (timeoutId) clearTimeout(timeoutId);
+        timeoutId = null;
+        self.processCheck(startTime, passed ? false : (errorMsg || 'Failed'));
       });
-    } catch(e) {
-      $this.log('error', "Error: " + $this.strategy.id + "\n" + e.stack);
-    }
-  }
-
-  function clear() {
-    if (this.timeoutId) clearTimeout(this.timeoutId);
-  }
-
-  function updateStatus(passed) {
-    if (passed) {
-      this.meta.riseCount += 1;
-      if (this.meta.up) this.meta.fallCount = 0;
-    } else {
-      this.meta.fallCount += 1;
-      if (! this.meta.up) this.meta.riseCount = 0;
-    }
-
-    if (this.meta.riseCount >= this.rise && ! this.meta.up) {
-      this.meta.up = true;
-      this.meta.fallCount = 0;
-    } else if (this.meta.fallCount >= this.fall && this.meta.up) {
-      this.meta.up = false;
-      this.meta.riseCount = 0;
-    } 
-  }
-
-  function benchmark(count, emitter, callback) {
-    count = count || 1; 
-
-    var meta = { 
-      count: 0,
-      errors: 0
-    };
-    
-    var strategy  = this.getStrategy(this.config);
-    var startTime = (new Date()).getTime()
-
-    var alive = true;
-    if (emitter) emitter.on('end', #{ alive = false });
-
-    var recurse = #{
-      if (!alive || meta.count == count) {
-        meta.totalTime = (new Date()).getTime() - startTime;
-        callback(meta);
-        return;
-      }
-
-      try {
-        strategy.check(#(passed){ 
-          if (!passed) meta.errors++;
-          recurse(); 
-        });
-      } 
-      
-      catch(e) {
-        meta.errors++;
-        recurse(); 
-      }
-
-      meta.count++;
-    };
-
-    recurse();
-  }
-
-  function run() {
-    if (! this.alive) return;
-
-    var $this = this;
-
-    // first time run immediately
-    if (this.firstTime) {
-      this.firstTime = false;
-      this.check(#{ $this.run() });
     } 
     
-    else {
-      this.timeoutId = setTimeout(#{ $this.check(#{ $this.run() }) }, this.interval);
+    catch(e) {
+       
     }
+  }
+
+  function start() {
+    if (this.running) return;
+    this.running = true;
+    this.intervalId = setInterval(#{ self.check() }, this.interval);
+    this.check();
   }
 
   function stop() {
-    if (this.timeoutId) clearTimeout(this.timeoutId);
-    this.firstTime = true;
-    this.alive     = false;
-  }
-
-  function updateResponse(start, end) {
-    var time = end - start;
-
-    if (time < 0) {
-      this.meta.count--;
-      return 0;
-    }
-
-    this.meta.lastResponse = time;
-
-    var avg   = this.meta.avgResponse;
-    var count = this.meta.passedCount;
-
-    if (avg) {
-      this.meta.avgResponse = Math.floor(((avg * count) + time) / (count + 1));
-    } else {
-      this.meta.avgResponse = time;
-    }
-
-    this.meta.passedCount = count + 1;
-
-    var times = this.meta.responseTimes;
-    while (times.length >= N_HOSTORICAL_TICKS) times.shift();
-    times.push(time);
-
-    return time;
-  }
-
-  function averageTime() {
-    return this.meta.avgResponse || null;
-  }
-
-  function times(n) {
-    var times = this.meta.responseTimes || [];
-    if (n) {
-      return times.slice(times.length-n); 
-    } else {
-      return times;
-    }
+    if (this.timeoutId)  clearTimeout(this.timeoutId);
+    if (this.intervalId) clearInterval(this.intervalId);
   }
 
   function toJSON() {
-    return JSON.stringify(this.meta);
+    return this.meta.toJSON();
   }
 
   function isUp() {
     return this.meta.up;
   }
 
-  function flush() {
-    this.meta = { count: 0 };
-  }
 }

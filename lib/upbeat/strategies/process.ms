@@ -15,11 +15,10 @@ export class Process extends Base {
     var $this = this;
     fs.readFile(this.pidfile, 'utf8', #(err, data) {
       if (err) {
-        $this.log("error", "Error: File doesn't exist");
         callback(false);
       } else {
-        $this.kill = spawn('kill', [data.replace(/\s+/g, '')]);
-        $this.kill.on('exit', #(code){ callback(code == 0); });
+        self.kill = spawn('kill', [ data.replace(/\s+/g, '') ]);
+        self.kill.on('exit', #(code) { callback(code == 0); });
       }
     });
   }
