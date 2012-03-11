@@ -123,6 +123,10 @@ export class Action {
     return times.slice(idx);
   }
 
+  function averageTime() {
+    return this.meta.averageResponseTime();
+  }
+
   function start() {
     if (this.running) return;
     this.running = true;

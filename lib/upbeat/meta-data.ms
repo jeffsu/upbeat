@@ -64,7 +64,7 @@ export class MetaData {
 
   function averageResponseTime() {
     if (this.totalCount == 0) return null;
-    return this.totalResTime / this.totalCount;
+    return Math.round(this.totalResTime / this.totalCount);
   }
 
   function mark(time) {
