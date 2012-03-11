@@ -1,30 +1,40 @@
 var Process = require('./process');
 var Service = require('./service');
-var winston = require('winston');
+var Server  = require('./server');
 
 
 export class Configurer {
+  function initialize(config) {
+    this.config = config;
+    this.configure(config);
+  }
 
   function configure(config, server) {
-    var error  = winston;
-    var change = winston;
-    var snapshot = winston;
-    
-    this.addProcesses(config, server);
-    this.addServices(config, server); 
+    var server = new Server();
 
+   
     if (config.snapshotInterval) {
-       server.snapshotInterval = parseInt(config.snapshotInterval);
+      server.snapshotInterval = parseInt(config.snapshotInterval);
     }
 
     if (config.checkInterval) {
-       server.checkInterval = parseInt(config.checkInterval);
+      server.checkInterval = parseInt(config.checkInterval);
     }
 
-    server.on('down',     #{ winston.error($1.service.name + ' down.') });
-    server.on('up',       #{ winston.info($1.service.name + ' up: ' + $1.action.meta.lastResponseTime + 'ms.') });
-    server.on('change',   #{ winston.info($1.service.name + ' changed.') });
-    server.on('snapshot', #{ winston.info('Server snapshotted') });
+    if (config.webApp !== false) {
+      var WebApp  = require('./www/app');
+      this.webApp = new WebApp(server);
+    }
+
+    if (config.logging !== false) {
+      var Logger  = require('./logger');
+      this.logger = new Logger(server);
+    }
+
+    this.addProcesses(config, server);
+    this.addServices(config, server); 
+
+    this.server = server;
   }
 
   function addServices(config, server) {
@@ -56,6 +66,18 @@ export class Configurer {
         server.addProcess(process);
       }
     }
+  }
+
+  function start() {
+    this.server.start();
+    if (this.logger) this.logger.start();
+    if (this.webApp) this.webApp.start(this.config.port || 2468);
+  }
+
+  function stop() {
+    this.server.stop();
+    if (this.logger) this.logger.stop();
+    if (this.webApp) this.webApp.stop();
   }
 
 }

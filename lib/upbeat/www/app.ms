@@ -1,9 +1,11 @@
-export class WebServer {
+var express = require('express');
+
+export class WebApp {
   function initialize(server) {
     this.server = server;
   }
 
-  function start() {
+  function start(port) {
     var app = express.createServer();
     app.configure(#{
       app.set('views', __dirname + '/views');
@@ -17,7 +19,13 @@ export class WebServer {
 
     require('./routes')(app, this, this.server)
     this.app = app;
+    console.log('starting web app on port: ' + port);
+    this.app.listen(port);
 
     return app;
+  }
+
+  function stop() {
+
   }
 }

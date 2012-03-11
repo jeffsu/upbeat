@@ -9,7 +9,7 @@ export class Server {
 
   include $m.EventEmitter;
 
-  function initialize(config) {
+  function initialize() {
     this.processes = {};
     this.services  = {};
     this.servicesArray = [];
@@ -38,6 +38,8 @@ export class Server {
     service.on('down',   #{ self.emit('down', $1) });
     service.on('up',     #{ self.emit('up', $1) });
     service.on('change', #{ self.emit('change', $1) });
+
+    this.emit('service-added', service);
 
     return service;
   }
