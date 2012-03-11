@@ -117,6 +117,12 @@ export class Action {
     }
   }
 
+  function times(n) {
+    var times = this.meta.times;
+    var idx = Math.max(0, times.length-n);
+    return times.slice(idx);
+  }
+
   function start() {
     if (this.running) return;
     this.running = true;

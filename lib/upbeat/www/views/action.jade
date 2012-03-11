@@ -34,7 +34,7 @@ script
   var chart = null;
   function buildChart(meta) {
     if (chart) {
-      chart.series[0].setData(meta.responseTimes, true);
+      chart.series[0].setData(meta.times, true);
       return;
     }
 

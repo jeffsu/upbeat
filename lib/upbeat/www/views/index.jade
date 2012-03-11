@@ -29,6 +29,6 @@ table.table.table-bordered.table-condensed
               tr
                 td(width="50%"): a(href="/services/#{name}/actions/#{i}")= action.id
                 td.sparkline= action.times(50).join(',')
-        td= service.isUp() ? 'Up' : 'Down'
+        td= service.up ? 'Up' : 'Down'
 script
   $(function () { $('.sparkline').sparkline() });
