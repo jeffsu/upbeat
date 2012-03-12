@@ -6,11 +6,14 @@ export class MetaData {
     var HISTORICAL_COUNT = 100;
   }
 
-  function initialize() {
-    this.up = true;
+  function initialize(config) {
+    this.up = false;
     this.times = [];
     this.snapshots = [];
     this.start = new Date();
+
+    this.rise = config.rise || 1;
+    this.fall = config.fall || 1;
 
     this.downTime     = 0;
     this.upTime       = 0;
@@ -51,16 +54,25 @@ export class MetaData {
     this.totalCount++;
 
     var wasUp = this.up;
-    this.up   = passed;
 
     this.mark(resTime);
-    this.emit((passed ? 'up' : 'down'), error);
+    this.emit((passed ? 'pass' : 'fail'), error);
+    this.lastCheck = passed;
 
-    if (wasUp != passed) {
-      this.runningCount = 1;
-      this.emit('change', passed);
-    } else {
+    if (wasUp == passed) {
       this.runningCount++;
+    } else {
+      this.runningCount = 1;
+    }
+
+    if (passed && this.runningCount == this.rise) {
+      this.up = passed;
+      this.emit('up');
+      this.emit('change');
+    } else if (!passed && this.runningCount == this.fall) {
+      this.up = passed;
+      this.emit('down', error);
+      this.emit('change');
     }
   }
 

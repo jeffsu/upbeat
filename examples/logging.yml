@@ -1,4 +1,4 @@
 logging:
-  fails: ./fails.log
-  all: ./all.log
+  up: ./fails.log
+  down: ./all.log
   snapshots: ./snapshots.log

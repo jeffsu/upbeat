@@ -34,14 +34,11 @@ export class Action {
     this.config  = config;
     this.running = false;
 
-    this.meta = new MetaData();
+    this.meta = new MetaData(config);
 
     this.strategy = this.getStrategy(config);
     this.timeout  = config.timeout;
     this.interval = config.interval;
-
-    this.rise = config.rise || 1;
-    this.fall = config.fall || 1;
 
     this.timeout  = this.timeout  || 5000;
     this.interval = this.interval || 10000;

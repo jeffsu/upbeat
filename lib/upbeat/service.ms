@@ -19,6 +19,9 @@ export class Service {
     var meta = action.meta;
     var evt = { service: this, action: action };
 
+    action.on('fail', #{ self.emit('fail', evt); });
+    action.on('pass', #{ self.emit('pass', evt); });
+
     action.on('down', #{ 
       var wasUp = self.up;
       self.up = false;
