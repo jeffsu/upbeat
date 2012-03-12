@@ -5,12 +5,14 @@ table.table.table-bordered
     tr
       th id
       th Avg Resp
+      th Uptime
       th Status
       th 
   each action, i in service.actions
     tr
       td: a(href="/services/#{service.name}/actions/#{i}")= action.id
       td= action.averageTime() + 'ms'
+      td= percentage(action.meta.upTime, action.meta.upTime + action.meta.downTime)
       td
         = action.isUp() ? 'Up' : 'Down'
       td

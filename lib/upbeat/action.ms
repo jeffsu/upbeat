@@ -106,9 +106,12 @@ export class Action {
       this.strategy.check(#(passed, errorMsg) {
         self.checking = false;
 
-        if (timeoutId) clearTimeout(timeoutId);
-        timeoutId = null;
-        self.processCheck(startTime, passed ? false : (errorMsg || 'Failed'));
+        // haven't timed out
+        if (timeoutId) {
+          clearTimeout(timeoutId);
+          timeoutId = null;
+          self.processCheck(startTime, passed ? false : (errorMsg || 'Failed'));
+        } 
       });
     } 
     

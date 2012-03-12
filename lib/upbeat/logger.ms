@@ -5,7 +5,7 @@ export class Logger {
     this.server = server;
     this.winston = require('winston');
 
-    this.server.on('down',     #{ self.error($1.service.name + ' down.') });
+    this.server.on('down',     #{ self.error($1.service.name + ' down: ' + $2) });
     this.server.on('up',       #{ self.info($1.service.name + ' up: ' + $1.action.meta.lastResponseTime + 'ms.') });
     this.server.on('change',   #{ self.info($1.service.name + ' changed.') });
     this.server.on('snapshot', #{ self.info('Server snapshotted') });

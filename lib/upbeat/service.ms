@@ -22,7 +22,7 @@ export class Service {
     action.on('down', #{ 
       var wasUp = self.up;
       self.up = false;
-      self.emit('down', evt) 
+      self.emit('down', evt, $1); 
       if (wasUp) self.emit('change', evt);
     });
 

@@ -1,5 +1,43 @@
 
+
+var TIME = {};
+TIME.sec  = 1000;
+TIME.min  = 60 * TIME.sec;
+TIME.hour = 60 * TIME.min;
+TIME.day  = 24 * TIME.hour;
+TIME.ALL  = [ 'day', 'hour', 'min', 'sec' ];
+
+function humanTime(incoming) {
+
+  var time = parseInt(incoming);
+  if (time <= 0) return "0 secs";
+
+  var ret = [];
+
+  foreach (var unit in TIME.ALL) {
+    var t = TIME[unit];
+    var n = Math.floor(time/t);
+
+    if (n > 0) {
+      var s = (n > 1) ? 's' : '';
+      ret.push(n + ' ' + unit + s);
+    }
+    time = time % t;
+  }
+
+  return ret.join(' ');
+}
+
+function percentage(count, total) {
+  if (total > 0) {
+    return (Math.round(count/total*10000) / 100) + '%';
+  } else {
+    return '0%';
+  }
+}
+
 export class WebApp {
+
   function initialize(server) {
     this.server = server;
   }
@@ -11,7 +49,13 @@ export class WebApp {
     app.configure(#{
       app.set('views', __dirname + '/views');
       app.set('view engine', 'jade');
-      app.set('view options', { serer: self.server });
+
+      app.set('view options', { 
+        server: self.server, 
+        humanTime: humanTime,
+        percentage: percentage
+      });
+
       app.use(express.bodyParser());
       app.use(express.methodOverride());
       app.use(app.router);

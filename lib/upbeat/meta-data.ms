@@ -37,6 +37,7 @@ export class MetaData {
 
     // credit uptime
     var now = (new Date()).getTime();
+
     if (this.lastTime) {
       var delta = now - this.lastTime;
       if (this.up) {
@@ -44,14 +45,15 @@ export class MetaData {
       } else {
         this.downTime += delta;
       }
-    }
+    } 
 
+    this.lastTime = now;
     this.totalCount++;
+
     var wasUp = this.up;
     this.up   = passed;
 
     this.mark(resTime);
-
     this.emit((passed ? 'up' : 'down'), error);
 
     if (wasUp != passed) {
@@ -68,7 +70,7 @@ export class MetaData {
   }
 
   function mark(time) {
-    this.totalResTime += time;
+    this.totalResTime    += time;
     this.lastResponseTime = time;
 
     this.times.push(time); 

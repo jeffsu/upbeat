@@ -35,7 +35,7 @@ export class Server {
     this.services[service.name] = service;
     this.servicesArray.push(service);
 
-    service.on('down',   #{ self.emit('down', $1) });
+    service.on('down',   #{ self.emit('down', $1, $2) });
     service.on('up',     #{ self.emit('up', $1) });
     service.on('change', #{ self.emit('change', $1) });
 
