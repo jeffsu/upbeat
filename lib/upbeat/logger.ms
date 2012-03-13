@@ -33,11 +33,6 @@ export class Logger {
     this.server.on('snapshot', #{ self.info('Server snapshotted') });
   }
 
-  function addFile(file, level) {
-    level = level || 'debug';
-    this.logger.add(winston.transports.File, { filename: file, level: level });
-  }
-
   function start() {
     this.running = true;
   }

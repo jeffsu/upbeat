@@ -11,7 +11,6 @@ export class Configurer {
 
   function configure(config, server) {
     var server = new Server();
-
    
     if (config.snapshotInterval) {
       server.snapshotInterval = parseInt(config.snapshotInterval);
@@ -28,7 +27,7 @@ export class Configurer {
 
     if (config.logging !== false) {
       var Logger  = require('./logger');
-      this.logger = new Logger(server);
+      this.logger = new Logger(server, config.logging);
     }
 
     this.addProcesses(config, server);
