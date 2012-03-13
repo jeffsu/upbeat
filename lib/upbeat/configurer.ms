@@ -29,7 +29,6 @@ export class Configurer {
     if (config.logging !== false) {
       var Logger  = require('./logger');
       this.logger = new Logger(server);
-      this.logger.addConsole('debug');
     }
 
     this.addProcesses(config, server);
