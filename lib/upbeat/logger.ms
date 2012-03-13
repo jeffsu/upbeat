@@ -7,7 +7,7 @@ export class Logger {
 
   function initialize(server) {
     this.server = server;
-    this.logger = winston.Logger();
+    this.logger = new (winston.Logger)({ transports: [ new (winston.transports.Console)() ] });
 
     this.server.on('down',     #{ self.error($1.service.name + ' down: ' + $2) });
     this.server.on('up',       #{ self.info($1.service.name + ' up: ' + $1.action.meta.lastResponseTime + 'ms.') });
@@ -17,12 +17,12 @@ export class Logger {
 
   function addConsole(level) {
     level = level || 'debug';
-    this.logger.add(winston.transports.Console, { colorize: true, level: level });
+    //this.logger.add(winston.transports.Console, { colorize: true, level: level });
   }
 
   function addFile(file, level) {
     level = level || 'debug';
-    this.logger.add(winston.transports.File, { filename: file, level: level });
+    //this.logger.add(winston.transports.File, { filename: file, level: level });
   }
 
   function start() {

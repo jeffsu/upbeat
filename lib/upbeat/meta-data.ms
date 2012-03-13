@@ -23,8 +23,8 @@ export class MetaData {
     this.lastErrorMessage = null;
     this.lastResponseTime = null;
 
-    this.upCount      = 0;
-    this.downCount    = 0;
+    this.passCount    = 0;
+    this.failCount    = 0;
     this.runningCount = 0;
   }
 
@@ -54,6 +54,12 @@ export class MetaData {
     this.totalCount++;
 
     var wasUp = this.up;
+
+    if (passed) {
+      this.passCount++;
+    } else {
+      this.failCount++;
+    }
 
     this.mark(resTime);
     this.emit((passed ? 'pass' : 'fail'), error);
