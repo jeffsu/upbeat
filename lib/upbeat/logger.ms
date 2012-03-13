@@ -48,5 +48,4 @@ export class Logger {
   function info(msg) {
     if (this.running) this.logger.info(msg);
   }
-
 }

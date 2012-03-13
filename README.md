@@ -339,3 +339,48 @@ Config file
         - strategy: "/home/me/my-strategy.js"
           key0: val0
           key1: val1
+# API
+
+Using configurer to instantiate your server.
+
+    var config = ... json config ...;
+    var configurer = new upbeat.Configurer(config);
+    configurer.start();
+
+## Configurer
+
+The configurer has 3 main members:
+
+  1. server
+  1. logger
+  1. webapp
+
+### Server
+
+The upbeat server is the object that does all the health checking and process management.
+
+#### Events
+
+*up* 
+
+Every time a service comes up.
+
+*down*
+
+Every time a service goes down.
+
+*change*
+
+Every time a services changes status.
+
+*snapshot*
+
+Every time a service gets snapshotted
+
+### Logger
+
+A container for a winston object and is a proxy for a lot of the server events.
+
+### WebApp
+
+A container for an express application.
