@@ -44,7 +44,7 @@ module.exports = #(app, upbeat) {
   app.get('/services/:service/health', #(req, res, next) { 
     var service = getService(req, res);
     if (service) {
-      if (service.isUp()) {
+      if (service.up) {
         res.send("Healthy", 400);
       } else {
         res.send("Unhealthy", 400);
