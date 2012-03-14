@@ -339,6 +339,25 @@ Config file
         - strategy: "/home/me/my-strategy.js"
           key0: val0
           key1: val1
+
+# Logging
+
+All logging is optional, but here are some parameters you can use:
+
+    logging:
+      console: false # defaults to true
+      files:
+        - /var/log/upbeat.log
+        - file: /var/log/upbeat.errors.log
+          level: error
+
+If you want to build your own listeners to upbeat, please follow lib/upbeat/logger.ms for an example.
+You can also look at bin/upbeat for an example of how to instantiate an upbeat server via config file.
+
+    var c = new upbeat.Configurer(<config object>);
+    c.server.on('change', function (service) { console.log('something changed') });
+    c.start();
+
 # API
 
 Using configurer to instantiate your server.
