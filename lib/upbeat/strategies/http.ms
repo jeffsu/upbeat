@@ -117,6 +117,10 @@ export class Http extends Base {
   }
 
   function calculatePass(resp, data, callback) {
+    if (! resp) {
+      return callback(false);
+    }
+
     var passedMatch  = true;
     var passedLambda = true;
 
