@@ -1,3 +1,9 @@
+** 0.2.0-pre3 **
+
+  * added listeners to servers
+  * decoupled logging 
+  * decoupled webApp
+
 ** 0.2.0-pre1 **
 
   * refactored server
