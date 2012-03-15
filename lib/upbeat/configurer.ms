@@ -20,9 +20,9 @@ export class Configurer {
       server.checkInterval = parseInt(config.checkInterval);
     }
 
-    if (config.webApp !== false) {
+    if (config.webapp !== false) {
       var WebApp  = require('./www/app');
-      this.webApp = new WebApp(server);
+      this.webApp = new WebApp(server, config.webapp);
     }
 
     if (config.logging !== false) {
@@ -70,7 +70,7 @@ export class Configurer {
   function start() {
     this.server.start();
     if (this.logger) this.logger.start();
-    if (this.webApp) this.webApp.start(this.config.port || 2468);
+    if (this.webApp) this.webApp.start();
   }
 
   function stop() {

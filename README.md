@@ -118,11 +118,28 @@ running configuring upbeat: server, services, actions and strategies
 <a name="global" />
 ###Global Server Configuration:
 
-In the top level of the yaml configuration you have 3 main options:
+In the top level of the yaml configuration you have 4 main categories:
 
-  * host: the ip on which the upbeat http server binds to
-  * port: the port on which the upbeat http server listens on
+  * webapp: parameters for the ui
+  * logging: parameters for logging
+  * processes: parameters for using forever
   * services: a key/value hash where the key is the name of the service and the value is an array of action definitions
+
+<a name="webapp" />
+###Web Application (UI)
+
+To disable the UI altogether:
+
+    webapp: false
+
+To run the web app on a particular port:
+
+    webapp: 
+      port: 2468
+      address: 127.0.0.1
+
+By default, the webapp is enabled and runs on port 2468
+
 
 <a name="forever" />
 ###Forever:

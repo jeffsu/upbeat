@@ -38,11 +38,14 @@ function percentage(count, total) {
 
 export class WebApp {
 
-  function initialize(server) {
+  function initialize(server, config) {
     this.server = server;
+    this.config = config;
+    this.port    = config.port || 2468;
+    this.address = config.address;
   }
 
-  function start(port) {
+  function start() {
     var express = require('express');
     var app = express.createServer();
 
@@ -66,7 +69,7 @@ export class WebApp {
     require('./routes')(app, this.server)
     this.app = app;
     console.log('starting web app on port: ' + port);
-    this.app.listen(port);
+    this.app.listen(this.port, this.address);
 
     return app;
   }
