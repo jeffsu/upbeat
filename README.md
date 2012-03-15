@@ -4,25 +4,25 @@ Process monitoring with scalable health/performance checking.
 
 Upbeat provides several useful features:
 
-**Complex healthcheck strategies**
+##Complex healthcheck strategies
 
 For accurate healthchecks, sometimes the likes of monit, nagios and/or haproxy is not enough.  An example
 would be testing a mysql server to see if 1) the process is running 2) a query works 3) how fast the query was
 This is just and example of what upbeat is meant to do.  It is not meant to replace the tools mentioned previously, 
 but to actually play nicely with them.
 
-**Fast and scalable remote health checking**
+##Fast and scalable remote health checking
 
 Upbeat leverages nodes quickness and allows service healthchecks to be temporarily cached allowing more throughout put 
 in your healthchecks.  This will enable every machine to know the status of every other machine in a cluster without doing
 an expotential number of "real" healthchecks.  In the context of cloud computing, where high throughput load balancing is 
 non-trivial this becomes very useful.
 
-**Web Dashboard**
+##Web Dashboard##
 
 See your statuses on one page or use them for scripting through an api.
 
-**Forever Integration**
+##Forever Integration##
 
 Define processes to be run and how to monitor them.
 
@@ -358,6 +358,7 @@ You can also look at bin/upbeat for an example of how to instantiate an upbeat s
     c.server.on('change', function (service) { console.log('something changed') });
     c.start();
 
+<a name="api" />
 # API
 
 Using configurer to instantiate your server.
