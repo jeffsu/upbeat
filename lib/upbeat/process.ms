@@ -1,8 +1,8 @@
-var forever = require('forever');
 
 // Wrapper around forever
 export class Process {
   function initialize(name, options, service) {
+    var forever = require('forever');
     this.command = this.parseCommand(options);
     this.name    = name;
 
