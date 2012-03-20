@@ -1,4 +1,3 @@
-var Process = require('./process');
 var Service = require('./service');
 var Server  = require('./server');
 
@@ -52,6 +51,7 @@ export class Configurer {
 
   function addProcess(name, config) {
     if (config) {
+      var Process = require('./process');
       var process = new Process(name, config);
       var checks  = config.checks;
       delete config['checks'];
