@@ -1,3 +1,8 @@
+** 0.2.0-pre4 **
+
+  * refactored configuration
+  * better api to launch upbeat from within code
+
 ** 0.2.0-pre3 **
 
   * added listeners to servers
