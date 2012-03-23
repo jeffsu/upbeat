@@ -1,3 +1,7 @@
+** 0.2.1 **
+
+  * fixed "initially down" bug
+
 ** 0.2.0-pre5 **
 
   * adding null response times for failures

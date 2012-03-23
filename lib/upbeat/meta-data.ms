@@ -11,6 +11,7 @@ export class MetaData {
     this.times = [];
     this.snapshots = [];
     this.start = new Date();
+    this.firstTime = true;
 
     this.rise = config.rise || 1;
     this.fall = config.fall || 1;
@@ -40,6 +41,10 @@ export class MetaData {
 
     // credit uptime
     var now = (new Date()).getTime();
+    if (this.firstTime) {
+      this.up = passed;
+      this.firstTime = false;
+    }
 
     if (this.lastTime) {
       var delta = now - this.lastTime;
