@@ -120,7 +120,7 @@ export class Action {
   function times(n) {
     var times = this.meta.times;
     var idx = Math.max(0, times.length-n);
-    return times.slice(idx);
+    return times.slice(idx).map(#{ return $1[0] ? $1[1] : null });
   }
 
   function averageTime() {

@@ -31,6 +31,12 @@ export class Logger {
     this.server.on('up',       #{ self.info($1.service.name + ' up: ' + $1.action.meta.lastResponseTime + 'ms.') });
     this.server.on('change',   #{ self.info($1.service.name + ' changed.') });
     this.server.on('snapshot', #{ self.info('Server snapshotted') });
+
+    if (config.verbose) {
+      this.server.on('pass', #{ self.info($1.service.name + '(' + $1.action.id + ') passed in ' + $1.action.meta.lastResponseTime + 'ms.') });
+      this.server.on('fail', #{ self.error($1.service.name + '(' + $1.action.id + ') failed in ' + $1.action.meta.lastResponseTime + 'ms: ' + $2) });
+    }
+
   }
 
   function start() {

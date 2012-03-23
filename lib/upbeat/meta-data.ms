@@ -61,7 +61,7 @@ export class MetaData {
       this.failCount++;
     }
 
-    this.mark(resTime);
+    this.mark(passed, resTime);
     this.emit((passed ? 'pass' : 'fail'), error);
     this.lastCheck = passed;
 
@@ -87,11 +87,11 @@ export class MetaData {
     return Math.round(this.totalResTime / this.totalCount);
   }
 
-  function mark(time) {
+  function mark(passed, time) {
     this.totalResTime    += time;
     this.lastResponseTime = time;
 
-    this.times.push(time); 
+    this.times.push([ passed, time ]); 
     if (this.times.length > HISTORICAL_COUNT) this.times.shift();
   }
 

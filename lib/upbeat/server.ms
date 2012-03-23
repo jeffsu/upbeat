@@ -38,6 +38,8 @@ export class Server {
     service.on('down',   #{ self.emit('down', $1, $2) });
     service.on('up',     #{ self.emit('up', $1) });
     service.on('change', #{ self.emit('change', $1) });
+    service.on('fail', #{ self.emit('fail', $1, $2) });
+    service.on('pass', #{ self.emit('pass', $1, $2) });
 
     this.emit('service-added', service);
 
