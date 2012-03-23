@@ -1,3 +1,7 @@
+** 0.2.0-pre5 **
+
+  * adding null response times for failures
+ 
 ** 0.2.0-pre4 **
 
   * refactored configuration
