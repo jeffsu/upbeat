@@ -1,3 +1,7 @@
+** 0.2.2 **
+  
+  * fixed /health
+  
 ** 0.2.1 **
 
   * fixed "initially down" bug
