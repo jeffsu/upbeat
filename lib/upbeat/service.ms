@@ -14,6 +14,11 @@ export class Service {
     }
   }
 
+
+  function isUp() {
+    return this.up;
+  }
+
   function addAction(action) {
     this.actions.push(action);
     var meta = action.meta;
