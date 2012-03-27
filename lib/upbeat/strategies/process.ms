@@ -17,13 +17,18 @@ export class Process extends Base {
       if (err) {
         callback(false);
       } else {
-        self.kill = spawn('kill', [ data.replace(/\s+/g, '') ]);
-        self.kill.on('exit', #(code) { callback(code == 0); });
+        var pid = data.replace(/\s+/g);
+        var filename = '/proc/' + pid + '/exe';
+        fs.readlink(filename, #(err, linkString) {
+          if (err) {
+            callback(false);
+          } else {
+            callback(true);
+          }
+        });
       }
     });
   }
 
-  function clear() {
-    if (this.kill) this.kill.kill('SIGINT'); 
-  }
+  function clear() { }
 }
