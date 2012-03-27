@@ -1,3 +1,7 @@
+** 0.2.3 **
+
+  * fixed process pidfile checking.
+
 ** 0.2.2 **
   
   * fixed /health
