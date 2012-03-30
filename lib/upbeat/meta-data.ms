@@ -1,3 +1,5 @@
+var tempos = require('./tempos');
+
 // handles overall uptitude
 export class MetaData {
   include $m.EventEmitter;
@@ -6,12 +8,12 @@ export class MetaData {
     var HISTORICAL_COUNT = 100;
   }
 
-  function initialize(config) {
+  function initialize(config, id) {
     this.up = false;
     this.times = [];
-    this.snapshots = [];
     this.start = new Date();
     this.firstTime = true;
+    this.id        = id;
 
     this.rise = config.rise || 1;
     this.fall = config.fall || 1;
@@ -29,13 +31,6 @@ export class MetaData {
     this.runningCount = 0;
   }
 
-  function snapshot() {
-    this.snapshots.push({
-      up:      this.up,
-      resTime: this.averageResponseTime()
-    });
-  }
-
   function setStatus(error, resTime) {
     var passed = ! error;
 
@@ -49,9 +44,9 @@ export class MetaData {
     if (this.lastTime) {
       var delta = now - this.lastTime;
       if (this.up) {
-        this.upTime += delta;
+        tempos.increment(this.id, 'uptime', delta);
       } else {
-        this.downTime += delta;
+        tempos.increment(this.id, 'downtime', delta);
       }
     } 
 
@@ -87,12 +82,28 @@ export class MetaData {
     }
   }
 
+  function uptime() {
+    return tempos.day.getVal(this.id, 'uptime');
+  }
+
+  function downtime() {
+    return tempos.day.getVal(this.id, 'downtime');
+  }
+
+
   function averageResponseTime() {
+    var totalResp  = tempos.day.getTotal(this.id, 'resp');
+    var totalCount = tempos.day.getTotal(this.id, 'count');
+
     if (this.totalCount == 0) return null;
-    return Math.round(this.totalResTime / this.totalCount);
+    return Math.round(totalResp / totalCount);
   }
 
   function mark(passed, time) {
+    tempos.increment(this.id, 'resp', time);
+    tempos.increment(this.id, 'count', 1);
+    tempos.increment(this.id, (passed ? 'passed' : 'failed'), 1);
+
     this.totalResTime    += time;
     this.lastResponseTime = time;
 

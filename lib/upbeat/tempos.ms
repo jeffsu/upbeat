@@ -1,11 +1,11 @@
 var tempo = require('tempo');
 
-export class Tempos {
+class Tempos {
   function initialize() {
-    this.minute = new tempo.DataStore(temp.MIN);
-    this.day    = new tempo.DataStore(temp.DAY);
-    this.hour   = new tempo.DataStore(temp.HOUR);
-    this.week   = new tempo.DataStore(temp.WEEK);
+    this.minute = new tempo.DataStore(tempo.MIN);
+    this.day    = new tempo.DataStore(tempo.DAY);
+    this.hour   = new tempo.DataStore(tempo.HOUR);
+    this.week   = new tempo.DataStore(tempo.WEEK);
   }
 
   function increment(key, attr, val) {
@@ -15,3 +15,5 @@ export class Tempos {
     this.week.increment(key, attr, val); 
   }
 }
+
+module.exports = new Tempos();

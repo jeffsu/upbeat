@@ -20,21 +20,12 @@ export class Action {
     STRAGETIES[name] = req;
   }
 
-  function snapshot() {
-    var m = this.meta;
-    this.meta.snapshot();
-  }
-
-  function getSnapshots() {
-    return this.snapshots;
-  }
-
-  function initialize(config, service) {
-    this.service = service;
+  function initialize(config) {
+    this.service = config.service;
     this.config  = config;
     this.running = false;
 
-    this.meta = new MetaData(config);
+    this.meta = new MetaData(config, this.id);
 
     this.strategy = this.getStrategy(config);
     this.timeout  = config.timeout;
@@ -44,7 +35,8 @@ export class Action {
     this.interval = this.interval || 10000;
 
     this.maxResponse = config['max-response-time'] || this.timeout;
-    this.id = config.name || config.id || this.strategy.id;
+    this.name = config.name;
+    this.id   = this.service.name + ':' + this.name;
   }
 
   function on() {

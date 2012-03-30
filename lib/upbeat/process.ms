@@ -4,7 +4,9 @@ export class Process {
   function initialize(name, options, service) {
     var forever = require('forever');
     this.command = this.parseCommand(options);
-    this.name    = name;
+
+    this.name = options.name;
+    delete options['name'];
 
     this.child    = forever.start(this.command, options);
     this.service = service;

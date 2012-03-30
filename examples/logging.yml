@@ -1,4 +1,3 @@
 logging:
   up: ./fails.log
   down: ./all.log
-  snapshots: ./snapshots.log
