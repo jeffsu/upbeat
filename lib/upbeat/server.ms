@@ -65,6 +65,6 @@ export class Server {
   }
 
   function getService(name) {
-    return this.services[name];
+    return this.serviceHash[name];
   }
 }

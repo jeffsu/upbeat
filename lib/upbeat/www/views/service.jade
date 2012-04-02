@@ -12,7 +12,7 @@ table.table.table-bordered
     tr
       td: a(href="/services/#{service.name}/actions/#{i}")= action.id
       td= action.averageTime() + 'ms'
-      td= percentage(action.meta.upTime, action.meta.upTime + action.meta.downTime)
+      td= percentage(action.meta.uptime(), action.meta.uptime() + action.meta.downtime())
       td
         = action.isUp() ? 'Up' : 'Down'
       td
@@ -33,7 +33,7 @@ script
       for (var i=0; i<data.length; i++) {
         $('#action' + i).sparkline(data[i]);
         var points = data[i];
-        var line = chart.series[i];
+        var line   = chart.series[i];
         line.setData(points, false);
       }
       chart.redraw();
@@ -50,7 +50,7 @@ script
     chart = new Highcharts.Chart({
       chart: { 
         renderTo: 'chart',
-        type: 'line' 
+        type:     'line' 
       }, 
 
       title: { text: $('h1.name').text() },

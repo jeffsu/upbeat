@@ -3,8 +3,8 @@ var tempo = require('tempo');
 class Tempos {
   function initialize() {
     this.minute = new tempo.DataStore(tempo.MIN);
-    this.day    = new tempo.DataStore(tempo.DAY);
     this.hour   = new tempo.DataStore(tempo.HOUR);
+    this.day    = new tempo.DataStore(tempo.DAY);
     this.week   = new tempo.DataStore(tempo.WEEK);
   }
 

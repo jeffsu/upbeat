@@ -90,6 +90,12 @@ export class MetaData {
     return tempos.day.getVal(this.id, 'downtime');
   }
 
+  function times(n, period) {
+    var tempo = tempos[period];
+    var history = tempo.getHistory(this.id, 'resp', 'count');
+    
+  }
+
 
   function averageResponseTime() {
     var totalResp  = tempos.day.getTotal(this.id, 'resp');
