@@ -109,13 +109,6 @@ export class Action {
     }
   }
 
-  function times(n, period) {
-    period = period || 'day';
-    var times = this.meta.times;
-    var idx = Math.max(0, times.length-n);
-    return times.slice(idx).map(#{ => $1[0] ? $1[1] : null });
-  }
-
   function averageTime() {
     return this.meta.averageResponseTime();
   }

@@ -18,8 +18,9 @@ module.exports = #(app, upbeat) {
   // service actions times
   app.get('/services/:service/actions.json', #(req, res, next) {
     var service = getService(req, res);
+    var period  = req.query.period || 'min';
     if (service) {
-      var times = service.actions#map { $1.times(100) };
+      var times = service.actions.map(#{ => $1.meta.plotResponseTimes('min') });
       res.contentType('json');
       res.send(JSON.stringify(times));
     }

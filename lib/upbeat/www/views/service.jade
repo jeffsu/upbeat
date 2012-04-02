@@ -55,6 +55,16 @@ script
 
       title: { text: $('h1.name').text() },
 
+      xAxis: {
+        title: { text: "Seconds Ago" },
+        categories: #{categories.min.data},
+      },
+
+      yAxis: {
+        title: { text: "Response Time in Milliseconds" }
+      },
+
+
       plotOptions: {
         pointInterval: 2000
       },

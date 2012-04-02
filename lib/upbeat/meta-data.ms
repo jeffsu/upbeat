@@ -90,25 +90,30 @@ export class MetaData {
     return tempos.day.getVal(this.id, 'downtime');
   }
 
-  function times(n, period) {
-    var tempo = tempos[period];
-    var history = tempo.getHistory(this.id, 'resp', 'count');
-    
+  function getHistory(period) {
+    var args  = [ this.id ];
+    for (var i=1; i<arguments.length; i++) args.push(arguments[i]);
+    var tempo = tempos[period || 'day']; 
+    return tempo.getHistory.apply(tempo, args);
   }
 
+  function plotResponseTimes(period) {
+    return this.getHistory(period, 'passed-count', 'passed-resp').map(#(row) { => row[1] ? Math.round(row[2] / row[1]) : null });
+  }
 
   function averageResponseTime() {
-    var totalResp  = tempos.day.getTotal(this.id, 'resp');
-    var totalCount = tempos.day.getTotal(this.id, 'count');
+    var totalResp  = tempos.day.getTotal(this.id, 'passed-resp');
+    var totalCount = tempos.day.getTotal(this.id, 'passed-count');
 
     if (this.totalCount == 0) return null;
     return Math.round(totalResp / totalCount);
   }
 
   function mark(passed, time) {
-    tempos.increment(this.id, 'resp', time);
-    tempos.increment(this.id, 'count', 1);
-    tempos.increment(this.id, (passed ? 'passed' : 'failed'), 1);
+    var pre = passed ? 'passed' : 'failed';
+    tempos.increment(this.id, pre + '-resp', time);
+    tempos.increment(this.id, pre + '-count', 1);
+    tempos.increment(this.id, pre, 1);
 
     this.totalResTime    += time;
     this.lastResponseTime = time;

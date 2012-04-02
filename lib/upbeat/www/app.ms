@@ -9,7 +9,6 @@ TIME.ALL  = [ 'day', 'hour', 'min', 'sec' ];
 
 function humanTime(incoming) {
 
-  var time = parseInt(incoming);
   if (time <= 0) return "0 secs";
 
   var ret = [];
@@ -36,6 +35,16 @@ function percentage(count, total) {
   }
 }
 
+var range = [];
+for (var i=0; i<1000; i++) range.push(i);
+
+var categories = { 
+  min: {
+    text: JSON.stringify('Seconds Ago'),
+    data: JSON.stringify(range.slice(0,12).map(#{ => 60 - $1 * 5 }))
+  }
+};
+
 export class WebApp {
 
   function initialize(server, config) {
@@ -56,7 +65,8 @@ export class WebApp {
       app.set('view options', { 
         server: self.server, 
         humanTime: humanTime,
-        percentage: percentage
+        percentage: percentage,
+        categories: categories
       });
 
       app.use(express.bodyParser());
