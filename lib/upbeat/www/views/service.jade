@@ -45,7 +45,7 @@ script
     var series = [];
 
     for (var i=0; i<count; i++) {
-      series.push({ name: $('#action' + i).attr('name'), data: [] });
+      series.push({ name: $('#action' + i).attr('name'), data: [], connectNulls: true });
     }
 
 
@@ -61,6 +61,7 @@ script
         title: { text: "Seconds Ago" },
         categories: #{categories.min.data},
       },
+
 
       yAxis: {
         title: { text: "Response Time in Milliseconds" }
