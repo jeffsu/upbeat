@@ -27,13 +27,13 @@ module.exports = #(app, upbeat) {
   });
 
   // service actions times
-  app.get('/services/:service/actions/:actionIdx.:format?', #(req, res, next) {
+  app.get('/services/:service/actions/:action.:format?', #(req, res, next) {
     var service = getService(req, res);
     if (service) {
-      var action = service.actions[parseInt(req.params.actionIdx)];
+      var action = service.actionHash[req.params.action];
       if (req.params.format == 'json') {
         res.contentType('json');
-        res.send(JSON.stringify(action.meta));
+        res.send(JSON.stringify(action.meta.plotResponseTimes('min')));
       } 
       
       else {

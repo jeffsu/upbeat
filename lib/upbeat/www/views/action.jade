@@ -1,6 +1,6 @@
 
 h3: a(href="/services/#{service.name}")= service.name
-h2= action.id
+h2= action.name
 
 h3 Attributes
 table.table.table-condensed.table-bordered.table-striped
@@ -32,20 +32,22 @@ script
   }
 
   var chart = null;
-  function buildChart(meta) {
+  function buildChart(data) {
     if (chart) {
-      chart.series[0].setData(meta.times, true);
+      chart.series[0].setData(data, true);
       return;
     }
 
-    var data = meta.responseTimes;
     chart = new Highcharts.Chart({
       chart: { 
         renderTo: 'container',
         type: 'line'
       }, 
 
-      xAxis: { title: { text: 'Last N Requests' } },
+      xAxis: { 
+        title: { text: 'Seconds Ago' },
+        categories: #{categories.min.data}
+      },
       yAxis: { title: { text: 'Time in Milliseconds' } },
 
       title: { text: '' },

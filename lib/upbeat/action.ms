@@ -25,7 +25,6 @@ export class Action {
     this.config  = config;
     this.running = false;
 
-    this.meta = new MetaData(config, this.id);
 
     this.strategy = this.getStrategy(config);
     this.timeout  = config.timeout;
@@ -37,6 +36,7 @@ export class Action {
     this.maxResponse = config['max-response-time'] || this.timeout;
     this.name = config.name;
     this.id   = this.service.name + ':' + this.name;
+    this.meta = new MetaData(config, this.id);
   }
 
   function on() {
