@@ -38,7 +38,7 @@ table.table.table-bordered.table-condensed
                   = ' (' + percentage(action.meta.uptime(), action.meta.downtime() + action.meta.uptime()) + ')'
                 td
                   = humanTime(action.meta.downtime()) + ' Down'
-                td.sparkline= action.times(50).join(',')
+                td.sparkline= action.meta.plotResponseTimes().join(',')
                 td= action.meta.up ? 'Up' : 'Down'
 script
   $(function () { $('.sparkline').sparkline() });

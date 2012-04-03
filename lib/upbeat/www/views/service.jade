@@ -10,13 +10,13 @@ table.table.table-bordered
       th 
   each action, i in service.actions
     tr
-      td: a(href="/services/#{service.name}/actions/#{i}")= action.id
+      td: a(href="/services/#{service.name}/actions/#{i}")= action.name
       td= action.averageTime() + 'ms'
       td= percentage(action.meta.uptime(), action.meta.uptime() + action.meta.downtime())
       td
         = action.isUp() ? 'Up' : 'Down'
       td
-        div(id="action#{i}", name=action.id)
+        div(id="action#{i}", name=action.name)
 
 #chart
 

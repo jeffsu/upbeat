@@ -7,7 +7,7 @@ TIME.hour = 60 * TIME.min;
 TIME.day  = 24 * TIME.hour;
 TIME.ALL  = [ 'day', 'hour', 'min', 'sec' ];
 
-function humanTime(incoming) {
+function humanTime(time) {
 
   if (time <= 0) return "0 secs";
 

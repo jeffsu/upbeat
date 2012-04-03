@@ -3,13 +3,13 @@ services:
     actions:
       www:
         strategy: http
-        url: http://www.google.com
+        url: http://www.factual.com
         status: 200
         interval: 5000
 
       lambda:
         strategy: http
-        url: http://www.google.com
+        url: http://www.factual.com
         lambda: "function (data) { return data.match(/html/) }"
         matches: html
         status: 200
@@ -17,7 +17,7 @@ services:
 
       lambda2: 
         strategy: http
-        url: http://www.google.com
+        url: http://www.factual.com
         lambda: 
           - "function (data) { return data.match(/html/) }"
           - "function (data) { return data.match(/html/) }"
