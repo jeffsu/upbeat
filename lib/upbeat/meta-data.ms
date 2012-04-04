@@ -82,18 +82,18 @@ export class MetaData {
     }
   }
 
-  function uptime() {
-    return tempos.day.getVal(this.id, 'uptime');
+  function uptime(period) {
+    return tempos.get(period).getTotal(this.id, 'uptime');
   }
 
-  function downtime() {
-    return tempos.day.getVal(this.id, 'downtime');
+  function downtime(period) {
+    return tempos.get(period).getTotal(this.id, 'downtime');
   }
 
   function getHistory(period) {
     var args  = [ this.id ];
     for (var i=1; i<arguments.length; i++) args.push(arguments[i]);
-    var tempo = tempos[period || 'day']; 
+    var tempo = tempos.get(period);
     return tempo.getHistory.apply(tempo, args);
   }
 
@@ -107,6 +107,10 @@ export class MetaData {
 
     if (this.totalCount == 0) return null;
     return Math.round(totalResp / totalCount);
+  }
+
+  function total(attr, period) {
+    return tempos.get(period).getTotal(this.id, attr);
   }
 
   function mark(passed, time) {

@@ -30,10 +30,25 @@ module.exports = #(app, upbeat) {
   app.get('/services/:service/actions/:action.:format?', #(req, res, next) {
     var service = getService(req, res);
     if (service) {
+      var period = 'day';
       var action = service.actionHash[req.params.action];
       if (req.params.format == 'json') {
         res.contentType('json');
-        res.send(JSON.stringify(action.meta.plotResponseTimes('min')));
+        var ret = {
+          meta: {
+            uptime: action.meta.uptime(period),
+            downtime: action.meta.downtime(period),
+            avgRespTime: action.meta.averageResponseTime(period),
+            interval: action.interval,
+            timeout:  action.timeout,
+            passes: action.meta.total('passed-count'), 
+            failures: action.meta.total('failed-count')
+          },
+
+          responseTimes: action.meta.plotResponseTimes('min')
+        };
+
+        res.send(JSON.stringify(ret));
       } 
       
       else {

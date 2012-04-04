@@ -14,6 +14,10 @@ class Tempos {
     this.hour.increment(key, attr, val); 
     this.week.increment(key, attr, val); 
   }
+
+  function get(period) {
+    return this[period || 'day'];
+  }
 }
 
 module.exports = new Tempos();
