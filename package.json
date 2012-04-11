@@ -10,9 +10,11 @@
   "main" : "./lib/upbeat/index",
   "bin":   { "upbeat": "./bin/upbeat", "tempo": "./bin/tempo" },
   "dependencies": { 
-    "jade": ">=0.19.0",
-    "mochiscript": ">=0.5.1",
-    "js-yaml": ">=0.3.1",
+    "express":     ">=2.5.8",
+    "jade":        ">=0.19.0",
+    "mochiscript": ">=0.5.2",
+    "js-yaml":     ">=0.3.1",
+    "tempo":       ">=0.0.1-pre2",
     "winston": ""
   },
   "repository":   {

@@ -1,25 +1,35 @@
 
-h3: a(href="/services/#{service.name}")= service.name
-h2= action.id
+ul.breadcrumb
+  li
+    a(href="/services/#{service.name}")= service.name
+    span.divider / 
+  li.active= action.name
+
 
 h3 Attributes
 table.table.table-condensed.table-bordered.table-striped
-  thead
-    tr
-      th Attribute
-      th Value
+  tr
+    th Uptime Today
+    td#uptime
+  tr
+    th Downtime Today
+    td#downtime
+  tr
+    th Average Response Time
+    td#avgRespTime
+  tr
+    th Interval
+    td#interval
+  tr
+    th Timeout
+    td#timeout
+  tr
+    th Failed Count
+    td#failures
+  tr
+    th Passed Count
+    td#passes
 
-  each value, key in action
-    - if (typeof value == 'string' || typeof value == 'number')
-      tr
-        td= key
-        td= value
-
-  each value, key in action.meta
-    - if (typeof value == 'string' || typeof value == 'number')
-      tr
-        td= key
-        td= value
 
 h3 Performance
 #container(style="width:100%;height:500px")
@@ -28,24 +38,32 @@ script
   $(function () { getData(); });
 
   function getData() {
-    setInterval(function () { $.get(location.href + '.json', buildChart) }, 2000);
+    $.get(location.href + '.json', updateData);
+    setInterval(function () { $.get(location.href + '.json', updateData) }, 2000);
   }
 
   var chart = null;
-  function buildChart(meta) {
+  function updateData(payload) {
+    var meta = payload.meta;
+    var data = payload.responseTimes;
+
+    for (var k in meta) $('#' + k).html(meta[k]);
+
     if (chart) {
-      chart.series[0].setData(meta.times, true);
+      chart.series[0].setData(data, true);
       return;
     }
 
-    var data = meta.responseTimes;
     chart = new Highcharts.Chart({
       chart: { 
         renderTo: 'container',
         type: 'line'
       }, 
 
-      xAxis: { title: { text: 'Last N Requests' } },
+      xAxis: { 
+        title: { text: 'Seconds Ago' },
+        categories: #{categories.min.data}
+      },
       yAxis: { title: { text: 'Time in Milliseconds' } },
 
       title: { text: '' },
@@ -53,6 +71,6 @@ script
         pointInterval: 2000
       },
 
-      series: [ { name: 'action', data: data } ]
+      series: [ { name: 'action', data: data, connectNulls: true } ]
     });
   }

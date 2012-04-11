@@ -19,9 +19,9 @@ table.table.table-bordered.table-condensed
       tr
         th Service
         th
-    each service, name in services
+    each service in services
       tr
-        td: a(href="/services/#{name}")= name
+        td: a(href="/services/#{service.name}")= service.name
         td(style="padding: 0")
           table(width="100%")
             thead
@@ -32,13 +32,13 @@ table.table.table-bordered.table-condensed
 
             each action, i in service.actions
               tr
-                td(width="50%"): a(href="/services/#{name}/actions/#{i}")= action.id
+                td(width="50%"): a(href="/services/#{service.name}/actions/#{action.name}")= action.name
                 td
-                  = humanTime(action.meta.upTime) + ' Up'
-                  = ' (' + percentage(action.meta.upTime, action.meta.downTime + action.meta.upTime) + ')'
+                  = humanTime(action.meta.uptime()) + ' Up'
+                  = ' (' + percentage(action.meta.uptime(), action.meta.downtime() + action.meta.uptime()) + ')'
                 td
-                  = humanTime(action.meta.downTime) + ' Down'
-                td.sparkline= action.times(50).join(',')
+                  = humanTime(action.meta.downtime()) + ' Down'
+                td.sparkline= action.meta.plotResponseTimes().join(',')
                 td= action.meta.up ? 'Up' : 'Down'
 script
   $(function () { $('.sparkline').sparkline() });

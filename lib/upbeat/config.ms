@@ -3,7 +3,7 @@ var Server  = require('./server');
 
 require('js-yaml');
 
-export class Configurer {
+export class Config {
   function initialize(config) {
     this.config = config;
     this.configure(config);
@@ -12,10 +12,6 @@ export class Configurer {
   function configure(config, server) {
     var server = this.server = new Server();
    
-    if (config.snapshotInterval) {
-      server.snapshotInterval = parseInt(config.snapshotInterval);
-    }
-
     if (config.checkInterval) {
       server.checkInterval = parseInt(config.checkInterval);
     }
@@ -35,8 +31,8 @@ export class Configurer {
     this.addServices(config); 
   }
 
-  function addService(name, config) {
-    var service = config ? new Service(name, config) : name;
+  function addService(config) {
+    var service = new Service(config);
     this.server.addService(service);
   }
 
@@ -45,7 +41,9 @@ export class Configurer {
     if (!services) return;
 
     for (var name in services) {
-      this.addService(name, services[name]);
+      var config = services[name];
+      config.name = name;
+      this.addService(config);
     }
   }
 
@@ -72,7 +70,10 @@ export class Configurer {
   function addProcesses(config) {
     var p = config.processes;
     if (p) {
-      for (var name in p) this.addProcess(name, p[name]);
+      for (var name in p) {
+        p.name = name;
+        this.addProcess(p[name]);
+      }
     }
   }
 

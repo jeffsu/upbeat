@@ -10,13 +10,13 @@ table.table.table-bordered
       th 
   each action, i in service.actions
     tr
-      td: a(href="/services/#{service.name}/actions/#{i}")= action.id
+      td: a(href="/services/#{service.name}/actions/#{action.name}")= action.name
       td= action.averageTime() + 'ms'
-      td= percentage(action.meta.upTime, action.meta.upTime + action.meta.downTime)
+      td= percentage(action.meta.uptime(), action.meta.uptime() + action.meta.downtime())
       td
         = action.isUp() ? 'Up' : 'Down'
       td
-        div(id="action#{i}", name=action.id)
+        div(id="action#{i}", name=action.name)
 
 #chart
 
@@ -33,7 +33,7 @@ script
       for (var i=0; i<data.length; i++) {
         $('#action' + i).sparkline(data[i]);
         var points = data[i];
-        var line = chart.series[i];
+        var line   = chart.series[i];
         line.setData(points, false);
       }
       chart.redraw();
@@ -43,17 +43,30 @@ script
   function buildChart() {
     var count = #{service.actions.length};
     var series = [];
+
     for (var i=0; i<count; i++) {
-      series.push({ name: $('#action' + i).attr('name'), data: [] });
+      series.push({ name: $('#action' + i).attr('name'), data: [], connectNulls: true });
     }
+
 
     chart = new Highcharts.Chart({
       chart: { 
         renderTo: 'chart',
-        type: 'line' 
+        type:     'line' 
       }, 
 
       title: { text: $('h1.name').text() },
+
+      xAxis: {
+        title: { text: "Seconds Ago" },
+        categories: #{categories.min.data},
+      },
+
+
+      yAxis: {
+        title: { text: "Response Time in Milliseconds" }
+      },
+
 
       plotOptions: {
         pointInterval: 2000

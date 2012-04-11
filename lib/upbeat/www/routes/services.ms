@@ -18,21 +18,37 @@ module.exports = #(app, upbeat) {
   // service actions times
   app.get('/services/:service/actions.json', #(req, res, next) {
     var service = getService(req, res);
+    var period  = req.query.period || 'min';
     if (service) {
-      var times = service.actions#map { $1.times(100) };
+      var times = service.actions.map(#{ => $1.meta.plotResponseTimes('min') });
       res.contentType('json');
       res.send(JSON.stringify(times));
     }
   });
 
   // service actions times
-  app.get('/services/:service/actions/:actionIdx.:format?', #(req, res, next) {
+  app.get('/services/:service/actions/:action.:format?', #(req, res, next) {
     var service = getService(req, res);
     if (service) {
-      var action = service.actions[parseInt(req.params.actionIdx)];
+      var period = 'day';
+      var action = service.actionHash[req.params.action];
       if (req.params.format == 'json') {
         res.contentType('json');
-        res.send(JSON.stringify(action.meta));
+        var ret = {
+          meta: {
+            uptime: action.meta.uptime(period),
+            downtime: action.meta.downtime(period),
+            avgRespTime: action.meta.averageResponseTime(period),
+            interval: action.interval,
+            timeout:  action.timeout,
+            passes: action.meta.total('passed-count'), 
+            failures: action.meta.total('failed-count')
+          },
+
+          responseTimes: action.meta.plotResponseTimes('min')
+        };
+
+        res.send(JSON.stringify(ret));
       } 
       
       else {

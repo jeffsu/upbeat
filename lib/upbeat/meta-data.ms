@@ -1,3 +1,5 @@
+var tempos = require('./tempos');
+
 // handles overall uptitude
 export class MetaData {
   include $m.EventEmitter;
@@ -6,12 +8,12 @@ export class MetaData {
     var HISTORICAL_COUNT = 100;
   }
 
-  function initialize(config) {
+  function initialize(config, id) {
     this.up = false;
     this.times = [];
-    this.snapshots = [];
     this.start = new Date();
     this.firstTime = true;
+    this.id        = id;
 
     this.rise = config.rise || 1;
     this.fall = config.fall || 1;
@@ -29,13 +31,6 @@ export class MetaData {
     this.runningCount = 0;
   }
 
-  function snapshot() {
-    this.snapshots.push({
-      up:      this.up,
-      resTime: this.averageResponseTime()
-    });
-  }
-
   function setStatus(error, resTime) {
     var passed = ! error;
 
@@ -49,9 +44,9 @@ export class MetaData {
     if (this.lastTime) {
       var delta = now - this.lastTime;
       if (this.up) {
-        this.upTime += delta;
+        tempos.increment(this.id, 'uptime', delta);
       } else {
-        this.downTime += delta;
+        tempos.increment(this.id, 'downtime', delta);
       }
     } 
 
@@ -87,12 +82,43 @@ export class MetaData {
     }
   }
 
+  function uptime(period) {
+    return tempos.get(period).getTotal(this.id, 'uptime');
+  }
+
+  function downtime(period) {
+    return tempos.get(period).getTotal(this.id, 'downtime');
+  }
+
+  function getHistory(period) {
+    var args  = [ this.id ];
+    for (var i=1; i<arguments.length; i++) args.push(arguments[i]);
+    var tempo = tempos.get(period);
+    return tempo.getHistory.apply(tempo, args);
+  }
+
+  function plotResponseTimes(period) {
+    return this.getHistory(period, 'passed-count', 'passed-resp').map(#(row) { => row[1] ? Math.round(row[2] / row[1]) : null });
+  }
+
   function averageResponseTime() {
+    var totalResp  = tempos.day.getTotal(this.id, 'passed-resp');
+    var totalCount = tempos.day.getTotal(this.id, 'passed-count');
+
     if (this.totalCount == 0) return null;
-    return Math.round(this.totalResTime / this.totalCount);
+    return Math.round(totalResp / totalCount);
+  }
+
+  function total(attr, period) {
+    return tempos.get(period).getTotal(this.id, attr);
   }
 
   function mark(passed, time) {
+    var pre = passed ? 'passed' : 'failed';
+    tempos.increment(this.id, pre + '-resp', time);
+    tempos.increment(this.id, pre + '-count', 1);
+    tempos.increment(this.id, pre, 1);
+
     this.totalResTime    += time;
     this.lastResponseTime = time;
 

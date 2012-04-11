@@ -4,14 +4,21 @@ var Action = require('./action');
 export class Service {
   include $m.EventEmitter;
 
-  function initialize(name, actions) {
-    this.name    = name;
-    this.actions = [];
+  function initialize(config) {
+    this.name        = config.name;
+    this.actionHash  = {};
+    this.actions     = this.actionArray = [];
+
     this.up = true;
 
-    foreach (var action in actions) {
-      this.addAction(new Action(action, this));
+    for (var name in config.actions) {
+      var aconfig  = config.actions[name];
+      aconfig.name = name;
+      aconfig.service = this;
+      this.addAction(new Action(aconfig));
     }
+
+    this.actions = this.actions.sort(#{ => $1.name - $2.name });
   }
 
 
@@ -21,6 +28,8 @@ export class Service {
 
   function addAction(action) {
     this.actions.push(action);
+    this.actionHash[action.name] = action;
+
     var meta = action.meta;
     var evt = { service: this, action: action };
 
@@ -61,14 +70,8 @@ export class Service {
     }
   }
 
-  function snapshot() {
-    foreach (var a in this.actions) {
-      a.snapshot();
-    }
-  }
-
-  function getAction(idx) {
-    return this.actions[idx];
+  function getAction(name) {
+    return this.actionHash[name];
   }
 
   function start() {
