@@ -10,19 +10,27 @@ module.exports = #(app, upbeat) {
   }
 
   // service landing page
-  app.get('/services/:service', #(req, res, next) {
-    var service = getService(req, res);
-    if (service) res.render('service', { service: service });
-  });
-
-  // service actions times
-  app.get('/services/:service/actions.json', #(req, res, next) {
+  app.get('/services/:service.:format?', #(req, res, next) {
     var service = getService(req, res);
     var period  = req.query.period || 'min';
-    if (service) {
-      var times = service.actions.map(#{ => $1.meta.plotResponseTimes('min') });
+
+    if (req.params.format == 'json') {
+      var payload = [];
+      foreach (var action in service.actions) {
+        payload.push({
+          name:     action.name,
+          up:       action.isUp(),
+          avgTime:  action.averageTime() + 'ms',
+          uptime:   action.meta.uptime(),
+          downtime: action.meta.downtime(),
+          series:   action.meta.plotResponseTimes(period)
+        });
+      }
+
       res.contentType('json');
-      res.send(JSON.stringify(times));
+      res.send(JSON.stringify(payload));
+    } else {
+      if (service) res.render('service', { service: service });
     }
   });
 
