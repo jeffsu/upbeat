@@ -1,14 +1,18 @@
+var tempos = require('./tempos');
 
 // Wrapper around forever
 export class Process {
   function initialize(name, options, service) {
-    var forever = require('forever');
-    this.command = this.parseCommand(options);
+    var forever  = require('forever');
 
     this.name = options.name;
     delete options['name'];
 
-    this.child    = forever.start(this.command, options);
+    this.command = this.parseCommand(options);
+    if (this.command) {
+      this.child = forever.start(this.command, options);
+    }
+
     this.service = service;
 
     this.errors = [];
@@ -26,7 +30,7 @@ export class Process {
     delete options['command'];
     delete options['options'];
 
-    return cmd;
+    return cmd.length ? cmd : null;
   }
 
   function isUp() {
