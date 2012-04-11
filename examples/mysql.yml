@@ -5,6 +5,10 @@ services:
         strategy: mysql # custom query
         sql: "SELECT * FROM USERS"
         host: localhost
+        user: root
+        password: root
       mysql-default:
         strategy: mysql 
         host: localhost
+        user: root
+        password: root
