@@ -49,18 +49,9 @@ export class Config {
 
   function addProcess(name, config) {
     if (config) {
+      config.name = name;
       var Process = require('./process');
-      var process = new Process(name, config);
-      var checks  = config.checks;
-      delete config['checks'];
-
-      var service = null;
-      if (checks) {
-        service = new Service(name, checks);
-        this.server.addService(service);
-      }
-
-      var process = new Process(name, options, service);
+      var process = new Process(config, this.server);
       this.server.addProcess(process);
     } else {
       this.server.addProcess(name);
@@ -72,7 +63,7 @@ export class Config {
     if (p) {
       for (var name in p) {
         p.name = name;
-        this.addProcess(p[name]);
+        this.addProcess(name, p[name]);
       }
     }
   }
