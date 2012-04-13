@@ -1,6 +1,7 @@
 services:
   places:
-    - strategy: oauth
+    actions:
+      strategy: oauth
       interval: 1000
       url: http://api.v3.factual.com/t/places
       key: "MY KEY"

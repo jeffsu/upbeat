@@ -1,5 +1,4 @@
 var Base  = require('./base-strategy');
-var redis = require('redis');
 
 export class Redis extends Base {
 
@@ -7,8 +6,8 @@ export class Redis extends Base {
   static var INTERVAL = 10000;
 
   function initialize(config) {
-    this.host = config.host;
-    this.port = config.port;
+    this.host = config.host || 'localhost';
+    this.port = config.port || 6379;
 
     this.running = false;
     this.createClient();
@@ -16,22 +15,24 @@ export class Redis extends Base {
   }
 
   function createClient() {
-    var $this = this;
-
     try {
+      var redis = require('redis');
       this.client = redis.createClient(this.port, this.host);
     } catch(e) {
       console.log("Couldn't find the redis package: npm-g install redis or npm install redis.");
     }
 
-    this.client.on('error',   #{ $this.running = false })
-    this.client.on('connect', #{ $this.running = true })
+    this.client.on('error',   #{ self.running = false })
+    this.client.on('connect', #{ self.running = true })
   }
 
   function check(callback) {
+    console.log('hi');
     if (! this.running) return callback(false);
 
+      console.log('start');
     this.client.echo("hello", #(err, reply) {
+      console.log('finishied');
       if (err) {
         callback(false);
       } else {

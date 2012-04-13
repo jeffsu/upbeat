@@ -5,7 +5,7 @@
 
 module.exports = #(app, upbeat) {
   app.get('/', #(req, res, next) {
-    res.render('index', { hasService: upbeat.services.length, services: upbeat.services, hasProcess: upbeat.processes.length, processes: upbeat.processes })
+    res.render('index', { hasService: upbeat.services.length, services: upbeat.services, hasProcesses: upbeat.processes.length, processes: upbeat.processes })
   });
 
   require('./services')(app, upbeat);

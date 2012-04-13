@@ -12,14 +12,13 @@ export class Tcp extends Base {
   }
 
   function check(callback) {
-    var $this = this;
     this.client = net.connect(this.port, this.host, #{
       callback(true);
-      $this.client.end(); 
-      $this.client = null;
+      self.client.end(); 
+      self.client = null;
     });
 
-    this.client.on('error', #{ callback(false); $this.client.end(); $this.client = null; });
+    this.client.on('error', #{ callback(false); self.client.end(); self.client = null; });
   }
 
   function clear() {

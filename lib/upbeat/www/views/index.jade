@@ -1,16 +1,17 @@
-h1 Processes
-table.table.table-bordered.table-condensed
-  thead
-    tr 
-      th Command
-      th Runnning
-      th PID
+- if (hasProcesses)
+  h1 Processes
+  table.table.table-bordered.table-condensed
+    thead
+      tr 
+        th Command
+        th Runnning
+        th PID
 
-  each process, name in processes
-    tr
-      td: a(href="/processes/#{name}")= name
-      td= process.child.running ? 'Yes' : 'No'
-      td= process.getPid()
+    each process, name in processes
+      tr
+        td: a(href="/processes/#{name}")= name
+        td= process.child.running ? 'Yes' : 'No'
+        td= process.getPid()
 
 - if (hasService)
   h1 Services
