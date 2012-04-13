@@ -1,6 +1,13 @@
-services:
+processes:
   myprocess:
-    - strategy: process
-      pidfile: /tmp/foo.pid
-      interval: 2000
-      timeout:  1000
+    command:
+      - /usr/local/bin/node
+      - /Users/jeffsu/workspace/upbeat/examples/server.js
+    pidfile: ./foo.pid
+    actions:
+      http: 
+        strategy: tcp
+        host: localhost
+        port: 1337
+        interval: 2000
+        timeout:  1000

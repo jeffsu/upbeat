@@ -1,41 +1,91 @@
 var tempos = require('./tempos');
 
+var fs      = require('fs');
+var tempos  = require('./tempos');
+var Service = require('./service');
+
 // Wrapper around forever
 export class Process {
+<<<<<<< HEAD
   function initialize(name, options, service) {
     var forever  = require('forever');
+  function initialize(config, server) {
+    this.name = config.name;
+    this.pidFile = config.pidFile;
 
-    this.name = options.name;
-    delete options['name'];
+    this.child = this.getChild(config);
 
-    this.command = this.parseCommand(options);
-    if (this.command) {
-      this.child = forever.start(this.command, options);
+    if (config.actions) {
+      this.service = new Service({
+        actions: config.actions,
+        name:    config.name
+      });
+      server.addService(this.service);
     }
 
-    this.service = service;
+    this.key = 'process:' + this.name;
 
     this.errors = [];
     this.stderr = [];
     this.stdout = [];
-
-    this.setupChild(this.child);
   }
 
-  function parseCommand(options) {
-    var cmd = [];
-    if (options.command) cmd.push(options.command);
-    if (options.options) cmd = cmd.concat(options.options);
+  function getChild(config) {
+    var options  = config.forever || {};
+    this.command = config.command;
 
-    delete options['command'];
-    delete options['options'];
+    if (!this.command) return null;
 
-    return cmd.length ? cmd : null;
+    config.pidFile = config.pidFile || this.pidFile;
+
+    var forever = require('forever');
+    return forever.start(this.command, options);
+  }
+
+  function start() {
+    if (this.intervalId) return;
+    this.checkin();
+    this.intervalId = setInterval(#{ self.checkin() }, 10000);
+  }
+
+  function stop() {
+    if (this.intervalId) {
+      clearInterval(this.intervalId);
+      this.intervalId = null;
+    }
+  }
+
+  function checkin() {
+    this.getSupposedPid(#(err, pid) {
+      if (err) {
+        tempos.increment(this.key, 'fail-count', 1);
+      } else {
+        tempos.increment(this.key, 'pass-count', 1);
+        tempos.increment(this.key, 'memory', this.getMemory(pid));
+      }
+    });
+  }
+
+  function getMemory() {
+    return 10;
   }
 
   function isUp() {
     if (!this.child) return false;
     return this.service ? true : this.service.isUp();
+  }
+
+  function getSupposedPid(cb) {
+    fs.readFile(this.pidFile, #(err, data) {
+      if (err) {
+        return this.getPid();
+        console.warn("Error reading pidfile: " + this.pidFile);
+        this.state = "Error reading pidfile: " + this.pidFile;
+        cb(err);
+      } else {
+        cb(false, parseInt(data)); 
+      }
+    });
   }
 
   function getPid() {
@@ -52,9 +102,11 @@ export class Process {
     child.on('stderr',  #{ self.append(self.stderr, $1) });
   }
 
-  function append(array, str) {
-    array.push(str);
-    var over = array.length - 20;
-    while (over-- > 0) array.shift();
+  function append(array, msg) {
+    if (array.length == 100) {
+      array.shift();
+    }
+
+    array.push(msg);
   }
 }

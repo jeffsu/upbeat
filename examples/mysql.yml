@@ -1,14 +1,10 @@
 services:
   mysql:
     actions:
-      mysql:
-        strategy: mysql # custom query
-        sql: "SELECT * FROM USERS"
-        host: localhost
-        user: root
-        password: root
-      mysql-default:
+      users:
         strategy: mysql 
-        host: localhost
-        user: root
-        password: root
+        sql: "SELECT * FROM USERS"
+        socket: /tmp/mysql.sock
+      default:
+        strategy: mysql 
+        socket: /tmp/mysql.sock
