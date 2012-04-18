@@ -1,9 +1,9 @@
 processes:
   myprocess:
     command:
-      - /usr/local/bin/node
-      - /Users/jeffsu/workspace/upbeat/examples/server.js
-    pidfile: ./foo.pid
+      - /home/jeffsu/opt/local/node/bin/node
+      - /home/jeffsu/workspace/upbeat/examples/server.js
+    pidFile: ./foo.pid
     actions:
       http: 
         strategy: tcp

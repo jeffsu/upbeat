@@ -21,6 +21,20 @@ export class Service {
     this.actions = this.actions.sort(#{ => $1.name - $2.name });
   }
 
+  function payload(period) {
+    period = period || 'day';
+
+    return service.actions.map(#(action) {
+      return {
+          name:     action.name,
+          up:       action.isUp(),
+          avgTime:  action.averageTime() + 'ms',
+          uptime:   action.meta.uptime(),
+          downtime: action.meta.downtime(),
+          series:   action.meta.plotResponseTimes(period)
+      }
+    });
+  }
 
   function isUp() {
     return this.up;

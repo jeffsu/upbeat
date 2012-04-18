@@ -5,13 +5,18 @@
       tr 
         th Command
         th Runnning
+        th(colspan="2") Memory
+        th Virtual
         th PID
 
-    each process, name in processes
+    each process in processes
       tr
-        td: a(href="/processes/#{name}")= name
+        td: a(href="/processes/#{process.name}")= process.name
         td= process.child.running ? 'Yes' : 'No'
-        td= process.getPid()
+        td= process.mem + 'Kb'
+        td.sparkline= process.plotMemory().join(',')
+        td= process.vmem + 'Kb'
+        td= process.pid
 
 - if (hasService)
   h1 Services

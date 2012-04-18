@@ -6,14 +6,15 @@ var Service = require('./service');
 
 // Wrapper around forever
 export class Process {
-<<<<<<< HEAD
-  function initialize(name, options, service) {
-    var forever  = require('forever');
-  function initialize(config, server) {
-    this.name = config.name;
-    this.pidFile = config.pidFile;
+  private {
+    var PS = "ps -o rss=,vsz= -p ";
+    var exec = require('child_process').exec;
+  }
 
-    this.child = this.getChild(config);
+  function initialize(config, server) {
+    this.name    = config.name;
+    this.pidFile = config.pidFile;
+    this.child   = this.getChild(config);
 
     if (config.actions) {
       this.service = new Service({
@@ -25,6 +26,9 @@ export class Process {
 
     this.key = 'process:' + this.name;
 
+    this.mem  = 0;
+    this.vmem = 0;
+
     this.errors = [];
     this.stderr = [];
     this.stdout = [];
@@ -35,7 +39,6 @@ export class Process {
     this.command = config.command;
 
     if (!this.command) return null;
-
     config.pidFile = config.pidFile || this.pidFile;
 
     var forever = require('forever');
@@ -45,7 +48,7 @@ export class Process {
   function start() {
     if (this.intervalId) return;
     this.checkin();
-    this.intervalId = setInterval(#{ self.checkin() }, 10000);
+    this.intervalId = setInterval(#{ self.checkin() }, 1000);
   }
 
   function stop() {
@@ -55,19 +58,43 @@ export class Process {
     }
   }
 
+  function plotMemory(period) {
+    period = period || 'min';
+    return tempos.get(period)
+      .getHistory(this.key, 'mem', 'mem-counter')
+      .map(#(row) { console.log(row); =>row[2] ?  Math.round(row[1] / row[2]) : null });
+  }
+
   function checkin() {
     this.getSupposedPid(#(err, pid) {
       if (err) {
-        tempos.increment(this.key, 'fail-count', 1);
+        self.logFail();
       } else {
-        tempos.increment(this.key, 'pass-count', 1);
-        tempos.increment(this.key, 'memory', this.getMemory(pid));
+        self.pid = pid;
+        self.checkProcess(pid);
       }
     });
   }
 
-  function getMemory() {
-    return 10;
+  function checkProcess(pid) {
+    exec('kill -0 ' + pid, #(err, stdout, stderr) {
+      if (err) {
+        self.logFail();
+      } else {
+        tempos.increment(self.key, 'pass-count', 1);
+      }
+    });
+
+    exec(PS + pid, #(err, stdout, stderr) {
+      if (err) return;
+      var splitted = stdout.trim().split(/\s+/);
+      self.mem  = parseInt(splitted[0]);
+      self.vmem = parseInt(splitted[1]);
+
+      tempos.increment(self.key, 'mem', self.mem);
+      tempos.increment(self.key, 'vmem', self.vmem);
+      tempos.increment(self.key, 'mem-counter');
+    });
   }
 
   function isUp() {
@@ -75,10 +102,14 @@ export class Process {
     return this.service ? true : this.service.isUp();
   }
 
+  function logFail() {
+    tempos.increment(self.key, 'fail-count', 1);
+  }
+
   function getSupposedPid(cb) {
     fs.readFile(this.pidFile, #(err, data) {
       if (err) {
-        return this.getPid();
+        return self.getPid(cb);
         console.warn("Error reading pidfile: " + this.pidFile);
         this.state = "Error reading pidfile: " + this.pidFile;
         cb(err);
@@ -88,10 +119,16 @@ export class Process {
     });
   }
 
-  function getPid() {
+  function getPid(cb) {
     try {
-      return this.child ? this.child.child.pid : null;
+      var pid = this.child ? this.child.child.pid : null;
+      if (pid) {
+        cb(false, pid);
+      } else {
+        cb(true);
+      }
     } catch(e) {
+      cb(false, pid);
       return null;
     }
   }

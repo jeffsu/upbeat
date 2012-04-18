@@ -15,18 +15,7 @@ module.exports = #(app, upbeat) {
     var period  = req.query.period || 'min';
 
     if (req.params.format == 'json') {
-      var payload = [];
-      foreach (var action in service.actions) {
-        payload.push({
-          name:     action.name,
-          up:       action.isUp(),
-          avgTime:  action.averageTime() + 'ms',
-          uptime:   action.meta.uptime(),
-          downtime: action.meta.downtime(),
-          series:   action.meta.plotResponseTimes(period)
-        });
-      }
-
+      var payload = service.payload(period);
       res.contentType('json');
       res.send(JSON.stringify(payload));
     } else {

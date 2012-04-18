@@ -62,7 +62,6 @@ export class Config {
     var p = config.processes;
     if (p) {
       for (var name in p) {
-        p.name = name;
         this.addProcess(name, p[name]);
       }
     }

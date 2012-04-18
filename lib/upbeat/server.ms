@@ -58,6 +58,10 @@ export class Server {
     foreach (var s in this.services) {
       s.start();
     }
+
+    foreach (var p in this.processes) {
+      p.start();
+    }
   }
 
   function getAction(service, actionIdx) {
