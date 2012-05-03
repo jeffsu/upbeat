@@ -1,6 +1,7 @@
 ** 0.2.3 **
 
   * fixed process pidfile checking.
+  * adding different syntax config file
 
 ** 0.2.2 **
   
