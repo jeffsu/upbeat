@@ -1,0 +1,5 @@
+ul.nav.nav-tabs
+  each val in [ 'min', 'hour', 'day' ]
+    - selected = val == period ? "active" : ""
+    li("class"=selected)
+      a(href="?period=#{val}")= "Past " + val

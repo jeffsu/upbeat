@@ -3,9 +3,21 @@ html
   head
     title Upbeat
 
+    script(src='https://www.google.com/jsapi')
+    script
+      var loaded = false;
+      google.load('visualization', '1.0', { packages: [ 'corechart' ] });
+      google.setOnLoadCallback(function () { loaded = true; });
+      function calculatePeriod(idx, period) {
+        if (period == 'min') {
+          return ((12 - idx) * 5) + ' secs';
+        } else if (period == 'hour') {
+          return ((12 - idx) * 5) + ' mins';
+        }
+      }
+
     script(src='/javascripts/jquery.js')
     script(src='/javascripts/sparkline.js')
-    script(src='/highcharts/js/highcharts.js')
     script(src='/javascripts/global.js')
 
     link(rel='stylesheet', href='/stylesheets/bootstrap/bootstrap.css')

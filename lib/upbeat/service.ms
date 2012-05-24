@@ -24,7 +24,7 @@ export class Service {
   function payload(period) {
     period = period || 'day';
 
-    return service.actions.map(#(action) {
+    return this.actions.map(#(action) {
       return {
           name:     action.name,
           up:       action.isUp(),

@@ -19,7 +19,7 @@ module.exports = #(app, upbeat) {
       res.contentType('json');
       res.send(JSON.stringify(payload));
     } else {
-      if (service) res.render('service', { service: service });
+      if (service) res.render('service', { service: service, period: period });
     }
   });
 

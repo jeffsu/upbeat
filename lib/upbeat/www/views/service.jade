@@ -1,5 +1,8 @@
 h1.name= service.name
 
+include _period_tab
+
+
 table.table.table-bordered
   thead
     tr
@@ -21,21 +24,25 @@ table.table.table-bordered
 #chart
 
 script
+  var url   = "/services/#{service.name}.json?period=#{period}";
   var chart = null;
+  var data = null;
+  var headers = [];
+  var period = "#{period}";
+
 
   $(function () { 
-    buildChart();
     getData();
     setInterval(getData, 2000);
   });
 
   function getData() {
-    $.get(location.href.replace(/(\.\w+)?$/, '.json'), function (data) { 
+    $.get(url, function (data) { 
       for (var i=0; i<data.length; i++) {
         populateAction(i, data[i]);
       }
 
-      chart.redraw();
+      buildChart(data);
     });
   }
 
@@ -49,43 +56,28 @@ script
     var time = percentage(data.uptime, totalTime);
 
     $action.find('.uptime').html(time);
-
-    var line = chart.series[idx];
-    line.setData(data.series, false);
   }
 
-  function buildChart() {
-    var count = #{service.actions.length};
-    var series = [];
+  function buildChart(data) { 
+    if (!loaded) return;
 
-    for (var i=0; i<count; i++) {
-      series.push({ name: $('#action' + i).attr('name'), data: [], connectNulls: true });
+    if (!chart) chart = new google.visualization.LineChart($('#chart')[0]);
+
+    var header = [ period + 's Ago'];
+    var array = [ header ];
+    for (var i=0; i<data.length; i++) {
+      var action = data[i];
+      header.push(action.name);
+      for (var j=0; j<action.series.length; j++) {
+        var col = action.series[j];
+        var row = array[j+1] = array[j+1] || [ calculatePeriod(j, period) ];
+        row.push(col);
+      }
     }
 
-
-    chart = new Highcharts.Chart({
-      chart: { 
-        renderTo: 'chart',
-        type:     'line' 
-      }, 
-
-      title: { text: $('h1.name').text() },
-
-      xAxis: {
-        title: { text: "Seconds Ago" },
-        categories: #{categories.min.data},
-      },
-
-
-      yAxis: {
-        title: { text: "Response Time in Milliseconds" }
-      },
-
-
-      plotOptions: {
-        pointInterval: 2000
-      },
-
-      series: series
+    chart.draw(google.visualization.arrayToDataTable(array), { 
+      vAxis: { title: "Milliseconds" },
+      hAxis: { title: "Past " + period, showTextEvery: 1 },
+      interpolateNulls: period == 'min'
     });
   }
