@@ -2,6 +2,7 @@
 
   * fixed process pidfile checking.
   * adding different syntax config file
+  * fixing tempo executable
 
 ** 0.2.2 **
   
