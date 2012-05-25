@@ -18,6 +18,18 @@ class Tempos {
   function get(period) {
     return this[period || 'day'];
   }
+
+  function calculatePeriod(idx, period) {
+    if (period == 'min') {
+      return ((12 - idx) * 5) + ' secs';
+    } else if (period == 'hour') {
+      return ((12 - idx) * 5) + ' mins';
+    } else if (period == 'day') {
+      return (24 - idx);
+    }
+  }
+
+
 }
 
 module.exports = new Tempos();

@@ -1,5 +1,6 @@
 var http = require('http');
 var Action = require('./action');
+var metrics = require('./metrics');
 
 export class Service {
   include $m.EventEmitter;
@@ -8,6 +9,7 @@ export class Service {
     this.name        = config.name;
     this.actionHash  = {};
     this.actions     = this.actionArray = [];
+    this.metrics     = [];
 
     this.up = true;
 
@@ -18,13 +20,23 @@ export class Service {
       this.addAction(new Action(aconfig));
     }
 
+    for (var name in config.metrics) {
+      var c = config.metrics[name];
+      var klass = metrics.lookup[c.type]; 
+      if (klass) {
+        this.metrics.push(new klass(this.name, name, c));
+      } else {
+        console.warn("Invalid metric type: " + c.type);
+      }
+    }
+
     this.actions = this.actions.sort(#{ => $1.name - $2.name });
   }
 
   function payload(period) {
     period = period || 'day';
 
-    return this.actions.map(#(action) {
+    var actions = this.actions.map(#(action) {
       return {
           name:     action.name,
           up:       action.isUp(),
@@ -32,8 +44,17 @@ export class Service {
           uptime:   action.meta.uptime(),
           downtime: action.meta.downtime(),
           series:   action.meta.plotResponseTimes(period)
-      }
+      };
     });
+
+    var metrics = this.metrics.map(#(metric) {
+      return {
+        name: metric.name,
+        unit: metric.unit,
+        series: metric.plot(period)
+      };
+    });
+    return { actions: actions, metrics: metrics };
   }
 
   function isUp() {
@@ -92,11 +113,19 @@ export class Service {
     foreach (var action in this.actions) {
       action.start();
     }
+
+    foreach (var metric in this.metrics) {
+      metric.start();
+    }
   }
 
   function stop() {
     foreach (var action in this.actions) {
       action.stop();
+    }
+
+    foreach (var metric in this.metrics) {
+      metric.stop();
     }
   }
 

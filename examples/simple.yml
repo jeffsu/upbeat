@@ -1,13 +1,41 @@
-processes:
-  NodeServer:
-    command: "/home/jeffsu/opt/local/node/bin/node"
-    options: [ '/home/jeffsu/workspace/upbeat/examples/server.js' ]
-    checks:
-      - strategy: http
-        url: http://localhost:1337
+services:
+  system:
+    metrics:
+      load:
+        type: load
+      memory:
+        type: sysmem
+
+  factual-website:
+    actions:
+      www:
+        strategy: http
+        url: http://www.factual.com
         status: 200
-        interval: 3000
-      - strategy: http
-        url: http://localhost:1337/hello
+        interval: 1000
+
+      lambda:
+        strategy: http
+        url: http://www.factual.com
+        lambda: "function (data) { return data.match(/html/) }"
+        matches: html
         status: 200
-        interval: 3000
+        interval: 5000
+
+      lambda2: 
+        strategy: http
+        url: http://www.factual.com
+        lambda: 
+          - "function (data) { return data.match(/html/) }"
+          - "function (data) { return data.match(/html/) }"
+        matches: 
+          - html
+          - html
+        status: 200
+        interval: 10000
+  google:
+    actions:
+      connection:
+        strategy: tcp
+        host: www.google.com
+        port: 80

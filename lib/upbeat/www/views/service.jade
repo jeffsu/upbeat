@@ -3,25 +3,32 @@ h1.name= service.name
 include _period_tab
 
 
-table.table.table-bordered
-  thead
-    tr
-      th id
-      th Avg Resp
-      th Uptime
-      th Status
-      th 
-  each action, i in service.actions
-    tr(id="action" + i)
-      td: a(href="/services/#{service.name}/actions/#{action.name}")= action.name
-      td.avgTime= action.averageTime() + 'ms'
-      td.uptime= percentage(action.meta.uptime(), action.meta.uptime() + action.meta.downtime())
-      td.is-up
-        = action.isUp() ? 'Up' : 'Down'
-      td
-        div.sparkline
+if service.actions.length
+  table.table.table-bordered
+    thead
+      tr
+        th id
+        th Avg Resp
+        th Uptime
+        th Status
+        th 
+    each action, i in service.actions
+      tr(id="action" + i)
+        td: a(href="/services/#{service.name}/actions/#{action.name}")= action.name
+        td.avgTime= action.averageTime() + 'ms'
+        td.uptime= percentage(action.meta.uptime(), action.meta.uptime() + action.meta.downtime())
+        td.is-up
+          = action.isUp() ? 'Up' : 'Down'
+        td
+          div.sparkline
 
-#chart
+  #chart(style="height: 200px")
+
+.metrics 
+  each metric in service.metrics
+    h3= metric.name
+    .metric(style="height: 200px")
+      
 
 script
   var url   = "/services/#{service.name}.json?period=#{period}";
@@ -29,6 +36,7 @@ script
   var data = null;
   var headers = [];
   var period = "#{period}";
+  var metricCharts = null;
 
 
   $(function () { 
@@ -38,12 +46,36 @@ script
 
   function getData() {
     $.get(url, function (data) { 
-      for (var i=0; i<data.length; i++) {
-        populateAction(i, data[i]);
+      var actions = data.actions;
+      for (var i=0; i<actions.length; i++) {
+        populateAction(i, actions[i]);
       }
 
-      buildChart(data);
+      buildChart(actions);
+      buildMetrics(data.metrics);
     });
+  }
+
+  function buildMetrics(metrics) {
+    if (!loaded) return;
+    if (!metricCharts) {
+      metricCharts = [];
+      var eles = $('.metric');
+      for (var i=0; i<metrics.length; i++) {
+        metricCharts.push(new google.visualization.LineChart(eles[i]));
+      }
+    }
+
+    for (var i=0; i<metrics.length; i++) {
+      var metric = metrics[i];
+      var series = metric.series;
+
+      metricCharts[i].draw(google.visualization.arrayToDataTable(metric.series), {
+        interpolateNulls: period == 'min',
+        hAxis: { title: "Past " + period, showTextEvery: 1 },
+        vAxis: { title: metric.unit }
+      })
+    }
   }
 
   function populateAction(idx, data) {
@@ -58,15 +90,15 @@ script
     $action.find('.uptime').html(time);
   }
 
-  function buildChart(data) { 
+  function buildChart(actions) { 
     if (!loaded) return;
-
+    if (actions.length == 0) return;
     if (!chart) chart = new google.visualization.LineChart($('#chart')[0]);
 
-    var header = [ period + 's Ago'];
+    var header = [ period + ' Ago'];
     var array = [ header ];
-    for (var i=0; i<data.length; i++) {
-      var action = data[i];
+    for (var i=0; i<actions.length; i++) {
+      var action = actions[i];
       header.push(action.name);
       for (var j=0; j<action.series.length; j++) {
         var col = action.series[j];

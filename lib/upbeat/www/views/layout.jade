@@ -8,11 +8,14 @@ html
       var loaded = false;
       google.load('visualization', '1.0', { packages: [ 'corechart' ] });
       google.setOnLoadCallback(function () { loaded = true; });
+
       function calculatePeriod(idx, period) {
         if (period == 'min') {
           return ((12 - idx) * 5) + ' secs';
         } else if (period == 'hour') {
           return ((12 - idx) * 5) + ' mins';
+        } else if (period == 'day') {
+          return (24 - idx);
         }
       }
 
