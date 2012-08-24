@@ -1,0 +1,15 @@
+services:
+  web-site:
+    http:
+      strategy: http 
+      timeout: 1000
+      interval: 1000
+    process:
+      strategy: process
+      timeout: 1000
+      interval: 1000
+
+server:
+  port: 3000
+
+log: [ 'change', 'fail', 'pass', 'up', 'down' ]
