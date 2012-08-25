@@ -22,6 +22,13 @@ module.exports = {
 
     return #(cb) {
       conn.query(sql, #(err, rows, fields) { cb(err); });
-    }
+    };
+  },
+
+  process: #(options) {
+    return #(cb) {
+
+    };
   }
+
 };

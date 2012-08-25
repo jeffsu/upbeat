@@ -1,5 +1,8 @@
 export class Service {
-  function initialize() {
+  include $m.EventEmitter;
+
+  function initialize(name) {
+    this.name    = name;
     this.sensors = {};
     this.isHealthy = null;
   }
@@ -28,6 +31,7 @@ export class Service {
       if (!healthy) self.isHealthy = false;
       else self.isHealthy = self.getHealth();
     });
+
   }
 
   function getHealth() {

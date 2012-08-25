@@ -1,4 +1,5 @@
 var strategies = require('./strategies');
+var tempo      = require('tempo');
 
 export class Sensor {
   include $m.EventEmitter;
@@ -7,6 +8,10 @@ export class Sensor {
     var TIMEOUT  = 5000;
     var INTERVAL = 5000;
     var PAUSED   = 'paused';
+    var SECOND   = 1000;
+    var MIN      = SECOND * 60;
+    var HOUR     = SECOND * 60;
+    var DAY      = HOUR * 24;
     var STACKED  = 5;
   }
 
@@ -20,15 +25,58 @@ export class Sensor {
     this.fall     = -1 * (options.fall || 1);
     this.up       = options.up || 1;
 
-    this.total    = 0; // total requests
-    this.passed   = 0; // total passed requests
-    this.failed   = 0; // total failed requests
+    this.totalCount = 0; // total requests
+    this.passCount  = 0; // total passed requests
+    this.failCount  = 0; // total failed requests
+
+    this.downTime = 0;
+    this.upTime   = 0;
+
     this.stacked  = 0; // number of stacked up requests
+    this.min  = tempo.min();
+    this.day  = tempo.day();
+    this.week = tempo.week();
 
     this.status = 'paused';
     this.isHealthy   = null;
     this.healthCount = 0;
     this.lastHealth  = null;
+
+    this.setEvents();
+  }
+
+  function getTempo(time) {
+    return this[time || 'day'];
+  }
+
+  function getAverageTimes(time) {
+    var tempo = this.getTempo(time);
+    return {
+      fail: tempo.getAverageHistory('fail-time', 'fail-count'),
+      pass: tempo.getAverageHistory('pass-time', 'pass-count')
+    };
+  }
+
+  function setEvents() {
+    this.on('fail', #(time) {
+      self.min.inc("fail-count");
+      self.day.inc("fail-count");
+      self.week.inc("fail-count");
+
+      self.min.inc("fail-time", time);
+      self.day.inc("fail-time", time);
+      self.week.inc("fail-time", time);
+    });
+
+    this.on('pass', #(time) {
+      self.min.inc("pass-count");
+      self.day.inc("pass-count");
+      self.week.inc("pass-count");
+
+      self.min.inc("pass-time", time);
+      self.day.inc("pass-time", time);
+      self.week.inc("pass-time", time);
+    });
   }
 
   function run() {
@@ -48,7 +96,22 @@ export class Sensor {
 
   function respond(err, meta, time, cb) {
     var passed = !err;
-    this.emit(passed ? 'pass' : 'fail', (new Date).getTime() - time, err || meta);
+
+    var now = (new Date).getTime();
+
+    this.totalCount++;
+
+    if (passed) {
+      this.passCount++;
+      this.lastPass = now;
+    }
+
+    else {
+      this.failCount++;
+      this.lastFail = now;
+    }
+
+    this.emit(passed ? 'pass' : 'fail', now - time, err || meta);
 
     if (passed != this.lastHealth) {
       this.healthCount = 0;
@@ -60,15 +123,15 @@ export class Sensor {
 
       // handle changing
       if (this.healthCount == this.fall) {
+        this.isHealthy = false;
         this.emit('change', this.isHealthy);
         this.emit('down');
-        this.isHealthy = false;
       } 
       
       else if (this.healthCount == this.up) {
+        this.isHealthy = true;
         this.emit('change', this.isHealthy);
         this.emit('up');
-        this.isHealthy = true;
       }
     }
 
@@ -85,13 +148,13 @@ export class Sensor {
     }
 
     this.emit('check');
-    this.total++;
 
     var startTime = (new Date).getTime();
     var stopped   = false;
     this.stacked++;
 
     setTimeout(#{ 
+      if (stopped) return;
       self.respond('timed-out', null, startTime, cb);
       stopped = true;
     }, this.timeout);
@@ -99,6 +162,7 @@ export class Sensor {
     this.strategy(#(err, meta) {
       self.stacked--;
       if (!stopped) self.respond(err, meta, startTime, cb);
+      stopped = true;
     });
   }
 }

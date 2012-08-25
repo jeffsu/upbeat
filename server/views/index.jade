@@ -1,5 +1,28 @@
 extends layout
 
 block content
-  h1= title
-  p Welcome to #{title}
+  table.table.table-condensed.table-bordered(style="background-color: #333")
+    tr.success
+      th Service
+      th Status
+      th Pass/Total
+      th Last Pass
+      th Last Failure
+    - var i = 0;
+    each service, sname in server.services
+      if i++ > 0
+        tr: td(colspan=5) &nbsp;
+      tr
+        td= sname
+        td!= health(service.isHealthy)
+        td
+        td
+        td
+      each sensor, name in service.sensors
+        tr
+          td(style="padding-left: 20px"): a(href="/services/#{sname}/sensors/#{name}")= name
+          td!= health(sensor.isHealthy)
+          td #{sensor.passCount}/#{sensor.totalCount}
+          td= sensor.lastPass 
+          td= sensor.lastFail 
+

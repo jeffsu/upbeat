@@ -1,0 +1,2 @@
+require('mochiscript');
+require('./app');

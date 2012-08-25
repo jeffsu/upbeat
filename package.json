@@ -11,10 +11,11 @@
   "bin":   { "upbeat": "./bin/upbeat" },
   "dependencies": { 
     "request":     "*",
+    "jade":        "*",
     "express":     "*",
     "mochiscript": ">=0.6.9",
     "js-yaml":     ">=0.3.1",
-    "tempo":       ">=0.0.1-pre5",
+    "tempo":       ">=0.1.0-pre6",
     "winston": ""
   },
   "repository":   {

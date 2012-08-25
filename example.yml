@@ -2,12 +2,20 @@ services:
   web-site:
     http:
       strategy: http 
-      timeout: 1000
-      interval: 1000
-    process:
-      strategy: process
-      timeout: 1000
-      interval: 1000
+      url: http://www.google.com
+      timeout: 100
+      interval: 5000
+    http2:
+      strategy: http 
+      url: http://www.google.com
+      timeout: 100
+      interval: 6000
+  factual-www:
+    http:
+      strategy: http 
+      url: http://www.factual.com
+      timeout: 200
+      interval: 5000
 
 server:
   port: 3000

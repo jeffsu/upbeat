@@ -1,7 +1,15 @@
 doctype 5
 html
   head
-    title= title
+    title Upbeat
     link(rel='stylesheet', href='/stylesheets/style.css')
+    link(rel='stylesheet', href='/stylesheets/bootstrap.min.css')
+
+    script(src='/javascripts/jquery.js')
+    script(src='/javascripts/raphael.js')
+    script(src='/javascripts/elycharts.js')
+    script(src='/javascripts/chart-styles.js')
   body
-    block content
+    .container-fluid
+      h3 Upbeat
+      block content
