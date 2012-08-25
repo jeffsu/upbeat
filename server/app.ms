@@ -23,7 +23,6 @@ function getResource(params) {
 var mochi = require('mochiscript').mochi;
 var jade  = require('jade');
 jade.filters.mochi = #(block) {
-  console.log(mochi.parse(block));
   return ("<script>" + mochi.parse(block) + "</script>").replace(/#/g, '\\#').replace(/\n/g, '');
 };
 
