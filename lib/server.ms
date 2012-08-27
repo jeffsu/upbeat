@@ -41,6 +41,9 @@ export class Server {
     this.on('sensor', #(serviceName, sensorName, type, sensor, data1, data2) {
       if (self.trackedEvents[type]) self.log(serviceName, sensorName, type, sensor, data1, data2);
     });
+
+    if (config.dashboard)
+      this.buildDash(config.dashboard);
   }
 
   function buildService(name, config) {
@@ -65,7 +68,7 @@ export class Server {
   }
 
   function log(serviceName, sensorName, eventType, sensor, data1, data2) {
-    console.log(serviceName + '/' + sensorName + '/ ' + eventType + ' -- ' + (new Date).toString());
+    console.log(serviceName + '/' + sensorName + ': ' + eventType + ' - ' + (new Date).toString());
   }
 
   function build(config) {
@@ -76,4 +79,9 @@ export class Server {
     for (var k in config.services) 
       this.services[k] = this.buildService(k, config.services[k]);
   }
+
+  function buildDash(config) {
+    this.app = require('../www/app')(this, config);
+  }
+
 }

@@ -1,4 +1,4 @@
-$.elycharts.templates['line_basic'] = {
+$.elycharts.templates['pass-fail'] = {
  type : "line",
  margins : [10, 10, 20, 50],
  defaultSeries : {
@@ -14,6 +14,13 @@ $.elycharts.templates['line_basic'] = {
  series : {
   fail : {
    color : "red",
+   plotProps: {
+     "stroke-width": 0
+   },
+   dotProps: {
+     stroke: "red",
+     "stroke-width": 2
+   },
    startAnimation: { type: 'reg', delay: 100, easing: 'elastic' }
   },
   pass : {

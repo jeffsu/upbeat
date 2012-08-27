@@ -17,7 +17,7 @@ services:
       timeout: 200
       interval: 5000
 
-server:
-  port: 3000
-
 log: [ 'change', 'fail', 'pass', 'up', 'down' ]
+
+dashboard:
+  port: 3000
