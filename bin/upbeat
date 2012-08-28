@@ -6,12 +6,15 @@ require('js-yaml');
 var path   = require('path');
 var upbeat = require('../lib/upbeat');
 
+/*
 if (process.argv.length !== 3) {
   console.log("USAGE: upbeat <configFile>");
   process.exit(0);
 }
+*/
 
-var configFile = process.argv[2];
+//var configFile = process.argv[2];
+var configFile = "example.yml"
 var config = require(path.join(process.cwd(), configFile));
 var server = new upbeat.Server(config);
 server.run();

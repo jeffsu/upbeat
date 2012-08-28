@@ -1,5 +1,6 @@
 var Service = require('./service');
 var Sensor  = require('./sensor');
+var Stats   = require('./stats');
 
 export class Server {
   include $m.EventEmitter;
@@ -37,13 +38,29 @@ export class Server {
 
   function initialize(config) {
     this.services = {};
-    this.build(config);
+    this.stats    = {};
+
+    this.buildServices(config.services);
+    this.buildStats(config.stats);
     this.on('sensor', #(serviceName, sensorName, type, sensor, data1, data2) {
       if (self.trackedEvents[type]) self.log(serviceName, sensorName, type, sensor, data1, data2);
     });
 
     if (config.dashboard)
       this.buildDash(config.dashboard);
+
+    if (config.redis) 
+      this.buildRedis(config.redis);
+  }
+
+  function buildRedis(config) {
+    if (!config) return;
+    var redis = require('redis').createClient(config);
+    setInterval(#{
+      for (var k in self.stats) {
+        self.stats[k].sync(redis, k);
+      }
+    }, config.interval || 3000);
   }
 
   function buildService(name, config) {
@@ -71,13 +88,21 @@ export class Server {
     console.log(serviceName + '/' + sensorName + ': ' + eventType + ' - ' + (new Date).toString());
   }
 
-  function build(config) {
+  function buildStats(config) {
+    if (!config) return;
+    for (var k in config) {
+      this.stats[k] = new Stats(config[k]); 
+    }
+  }
+
+  function buildServices(config) {
+    if (!config) return;
     this.trackedEvents = {};
     if (config.log) 
       config.log.forEach(#{ self.trackedEvents[$1] = true });
 
-    for (var k in config.services) 
-      this.services[k] = this.buildService(k, config.services[k]);
+    for (var k in config) 
+      this.services[k] = this.buildService(k, config[k]);
   }
 
   function buildDash(config) {

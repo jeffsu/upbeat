@@ -21,3 +21,16 @@ log: [ 'change', 'fail', 'pass', 'up', 'down' ]
 
 dashboard:
   port: 3000
+
+stats:
+  urls:
+    strategy: counter
+
+  responses:
+    strategy: average
+    sum: sum
+    count: count
+
+redis:
+  port: 6379
+  host: localhost

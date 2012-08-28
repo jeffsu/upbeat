@@ -14,8 +14,12 @@ module.exports = #(server, config) {
   var app = express();
 
   function getResource(params) {
-    var service = server.services[params.service];
-    return params.sensor ? service.sensors[params.sensor] : service;
+    if (params.service) {
+      var service = server.services[params.service];
+      return params.sensor ? service.sensors[params.sensor] : service;
+    } else if (params.stats) {
+      return server.stats[params.stats];
+    }
   }
 
   var mochi = require('mochiscript').mochi;
@@ -46,6 +50,16 @@ module.exports = #(server, config) {
 
   app.get('/', #(req, res, next) {
     res.render('index', { params: req.params, server: server });
+  });
+
+  app.get('/stats/:stats/:time.:format?', #(req, res, next) {
+    var stats = getResource(req.params);
+    var strategy = stats.config.strategy;
+    if (req.params.format == 'json') {
+      res.json(stats.getData(req.params.time));
+    } else {
+      res.render('stats/' + strategy, { config: config, stats: stats, params: req.params });
+    }
   });
 
   app.get('/services/:service.:format?', #(req, res, next) {
