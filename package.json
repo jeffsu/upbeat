@@ -10,13 +10,13 @@
   "main" : "./lib/upbeat/index",
   "bin":   { "upbeat": "./bin/upbeat" },
   "dependencies": { 
-    "request":     "*",
-    "jade":        "*",
-    "express":     "*",
+    "request":     ">=2.10.0",
+    "jade":        ">=0.27.2",
+    "express":     ">=3.0.0rc3",
     "mochiscript": ">=0.6.9",
     "js-yaml":     ">=0.3.1",
     "tempo":       ">=0.1.0-pre6",
-    "winston": ""
+    "winston":     ">=0.6.2"
   },
   "repository":   {
     "type": "git",

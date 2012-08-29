@@ -13,7 +13,7 @@ block content
       if i++ > 0
         tr: td(colspan=5) &nbsp;
       tr
-        td= sname
+        td: a(href="/services/#{sname}")= sname
         td!= health(service.isHealthy)
         td
         td

@@ -17,7 +17,20 @@ services:
       timeout: 200
       interval: 5000
 
-server:
+log: [ 'change', 'fail', 'pass', 'up', 'down' ]
+
+dashboard:
   port: 3000
 
-log: [ 'change', 'fail', 'pass', 'up', 'down' ]
+stats:
+  urls:
+    strategy: counter
+
+  responses:
+    strategy: average
+    sum: sum
+    count: count
+
+redis:
+  port: 6379
+  host: localhost
