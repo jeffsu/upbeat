@@ -31,6 +31,8 @@ module.exports = #(server, config) {
        '<span style="color: red">'   + (down || 'down') + '</span>';
   };
 
+  app.locals.TIMES = [ 'min', 'hour', 'day', 'week' ];
+
   app.configure(function(){
     app.set('port', process.env.PORT || 3000);
     app.set('views', __dirname + '/views');
@@ -60,6 +62,10 @@ module.exports = #(server, config) {
     } else {
       res.render('stats/' + strategy, { config: config, stats: stats, params: req.params });
     }
+  });
+
+  app.get('/services', #(req, res, next) {
+    res.render('services', { params: req.params, services: server.services });
   });
 
   app.get('/services/:service.:format?', #(req, res, next) {

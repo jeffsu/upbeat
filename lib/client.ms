@@ -16,8 +16,11 @@ export class Client {
     this.stats    = {};
 
     this.setInterval();
-    if (config.redisClient) this.redisClient = config.redisClient;
+    if (config.redisClient) this.redis = config.redisClient;
     else if (config.redis) this.redis = this.createRedisClient(config.redis);
+
+    this.redis.on('error', #{ self.hasRedis = false });
+    this.redis.on('connect', #{ self.hasRedis = true });
   }
 
 
@@ -27,6 +30,8 @@ export class Client {
   }
 
   function sync() {
+    if (!this.hasRedis) return;
+
     for (var name in this.stats) {
       var stats = this.stats[name];
       stats.sync(this.redis, name);

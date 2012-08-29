@@ -1,19 +1,25 @@
 services:
   web-site:
-    http:
+    slow-call:
       strategy: http 
-      url: http://www.google.com
+      url: http://localhost:3001/slow/good
+      timeout: 300
+      interval: 5000
+    average-call:
+      strategy: http 
+      url: http://localhost:3001/fast/average
       timeout: 100
       interval: 5000
-    http2:
+    average-call:
       strategy: http 
-      url: http://www.google.com
+      url: http://localhost:3001/fast/average
       timeout: 100
-      interval: 6000
-  factual-www:
+      interval: 5000
+
+  web-site2:
     http:
       strategy: http 
-      url: http://www.factual.com
+      url: http://localhost:3001/fast/bad
       timeout: 200
       interval: 5000
 

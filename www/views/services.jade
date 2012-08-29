@@ -1,7 +1,6 @@
 extends layout
 
 block content
-  h3 Services
   table.table.table-condensed.table-bordered(style="background-color: #333")
     tr.success
       th Service
@@ -10,7 +9,7 @@ block content
       th Last Pass
       th Last Failure
     - var i = 0;
-    each service, sname in server.services
+    each service, sname in services
       if i++ > 0
         tr: td(colspan=5) &nbsp;
       tr
@@ -26,13 +25,3 @@ block content
           td #{sensor.passCount}/#{sensor.totalCount}
           td= sensor.lastPass 
           td= sensor.lastFail 
-
-  h3 Stats
-  ul
-    each st, name in server.stats
-      li 
-        = name + ": "
-        each time in TIMES
-          = " "
-          a(href="/stats/#{name}/#{time}")= time.substr(0,1);
-   

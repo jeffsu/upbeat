@@ -56,7 +56,12 @@ export class Server {
   function buildRedis(config) {
     if (!config) return;
     var redis = require('redis').createClient(config);
+    var stop  = true;
+    redis.on('error', #{ stop = true; console.log('hi') }); 
+    redis.on('connect', #{ stop = false; }); 
+
     setInterval(#{
+      if (stop) return;
       for (var k in self.stats) {
         self.stats[k].sync(redis, k);
       }
