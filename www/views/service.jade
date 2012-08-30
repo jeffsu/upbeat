@@ -2,11 +2,11 @@ extends layout
 block content
   h5
     a(href="/services") services 
-    = " >> "
+    = " > "
     = params.service
   each sensor, name in service.sensors
     h5: a(href="/services/#{params.service}/sensors/#{name}")= name
-    .chart(data-url="/services/#{params.service}/sensors/#{name}.json", data-type="pass-fail")
+    .chart(data-url="/services/#{params.service}/sensors/#{name}/#{params.time}.json", data-type="pass-fail")
      
   style
     .chart div { height: 300px }

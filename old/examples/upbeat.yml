@@ -1,4 +1,0 @@
-port: 2467
-services:
-  upbeat:
-    - strategy: upbeat

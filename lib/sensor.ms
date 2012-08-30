@@ -33,7 +33,9 @@ export class Sensor {
     this.upTime   = 0;
 
     this.stacked  = 0; // number of stacked up requests
+
     this.min  = tempo.min();
+    this.hour = tempo.hour();
     this.day  = tempo.day();
     this.week = tempo.week();
 
@@ -60,20 +62,24 @@ export class Sensor {
   function setEvents() {
     this.on('fail', #(time) {
       self.min.inc("fail-count");
+      self.hour.inc("fail-count");
       self.day.inc("fail-count");
       self.week.inc("fail-count");
 
       self.min.inc("fail-time", time);
+      self.hour.inc("fail-time", time);
       self.day.inc("fail-time", time);
       self.week.inc("fail-time", time);
     });
 
     this.on('pass', #(time) {
       self.min.inc("pass-count");
+      self.hour.inc("pass-count");
       self.day.inc("pass-count");
       self.week.inc("pass-count");
 
       self.min.inc("pass-time", time);
+      self.hour.inc("pass-time", time);
       self.day.inc("pass-time", time);
       self.week.inc("pass-time", time);
     });

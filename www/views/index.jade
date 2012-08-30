@@ -21,7 +21,11 @@ block content
         td
       each sensor, name in service.sensors
         tr
-          td(style="padding-left: 20px"): a(href="/services/#{sname}/sensors/#{name}")= name
+          td(style="padding-left: 20px")
+            = name
+            each time in TIMES
+              = " "
+              a(href="/services/#{sname}/sensors/#{name}/#{time}")= time.substr(0,1);
           td!= health(sensor.isHealthy)
           td #{sensor.passCount}/#{sensor.totalCount}
           td= sensor.lastPass 
@@ -35,4 +39,3 @@ block content
         each time in TIMES
           = " "
           a(href="/stats/#{name}/#{time}")= time.substr(0,1);
-   

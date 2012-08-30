@@ -3,8 +3,8 @@ block content
   h5
     a(href="/services") services 
     = ' > '
-    a(href="/services/#{params.service}")= params.service 
+    a(href="/services/#{params.service}/#{params.time}")= params.service 
     = ' > ' + params.sensor
-  .chart(data-url="/services/#{params.service}/sensors/#{params.sensor}.json", data-type="pass-fail")
+  .chart(data-url="/services/#{params.service}/sensors/#{params.sensor}/#{params.time}.json", data-type="pass-fail")
   style
     .chart div { height: 300px }

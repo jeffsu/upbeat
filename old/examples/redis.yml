@@ -1,5 +1,0 @@
-services:
-  redis:
-    actions:
-      echo:
-        strategy: redis

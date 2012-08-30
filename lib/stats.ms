@@ -1,5 +1,6 @@
 var tempo = require('tempo');
 
+// TODO expand this out into other classes
 export class Stats {
   function initialize(config) {
     this.config = config;
@@ -35,8 +36,13 @@ export class Stats {
 
     if (this.config.strategy == 'counter') {
       return this.counter(tempo);
+    } else if (this.config.strategy == 'average') {
+      return this.average(tempo);
     }
+  }
 
+  function average(tempo) {
+    return { average: tempo.getAverageHistory('sum', 'count') };
   }
 
   function counter(tempo) {

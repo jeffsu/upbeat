@@ -68,23 +68,18 @@ module.exports = #(server, config) {
     res.render('services', { params: req.params, services: server.services });
   });
 
-  app.get('/services/:service.:format?', #(req, res, next) {
-    if (req.params.format == 'json') {
-      res.json(getResource(req.params).getAverageTimes('day'));
-    } else {  
+  app.get('/services/:service/:time.:format?', #(req, res, next) {
+    if (req.params.format == 'json')
+      res.json(getResource(req.params).getAverageTimes(params.time));
+    else
       res.render('service', { params: req.params, server: server, service: getResource(req.params) });
-    }
   });
 
-  app.get('/services/:service/health', #(req, res, next) {
-  });
-
-  app.get('/services/:service/sensors/:sensor.:format?', #(req, res, next) {
-    if (req.params.format == 'json') {
-      res.json(getResource(req.params).getAverageTimes('min'));
-    } else {
+  app.get('/services/:service/sensors/:sensor/:time.:format?', #(req, res, next) {
+    if (req.params.format == 'json') 
+      res.json(getResource(req.params).getAverageTimes(req.params.time));
+    else 
       res.render('sensor', { params: req.params, sensor: getResource(req.params) });
-    }
   });
 
   app.get('/services/:service/sensors/:sensor/health', #(req, res, next) {
