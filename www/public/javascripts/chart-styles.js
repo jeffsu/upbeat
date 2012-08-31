@@ -18,28 +18,31 @@ $.elycharts.templates.upbeat = {
   features: {
     grid: {
       draw: [true, true],
-      props: { "stroke-dasharray" : "-" }
+      props: { 
+        "stroke-dasharray" : "-",
+      }
     },
 
     legend : {
-      horizontal: true,
+      horizontal: false,
+      width: 200,
+      height: 100,
 
-      width: 80,
-      height: 50,
-      x: 210,
-      y: 220,
-
+      x: 200,
+      y: 100,
+      
       dotType: "circle",
       dotProps: {
        stroke: "white",
-       "stroke-width" : 2
+       "stroke-width" : 1.5,
+       "stroke-opacity" : 0.5
       },
 
       borderProps : {
         opacity : 0.3,
         fill : "#c0c0c0",
         "stroke-width" : 0,
-        "stroke-opacity" : 0
+        "stroke-opacity" : 0.5
       }
     }
   },

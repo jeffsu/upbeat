@@ -8,12 +8,16 @@ function startChart(par) {
   function go() {
     $.get(url, function (payload) {
       var series = type != 'sensor' ? getSeries(payload.data) : {};
+      var legend = {};
+      for (var k in payload.data) legend[k] = k;
+
 
       $div.chart({
         template: type,
         values:   payload.data,
         labels:   payload.labels,
-        series:   series
+        series:   series,
+        legend:   legend
       });
     });
     setTimeout(go, 2000);
