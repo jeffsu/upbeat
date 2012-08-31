@@ -35,6 +35,10 @@ stats:
   response-times:
     strategy: average
 
-redis:
-  port: 6379
-  host: localhost
+sync:
+  interval: 5000
+  stats: true
+  sensors: true
+  redis:
+    port: 6379
+    host: localhost

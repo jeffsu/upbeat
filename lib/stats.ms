@@ -49,9 +49,10 @@ export class Stats {
 
   function sensor(tempo) {
     return {
-      response: tempo.getAverageHistory('time', 'total'),
-      pass:     tempo.getHistory('pass'),
-      fail:     tempo.getHistory('fail')
+      response:   tempo.getAverageHistory('time', 'total'),
+      pass:       tempo.getHistory('pass'),
+      fail:       tempo.getHistory('fail'),
+      "time-out": tempo.getHistory('time-out')
     };
   }
 

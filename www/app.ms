@@ -76,9 +76,9 @@ module.exports = #(server, config) {
       locals.server = server;
       locals.services = server.services;
       locals.stats    = server.stats;
-      locals.params   = req.params;
       locals.self     = getResource(req);
       locals.path     = req.path;
+      locals.query    = req.query;
       next(); 
     });
 
@@ -116,7 +116,7 @@ module.exports = #(server, config) {
     var strategy = stats.config.strategy;
 
     if (req.params.format == 'json') {
-      res.json(stats.getData(req.params.time));
+      res.json({ data: stats.getData(time), labels: LABELS[time] });
     } else {
       res.render('stats/' + strategy, { config: config, stats: stats, params: req.params });
     }

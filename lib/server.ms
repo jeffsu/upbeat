@@ -26,16 +26,20 @@ export class Server {
   }
 
   function sync(redis) {
-    for (var serviceName in this.services) {
-      var service = this.services[serviceName];
-      for (var sensorName in service.sensors) {
-        var sensor = service.sensors[sensorName];
-        sensor.sync(redis, "upbeat:services:" + serviceName + ":" + sensorName);
+    if (this.syncConfig.sensors) {
+      for (var serviceName in this.services) {
+        var service = this.services[serviceName];
+        for (var sensorName in service.sensors) {
+          var sensor = service.sensors[sensorName];
+          sensor.sync(redis, "upbeat:services:" + serviceName + ":" + sensorName);
+        }
       }
     }
 
-    for (var k in this.stats) 
-      this.stats[k].sync(redis, k);
+    if (this.syncConfig.stats) {
+      for (var k in this.stats) 
+        this.stats[k].sync(redis, k);
+    }
   }
 
   function run() {
@@ -62,24 +66,11 @@ export class Server {
     if (config.dashboard)
       this.buildDash(config.dashboard);
 
-    if (config.redis) 
-      this.buildRedis(config.redis);
-
-    if (this.redis || config.save)
-      this.setSave();
-  }
-
-  function setSave() {
-    setInterval(#{  self.save() }, 3000);
-  }
-
-  function save() {
-    for (var k in this.services) {
-      var service = this.services[k];
-      for (var name in service.sensors) {
-        var sensor = service.sensors[name];
-      }
+    if (config.sync) {
+      this.syncConfig = config.sync;
+      this.buildRedis(config.sync.redis);
     }
+
   }
 
   function buildRedis(config) {
@@ -92,7 +83,7 @@ export class Server {
     setInterval(#{
       if (stop) return;
       self.sync(redis);
-    }, config.interval || 3000);
+    }, this.syncConfig.interval || 3000);
   }
 
   function buildService(name, config) {

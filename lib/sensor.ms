@@ -148,6 +148,7 @@ export class Sensor {
     setTimeout(#{ 
       if (stopped) return;
       self.respond('timed-out', null, startTime, cb);
+      self.stats.inc('time-out');
       stopped = true;
     }, this.timeout);
 
