@@ -1,0 +1,25 @@
+table.table.table-condensed.table-bordered
+  tr.success
+    th Service
+    th Status
+    th Pass/Total
+    th Last Pass
+    th Last Failure
+  - var i = 0;
+  each service, name in server.services
+    - var sname = name;
+    if i++ > 0
+      tr: td(colspan=5) &nbsp;
+    tr
+      td: a(href="/services/#{sname}?time=min")= sname
+      td!= health(service.isHealthy)
+      td
+      td
+      td
+    each sensor, name in service.sensors
+      tr
+        td(style="padding-left: 20px"): a(href="/services/#{sname}/sensors/#{name}?time=min")= name
+        td!= health(sensor.isHealthy)
+        td #{sensor.passCount}/#{sensor.totalCount}
+        td= sensor.lastPass 
+        td= sensor.lastFail 

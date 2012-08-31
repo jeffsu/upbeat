@@ -3,14 +3,23 @@ html
   head
     title Upbeat
     link(rel='stylesheet', href='/stylesheets/style.css')
-    link(rel='stylesheet', href='/stylesheets/bootstrap.min.css')
+    link(rel='stylesheet', href='/bootstrap/css/bootstrap.min.css')
 
     script(src='/javascripts/jquery.js')
-    script(src='/javascripts/raphael.js')
+    script(src='/bootstrap/js/bootstrap.min.js')
+    script(src='/javascripts/raphael-1.5.2.js')
     script(src='/javascripts/elycharts.js')
     script(src='/javascripts/chart-styles.js')
-    script(src='/javascripts/data.js')
+    script(src='/javascripts/charts.js')
   body
+    .navbar.navbar-inverse.navbar-fixed-top
+      .navbar-inner
+        .container
+          a.brand Upbeat
+          .nav-collapse.collapse
+            ul.nav
+              li: a(href="/services") Services
+              li: a(href="/stats") Stats
+     
     .container-fluid
-      h3 Upbeat
       block content

@@ -3,6 +3,33 @@
  * Module dependencies.
  */
 
+var LABELS = {
+  min:  [],
+  hour: [],
+  day:  [],
+  week: []
+};
+
+var SUFFIXES = {
+  min: 'seconds ago',
+  hour: 'minutes ago',
+  day:  'hours ago',
+  week: 'days ago'
+};
+
+for (var i=0; i<12; i++) {
+  LABELS.min.push(i * 5);
+  LABELS.hour.push(i * 5);
+}
+
+for (var i=0; i<24; i++) LABELS.day.push(i);
+for (var i=0; i<7; i++) {
+  for (var j=0; j<6; j++) {
+    if (i>0 && j==0) LABELS.week.push(i);
+    else LABELS.week.push('');
+  }
+}
+
 module.exports = #(server, config) { 
 
   var express = require('express')
@@ -31,7 +58,7 @@ module.exports = #(server, config) {
        '<span style="color: red">'   + (down || 'down') + '</span>';
   };
 
-  app.locals.TIMES = [ 'min', 'hour', 'day', 'week' ];
+  app.locals.suffixes = SUFFIXES;
 
   app.configure(function(){
     app.set('port', process.env.PORT || 3000);
@@ -41,6 +68,20 @@ module.exports = #(server, config) {
     app.use(express.logger('dev'));
     app.use(express.bodyParser());
     app.use(express.methodOverride());
+
+    app.use(#(req, res, next) { 
+      var locals = res.locals;
+      req.query.time = req.query.time || 'min';
+      if (!locals) return next();
+      locals.server = server;
+      locals.services = server.services;
+      locals.stats    = server.stats;
+      locals.params   = req.params;
+      locals.self     = getResource(req);
+      locals.path     = req.path;
+      next(); 
+    });
+
     app.use(app.router);
     app.use(express.static(path.join(__dirname, 'public')));
   });
@@ -51,12 +92,29 @@ module.exports = #(server, config) {
   });
 
   app.get('/', #(req, res, next) {
-    res.render('index', { params: req.params, server: server });
+    res.render('index', {});
   });
 
-  app.get('/stats/:stats/:time.:format?', #(req, res, next) {
-    var stats = getResource(req.params);
+  app.get('/services/:service', #(req, res, next) {
+    var params = req.params;
+    var query  = req.query;
+    res.render('service', { params: req.params, service: getResource(req.params), query: query });
+  });
+
+  app.get('/services', #(req, res, next) {
+    res.render('services');
+  });
+
+
+  app.get('/stats', #(req, res, next) {
+    res.render('stats');
+  });
+
+  app.get('/stats/:stats.:format?', #(req, res, next) {
+    var time     = req.query.time;
+    var stats    = getResource(req.params);
     var strategy = stats.config.strategy;
+
     if (req.params.format == 'json') {
       res.json(stats.getData(req.params.time));
     } else {
@@ -64,22 +122,12 @@ module.exports = #(server, config) {
     }
   });
 
-  app.get('/services', #(req, res, next) {
-    res.render('services', { params: req.params, services: server.services });
-  });
-
-  app.get('/services/:service/:time.:format?', #(req, res, next) {
+  app.get('/services/:service/sensors/:sensor.:format?', #(req, res, next) {
+    var query = req.query;
     if (req.params.format == 'json')
-      res.json(getResource(req.params).getAverageTimes(params.time));
-    else
-      res.render('service', { params: req.params, server: server, service: getResource(req.params) });
-  });
-
-  app.get('/services/:service/sensors/:sensor/:time.:format?', #(req, res, next) {
-    if (req.params.format == 'json') 
-      res.json(getResource(req.params).getAverageTimes(req.params.time));
+      res.json({ data: getResource(req.params).getData(query.time), labels: LABELS[query.time] });
     else 
-      res.render('sensor', { params: req.params, sensor: getResource(req.params) });
+      res.render('sensor', { params: req.params, sensor: getResource(req.params), query: query });
   });
 
   app.get('/services/:service/sensors/:sensor/health', #(req, res, next) {

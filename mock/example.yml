@@ -1,22 +1,22 @@
 services:
-  web-site:
-    slow-call:
+  slow:
+    good:
       strategy: http 
-      url: http://localhost:3001/slow/good
+      url: http://localhost:3001/fast/good
       timeout: 300
       interval: 5000
-    average-call:
+    average:
       strategy: http 
       url: http://localhost:3001/fast/average
-      timeout: 100
+      timeout: 300
       interval: 5000
-    average-call:
+    perfect:
       strategy: http 
-      url: http://localhost:3001/fast/average
-      timeout: 100
+      url: http://localhost:3001/fast/perfect
+      timeout: 300
       interval: 5000
 
-  web-site2:
+  fast:
     http:
       strategy: http 
       url: http://localhost:3001/fast/bad

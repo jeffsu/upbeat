@@ -1,10 +1,12 @@
 extend layout
 block content
-  h5
-    a(href="/services") services 
-    = ' > '
-    a(href="/services/#{params.service}/#{params.time}")= params.service 
-    = ' > ' + params.sensor
-  .chart(data-url="/services/#{params.service}/sensors/#{params.sensor}/#{params.time}.json", data-type="pass-fail")
-  style
-    .chart div { height: 300px }
+  include _time-nav 
+  table(style="width: 100%")
+    tr
+      td Request&nbsp;Count
+      th(width="100%")= params.sensor
+      td Response&nbsp;Times
+  #chart.chart(data-url="/services/#{params.service}/sensors/#{params.sensor}.json?time=#{query.time}", style="height:300px", data-type="sensor")
+  = suffixes[query.time];
+  :mochi
+    $(#{ startChart('#chart') });

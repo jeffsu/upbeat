@@ -1,122 +1,85 @@
-$.elycharts.templates['pass-fail'] = {
- type : "line",
- margins : [10, 10, 20, 50],
- defaultSeries : {
-  plotProps : {
-   "stroke-width" : 4
+$.elycharts.templates.upbeat = {
+  type : "line",
+  margins : [20, 20, 25, 20],
+  defaultSeries: {
+    plotProps: { "stroke-width" : 4 },
+    fill: true,
+    fillProps: { opacity: .1 },
+    dot:  true,
+    dotProps : { stroke : "white", "stroke-width" : 2 }
   },
-  dot : true,
-  dotProps : {
-   stroke : "white",
-   "stroke-width" : 2
-  }
- },
- series : {
-  fail : {
-   color : "red",
-   plotProps: {
-     "stroke-width": 0
-   },
-   dotProps: {
-     stroke: "red",
-     "stroke-width": 2
-   },
-   startAnimation: { type: 'reg', delay: 100, easing: 'elastic' }
+
+  defaultAxis: { 
+    anchors: true,
+    labels: true,
+    labelsDistance: 15
   },
-  pass : {
-   color : "green",
-   startAnimation: { type: 'reg', delay: 100, easing: 'elastic' }
-  }
- },
- defaultAxis : {
-  labels : true
- },
- features : {
-  grid : {
-   draw : [true, false],
-   props : {
-    "stroke-dasharray" : "-"
-   }
+
+  features: {
+    grid: {
+      draw: [true, true],
+      props: { "stroke-dasharray" : "-" }
+    },
+
+    legend : {
+      horizontal: true,
+
+      width: 80,
+      height: 50,
+      x: 210,
+      y: 220,
+
+      dotType: "circle",
+      dotProps: {
+       stroke: "white",
+       "stroke-width" : 2
+      },
+
+      borderProps : {
+        opacity : 0.3,
+        fill : "#c0c0c0",
+        "stroke-width" : 0,
+        "stroke-opacity" : 0
+      }
+    }
   },
-  legend : {
-   horizontal : false,
-   width : 80,
-   height : 50,
-   x : 210,
-   y : 220,
-   dotType : "circle",
-   dotProps : {
-    stroke : "white",
-    "stroke-width" : 2
-   },
-   borderProps : {
-    opacity : 0.3,
-    fill : "#c0c0c0",
-    "stroke-width" : 0,
-    "stroke-opacity" : 0
-   }
+  axis: {
+    r: { 
+      labels: true,
+      labelsDistance: 2,
+      labelsAnchor: "start",
+      labelsMargin: 5
+    },
+
+    l: {
+      labelsDistance: 20,
+      labelsAnchor: "start",
+      labelsMargin: 5
+    }
   }
- }
 };
 
-$.elycharts.templates['lines'] = {
- type : "line",
- margins : [10, 10, 20, 50],
- defaultSeries : {
-  plotProps : {
-   "stroke-width" : 4
-  },
-  dot : true,
-  dotProps : {
-   stroke : "white",
-   "stroke-width" : 2
+$.elycharts.templates.sensor = {
+  template: 'upbeat',
+  series: {
+    fail: {
+      color: "red",
+      type: 'line',
+      plotProps: { "stroke-width": 0, opacity: 0.3 },
+      dotProps: { stroke: "red", "stroke-width": 2, opacity: 0.3 },
+    },
+    pass: { 
+      type: 'line', 
+      color: "green", 
+      plotProps: { "sroke-width": 0, opacity: 0.5 }
+    },
+    response: { 
+      color: 'blue', 
+      type: 'line', 
+      axis: 'r', 
+      fill: false,
+      plotProps: { 'stroke-width': 1 },
+      dotProps: { 'stroke-width': .5, stroke: "blue" } 
+    }
   }
- },
- series : {
-  fail : {
-   color : "red",
-   plotProps: {
-     "stroke-width": 0
-   },
-   dotProps: {
-     stroke: "red",
-     "stroke-width": 2
-   },
-   startAnimation: { type: 'reg', delay: 100, easing: 'elastic' }
-  },
-  pass : {
-   color : "green",
-   startAnimation: { type: 'reg', delay: 100, easing: 'elastic' }
-  }
- },
- defaultAxis : {
-  labels : true
- },
- features : {
-  grid : {
-   draw : [true, false],
-   props : {
-    "stroke-dasharray" : "-"
-   }
-  },
-  legend : {
-   horizontal : false,
-   width : 80,
-   height : 50,
-   x : 210,
-   y : 220,
-   dotType : "circle",
-   dotProps : {
-    stroke : "white",
-    "stroke-width" : 2
-   },
-   borderProps : {
-    opacity : 0.3,
-    fill : "#c0c0c0",
-    "stroke-width" : 0,
-    "stroke-opacity" : 0
-   }
-  }
- }
 };
-

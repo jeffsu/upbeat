@@ -1,5 +1,6 @@
 var strategies = require('./strategies');
 var tempo      = require('tempo');
+var Stats      = require('./stats');
 
 export class Sensor {
   include $m.EventEmitter;
@@ -34,10 +35,7 @@ export class Sensor {
 
     this.stacked  = 0; // number of stacked up requests
 
-    this.min  = tempo.min();
-    this.hour = tempo.hour();
-    this.day  = tempo.day();
-    this.week = tempo.week();
+    this.stats = new Stats({ strategy: 'sensor' });
 
     this.status = 'paused';
     this.isHealthy   = null;
@@ -47,41 +45,29 @@ export class Sensor {
     this.setEvents();
   }
 
-  function getTempo(time) {
-    return this[time || 'day'];
+  function sync(redis, name, cb) {
+    this.stats.sync(redis, name, cb);
   }
 
-  function getAverageTimes(time) {
-    var tempo = this.getTempo(time);
-    return {
-      fail: tempo.getAverageHistory('fail-time', 'fail-count'),
-      pass: tempo.getAverageHistory('pass-time', 'pass-count')
-    };
+  function getTempo(time) {
+    return this.stats.getTempo(time);
+  }
+
+  function getData(time) {
+    return this.stats.getData(time);
   }
 
   function setEvents() {
     this.on('fail', #(time) {
-      self.min.inc("fail-count");
-      self.hour.inc("fail-count");
-      self.day.inc("fail-count");
-      self.week.inc("fail-count");
-
-      self.min.inc("fail-time", time);
-      self.hour.inc("fail-time", time);
-      self.day.inc("fail-time", time);
-      self.week.inc("fail-time", time);
+      self.stats.inc("fail");
+      self.stats.inc("total");
+      self.stats.inc("time", time);
     });
 
     this.on('pass', #(time) {
-      self.min.inc("pass-count");
-      self.hour.inc("pass-count");
-      self.day.inc("pass-count");
-      self.week.inc("pass-count");
-
-      self.min.inc("pass-time", time);
-      self.hour.inc("pass-time", time);
-      self.day.inc("pass-time", time);
-      self.week.inc("pass-time", time);
+      self.stats.inc("pass");
+      self.stats.inc("total");
+      self.stats.inc("time", time);
     });
   }
 

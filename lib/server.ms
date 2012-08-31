@@ -25,6 +25,19 @@ export class Server {
     return services;
   }
 
+  function sync(redis) {
+    for (var serviceName in this.services) {
+      var service = this.services[serviceName];
+      for (var sensorName in service.sensors) {
+        var sensor = service.sensors[sensorName];
+        sensor.sync(redis, "upbeat:services:" + serviceName + ":" + sensorName);
+      }
+    }
+
+    for (var k in this.stats) 
+      this.stats[k].sync(redis, k);
+  }
+
   function run() {
     if (this.status == 'running') return;
     this.status = 'running';
@@ -51,20 +64,34 @@ export class Server {
 
     if (config.redis) 
       this.buildRedis(config.redis);
+
+    if (this.redis || config.save)
+      this.setSave();
+  }
+
+  function setSave() {
+    setInterval(#{  self.save() }, 3000);
+  }
+
+  function save() {
+    for (var k in this.services) {
+      var service = this.services[k];
+      for (var name in service.sensors) {
+        var sensor = service.sensors[name];
+      }
+    }
   }
 
   function buildRedis(config) {
     if (!config) return;
     var redis = require('redis').createClient(config);
     var stop  = true;
-    redis.on('error', #{ stop = true; console.log('hi') }); 
+    redis.on('error', #{ stop = true; }); 
     redis.on('connect', #{ stop = false; }); 
 
     setInterval(#{
       if (stop) return;
-      for (var k in self.stats) {
-        self.stats[k].sync(redis, k);
-      }
+      self.sync(redis);
     }, config.interval || 3000);
   }
 
