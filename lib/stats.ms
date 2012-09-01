@@ -35,37 +35,56 @@ export class Stats {
     this.week.sync(redis, name + ':week', onFin);
   }
 
-  function getData(time) {
+  function getData(time, as) {
     var tempo = this.getTempo(time);
+    var strategy = as || this.config.strategy;
 
-    if (this.config.strategy == 'counter') {
+    if (strategy == 'counter') {
       return this.counter(tempo);
-    } else if (this.config.strategy == 'average') {
+    } else if (strategy == 'average') {
       return this.average(tempo);
-    } else if (this.config.strategy == 'sensor') {
+    } else if (strategy == 'sensor') {
       return this.sensor(tempo);
+    } else if (strategy == 'pie') {
+      return this.pie(tempo);
     }
   }
 
   function sensor(tempo) {
-    return {
+    var data = {
       response:   tempo.getAverageHistory('time', 'total'),
       pass:       tempo.getHistory('pass'),
       fail:       tempo.getHistory('fail'),
       "time-out": tempo.getHistory('time-out')
     };
+
+    return { data: data };
   }
 
   function average(tempo) {
-    return { average: tempo.getAverageHistory('sum', 'count') };
+    var data = { average: tempo.getAverageHistory('sum', 'count') };
+    return { data: data };
+  }
+
+  function pie(tempo) {
+    var keys = tempo.getKeys();
+    var data = [];
+    var labels = [];
+    foreach (var k in keys) {
+      data.push(tempo.getCount(k));
+      labels.push(k);
+    }
+
+    return { data: data, labels: labels };
   }
 
   function counter(tempo) {
-    var ret = {};
+    var data = {};
     foreach (var key in tempo.getKeys()) {
-      ret[key] = tempo.getHistory(key);
+      data[key] = tempo.getHistory(key);
     }
-    return ret;
+
+    return { data: data };
   }
 
   function getTempo(time) {

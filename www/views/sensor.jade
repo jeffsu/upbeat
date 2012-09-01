@@ -1,12 +1,1 @@
-extend layout
-block content
-  include _time-nav 
-  table(style="width: 100%")
-    tr
-      td Request&nbsp;Count
-      th(width="100%")= params.sensor
-      td Response&nbsp;Times
-  #chart.chart(data-url="/services/#{params.service}/sensors/#{params.sensor}.json?time=#{query.time}", style="height:300px", data-type="sensor")
-  = suffixes[query.time];
-  :mochi
-    $(#{ startChart('#chart') });
+include stats/sensor

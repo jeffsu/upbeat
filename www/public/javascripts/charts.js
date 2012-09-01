@@ -4,18 +4,30 @@ function startChart(par) {
   var $div = $(par);
   var url  = $div.data('url');
   var type = $div.data('type');
+  var first = true;
 
   function go() {
     $.get(url, function (payload) {
+      if (!first) {
+        return $div.chart({ values: payload.data });
+      } else {
+        first = false;
+      }
+
       var series = type != 'sensor' ? getSeries(payload.data) : {};
       var legend = {};
-      for (var k in payload.data) legend[k] = k;
+      var values = payload.data;
+      var labels = payload.labels;
 
+      for (var k in payload.data) legend[k] = k;
+      if (type == 'upbeat-pie') {
+        legend = labels;
+      }
 
       $div.chart({
         template: type,
-        values:   payload.data,
-        labels:   payload.labels,
+        values:   values,
+        labels:   labels,
         series:   series,
         legend:   legend
       });

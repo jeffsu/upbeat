@@ -28,8 +28,8 @@ $.elycharts.templates.upbeat = {
       width: 200,
       height: 100,
 
-      x: 200,
-      y: 100,
+      x: 100,
+      y: 150,
       
       dotType: "circle",
       dotProps: {
@@ -94,4 +94,9 @@ $.elycharts.templates.sensor = {
       dotProps: { 'stroke-width': .5, stroke: "blue" } 
     }
   }
+};
+
+$.elycharts.templates['upbeat-pie'] = {
+  template: 'upbeat',
+  type: "pie"
 };

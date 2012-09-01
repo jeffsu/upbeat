@@ -3,18 +3,18 @@
  * Module dependencies.
  */
 
-var LABELS = {
-  min:  [],
-  hour: [],
-  day:  [],
-  week: []
-};
-
 var SUFFIXES = {
   min: 'seconds ago',
   hour: 'minutes ago',
   day:  'hours ago',
   week: 'days ago'
+};
+
+var LABELS = {
+  min:  [],
+  hour: [],
+  day:  [],
+  week: []
 };
 
 for (var i=0; i<12; i++) {
@@ -29,6 +29,7 @@ for (var i=0; i<7; i++) {
     else LABELS.week.push('');
   }
 }
+
 
 module.exports = #(server, config) { 
 
@@ -113,10 +114,12 @@ module.exports = #(server, config) {
   app.get('/stats/:stats.:format?', #(req, res, next) {
     var time     = req.query.time;
     var stats    = getResource(req.params);
-    var strategy = stats.config.strategy;
+    var strategy = req.query.as || stats.config.strategy;
 
     if (req.params.format == 'json') {
-      res.json({ data: stats.getData(time), labels: LABELS[time] });
+      var data = stats.getData(time, strategy);
+      data.labels = data.labels || LABELS[time];
+      res.json(data);
     } else {
       res.render('stats/' + strategy, { config: config, stats: stats, params: req.params });
     }
@@ -124,10 +127,13 @@ module.exports = #(server, config) {
 
   app.get('/services/:service/sensors/:sensor.:format?', #(req, res, next) {
     var query = req.query;
-    if (req.params.format == 'json')
-      res.json({ data: getResource(req.params).getData(query.time), labels: LABELS[query.time] });
-    else 
+    if (req.params.format == 'json') {
+      var data = getResource(req.params).getData(query.time);
+      data.labels = data.labels || LABELS[query.time];
+      res.json(data);
+    } else {
       res.render('sensor', { params: req.params, sensor: getResource(req.params), query: query });
+    }
   });
 
   app.get('/services/:service/sensors/:sensor/health', #(req, res, next) {
