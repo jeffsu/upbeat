@@ -1,5 +1,3 @@
-var CHART_TIME = 'min';
-
 function startChart(par) {
   var $div = $(par);
   var url  = $div.data('url');
@@ -19,9 +17,9 @@ function startChart(par) {
       var values = payload.data;
       var labels = payload.labels;
 
-      for (var k in payload.data) legend[k] = k;
-      if (type == 'upbeat-pie') {
-        legend = labels;
+      if (type == 'upbeat-pie') legend = labels;
+      else {
+        for (var k in payload.data) legend[k] = k;
       }
 
       $div.chart({

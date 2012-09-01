@@ -13,6 +13,13 @@ export class Service {
     return sensors;
   }
 
+  function toStatus() {
+    var ret = {};
+    for (var k in this.sensors) 
+      ret[k] = this.sensors[k].toStatus();
+    return ret;
+  }
+
   function run() {
     if (this.status == 'running') return;
     this.status = 'running';

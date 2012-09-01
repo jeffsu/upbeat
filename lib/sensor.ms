@@ -23,6 +23,9 @@ export class Sensor {
     this.timeout  = options.timeout  || TIMEOUT;
     this.interval = options.interval || INTERVAL;
 
+    this.slow = options.slow;
+
+
     this.fall     = -1 * (options.fall || 1);
     this.up       = options.up || 1;
 
@@ -41,6 +44,7 @@ export class Sensor {
     this.isHealthy   = null;
     this.healthCount = 0;
     this.lastHealth  = null;
+    this.isSlow      = null;
 
     this.setEvents();
   }
@@ -68,6 +72,15 @@ export class Sensor {
       self.stats.inc("pass");
       self.stats.inc("total");
       self.stats.inc("time", time);
+
+      self.isSlow = self.slow && time > self.slow;
+      if (self.isSlow) self.stats.inc('slow');
+    });
+
+    this.on('timeout', #{
+      self.stats.inc("timeout");
+      self.isSlow = true;
+      self.stats.inc('slow');
     });
   }
 
@@ -88,6 +101,7 @@ export class Sensor {
 
   function respond(err, meta, time, cb) {
     var passed = !err;
+    if (err == 'timeout') this.emit('timeout');
 
     var now = (new Date).getTime();
 
@@ -147,8 +161,7 @@ export class Sensor {
 
     setTimeout(#{ 
       if (stopped) return;
-      self.respond('timed-out', null, startTime, cb);
-      self.stats.inc('time-out');
+      self.respond('timeout', null, startTime, cb);
       stopped = true;
     }, this.timeout);
 

@@ -96,6 +96,7 @@ module.exports = #(server, config) {
     res.render('index', {});
   });
 
+  // Services
   app.get('/services/:service', #(req, res, next) {
     var params = req.params;
     var query  = req.query;
@@ -107,6 +108,18 @@ module.exports = #(server, config) {
   });
 
 
+  app.get('/services/:service/sensors/:sensor.:format?', #(req, res, next) {
+    var query = req.query;
+    if (req.params.format == 'json') {
+      var data = getResource(req.params).getData(query.time);
+      data.labels = data.labels || LABELS[query.time];
+      res.json(data);
+    } else {
+      res.render('sensor', { params: req.params, sensor: getResource(req.params), query: query });
+    }
+  });
+
+  // Stats
   app.get('/stats', #(req, res, next) {
     res.render('stats');
   });
@@ -125,18 +138,24 @@ module.exports = #(server, config) {
     }
   });
 
-  app.get('/services/:service/sensors/:sensor.:format?', #(req, res, next) {
-    var query = req.query;
-    if (req.params.format == 'json') {
-      var data = getResource(req.params).getData(query.time);
-      data.labels = data.labels || LABELS[query.time];
-      res.json(data);
-    } else {
-      res.render('sensor', { params: req.params, sensor: getResource(req.params), query: query });
+  app.post('/stats/:stats', #(req, res, next) {
+    var stats = getResource(req.params);
+    for (var k in req.body) {
+      var val = parseInt(req.body[k]);
+      if (val > 0) stats.inc(k, val);
     }
+    res.send("ok");
   });
 
+  // Health checks
   app.get('/services/:service/sensors/:sensor/health', #(req, res, next) {
+    var sensor = getResource(req.params);
+    return res.send(sensor.isHealthy ? 200 : 400);
+  });
+
+  app.get('/services/:service/health', #(req, res, next) {
+    var service = getResource(req.params);
+    return res.send(service.isHealthy ? 200 : 400);
   });
 
   http.createServer(app).listen(app.get('port'), function(){

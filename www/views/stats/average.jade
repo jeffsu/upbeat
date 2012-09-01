@@ -1,4 +1,8 @@
 extend ../layout
 block content
   h5= params.stats
-  .chart(data-url="/stats/#{params.stats}/#{params.time}.json", data-type="lines")
+  include ../_time-nav
+  #chart.chart(data-url="/stats/#{params.stats}.json?time=#{query.time}", data-type="upbeat")
+
+  :mochi
+    $(#{ startChart('#chart') });

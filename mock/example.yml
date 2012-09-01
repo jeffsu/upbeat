@@ -4,17 +4,25 @@ services:
       strategy: http 
       url: http://localhost:3001/fast/good
       timeout: 300
-      interval: 5000
+      interval: 2000
+      slow: 200
+      fast: 100
+
     average:
       strategy: http 
       url: http://localhost:3001/fast/average
       timeout: 300
-      interval: 5000
+      interval: 1000
+      slow: 200
+      fast: 100
+
     perfect:
       strategy: http 
       url: http://localhost:3001/fast/perfect
       timeout: 300
       interval: 5000
+      slow: 200
+      fast: 100
 
   fast:
     http:
