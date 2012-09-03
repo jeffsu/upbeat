@@ -146,6 +146,29 @@ export class Sensor {
     cb(err);
   }
 
+  function perf(cc, time, cb) {
+    var results = { pass: 0, fail: 0, time: 0 };
+    var stopAt = time + (new Date).getTime();
+    for (var i=0; i<cc; i++) {
+      this.checkSimple(results, stopAt);
+    }
+    setTimeout(#{ cb(results) }, time);
+  }
+
+  function checkSimple(results, stopAt) {
+    var start = (new Date).getTime();
+    if (stopAt <= start) return;
+
+    this.strategy(#(err, meta) {
+      if (err) results.fail++;
+      else {
+        results.pass++;
+        results.time += (new Date).getTime() - start;
+      }
+      self.checkSimple(results, stopAt);
+    });
+  }
+
   function check(cb) {
     if (this.stacked > 5) {
       this.isHealthy = false;

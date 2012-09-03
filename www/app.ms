@@ -17,16 +17,16 @@ var LABELS = {
   week: []
 };
 
-for (var i=0; i<12; i++) {
+for (var i=12; i>0; i--) {
   LABELS.min.push(i * 5);
   LABELS.hour.push(i * 5);
 }
 
-for (var i=0; i<24; i++) LABELS.day.push(i);
-for (var i=0; i<7; i++) {
-  for (var j=0; j<6; j++) {
-    if (i>0 && j==0) LABELS.week.push(i);
-    else LABELS.week.push('');
+for (var i=24; i>0; i--) LABELS.day.push(i);
+for (var i=7; i>0; i--) {
+  LABELS.week.push(i);
+  for (var j=0; j<5; j++) {
+    LABELS.week.push('');
   }
 }
 
@@ -74,12 +74,14 @@ module.exports = #(server, config) {
       var locals = res.locals;
       req.query.time = req.query.time || 'min';
       if (!locals) return next();
+
       locals.server = server;
       locals.services = server.services;
       locals.stats    = server.stats;
       locals.self     = getResource(req);
       locals.path     = req.path;
       locals.query    = req.query;
+      locals.body     = req.body;
       next(); 
     });
 
@@ -107,6 +109,20 @@ module.exports = #(server, config) {
     res.render('services');
   });
 
+  app.get('/services/:service/sensors/:sensor/test', #(req, res, next) {
+    res.render('sensor-test', { params: req.params, results: null });
+  });
+
+  app.post('/services/:service/sensors/:sensor/test', #(req, res, next) {
+    var results = {};
+    var sensor  = getResource(req.params);
+    var concurrency = parseInt(req.body.concurrency);
+    var time = parseInt(req.body.time) * 1000;
+
+    sensor.perf(concurrency, time, #(results) {
+      res.render('sensor-test', { params: req.params, results: results });
+    });
+  });
 
   app.get('/services/:service/sensors/:sensor.:format?', #(req, res, next) {
     var query = req.query;
@@ -150,12 +166,12 @@ module.exports = #(server, config) {
   // Health checks
   app.get('/services/:service/sensors/:sensor/health', #(req, res, next) {
     var sensor = getResource(req.params);
-    return res.send(sensor.isHealthy ? 200 : 400);
+    return res.send(sensor.isHealthy ? 200 : 503);
   });
 
   app.get('/services/:service/health', #(req, res, next) {
     var service = getResource(req.params);
-    return res.send(service.isHealthy ? 200 : 400);
+    return res.send(service.isHealthy ? 200 : 503);
   });
 
   http.createServer(app).listen(app.get('port'), function(){

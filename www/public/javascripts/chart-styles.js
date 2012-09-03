@@ -77,12 +77,20 @@ $.elycharts.templates.sensor = {
       plotProps: { "stroke-width": 3, opacity: 0.5 }
     },
 
-    "time-out": {
+    timeout: {
       type: 'line',
       color: 'yellow',
       dot: true,
       plotProps: { "stroke-width": 0 },
-      dotProps:  { "stroke": "yellow", "stroke-width": 1, opacity: 0.3 },
+      dotProps:  { "stroke": "yellow", "stroke-width": 1, opacity: 0.3 }
+    },
+
+    slow: {
+      type: 'line',
+      color: 'orange', 
+      dot: true,
+      plotProps: { "stroke-width": 0 },
+      dotProps:  { "stroke": "yellow", "stroke-width": 1, opacity: 0.3 }
     },
 
     response: { 

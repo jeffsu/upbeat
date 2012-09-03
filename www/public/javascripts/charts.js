@@ -1,11 +1,30 @@
+var CHART_TIMEOUTS = {
+  min: 2,
+  hour: 20,
+  day:  60,
+  week: 3600
+};
+
 function startChart(par) {
   var $div = $(par);
   var url  = $div.data('url');
   var type = $div.data('type');
   var first = true;
+  var m = url.match(/time=(\w+)/);
+  var time = null;
+  if (m) time = m[1];
+  var timeout = CHART_TIMEOUTS[time] || CHART_TIMEOUTS.min;
 
   function go() {
     $.get(url, function (payload) {
+      var data = payload.data;
+      if (data) {
+        for (var k in data) {
+          if (data[k] instanceof Array) 
+            data[k] = data[k].reverse();
+        }
+      }
+
       if (!first) {
         return $div.chart({ values: payload.data });
       } else {
@@ -17,8 +36,9 @@ function startChart(par) {
       var values = payload.data;
       var labels = payload.labels;
 
-      if (type == 'upbeat-pie') legend = labels;
-      else {
+      if (type == 'upbeat-pie') {
+        legend = labels;
+      } else {
         for (var k in payload.data) legend[k] = k;
       }
 
@@ -30,7 +50,8 @@ function startChart(par) {
         legend:   legend
       });
     });
-    setTimeout(go, 2000);
+
+    setTimeout(go, timeout * 1000);
   }
 
   go();
@@ -49,7 +70,8 @@ var COLORS = [
   'red',
   'green',
   'yellow',
-  'pink'
+  'pink',
+  'orange'
 ];
 
 var USED_COLORS = {};
@@ -62,5 +84,5 @@ function getOneSeries(name) {
 }
 
 function getColor(name) {
-  return USED_COLORS[name] || (USED_COLORS[name] = COLORS[COLOR_IDX++]);
+  return USED_COLORS[name] || (USED_COLORS[name] = COLORS[COLOR_IDX++%COLORS.length]);
 }
