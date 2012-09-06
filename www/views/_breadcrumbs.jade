@@ -1,0 +1,3 @@
+ul.breadcrumbs
+  each bc in breadcrumbs(path)
+    li: a(href=bc.href)= bc.name
