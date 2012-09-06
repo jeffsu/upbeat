@@ -6,6 +6,10 @@ module.exports = #(app) {
     week: 'days ago'
   };
 
+  app.locals.affirm = #(val) {
+    return val ? "yes" : "no";
+  };
+
   app.locals.breadcrumbs = #(path) {
     path = path || this.path;
     var splitted = path.split('/');

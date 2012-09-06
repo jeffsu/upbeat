@@ -5,6 +5,23 @@ block content
     = params.stats || params.sensor + " "
     small
       a.btn.btn-mini(href="/services/#{params.service}/sensors/#{params.sensor}/test") Performance Test
+  table.table.table-bordered.table-condensed
+    tr
+      th Healthy
+      td= affirm(sensor.isHealthy)
+      th Slow
+      td= affirm(sensor.isSlow)
+    tr
+      th Pass Count
+      td= sensor.passCount
+      th Fail Count
+      td= sensor.failCount
+    tr
+      th Status
+      td= sensor.status
+      th Last Failure
+      td= sensor.lastFailure
+    
   include _time-nav 
   table(style="width: 100%")
     tr
