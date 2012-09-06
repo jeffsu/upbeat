@@ -1,4 +1,3 @@
-
 h3 Services
 table.table.table-condensed.table-bordered
   tr.success
@@ -11,13 +10,16 @@ table.table.table-condensed.table-bordered
   - var i = 0;
   each service, name in server.services
     - var sname = name;
-    tr(class=service.isHealthy ? 'success' : 'error')
-      td.service(colspan=6, align="center")
-        a(href="/services/#{sname}?time=min")
-          != sname + ' (' + health(service.isHealthy) + ')'
+    - var sensorCount = 0; for (var k in service.sensors) sensorCount++;
+    - var first = true;
     each sensor, name in service.sensors
       tr
-        td
+        if first
+          td.service(rowspan=sensorCount)
+            a(href="/services/#{sname}?time=min")
+              != sname + ' (' + health(service.isHealthy) + ')'
+          - first = false
+
         td(style="padding-left: 20px"): a(href="/services/#{sname}/sensors/#{name}?time=min")= name
         td!= health(sensor.isHealthy)
         td #{sensor.passCount}/#{sensor.totalCount}

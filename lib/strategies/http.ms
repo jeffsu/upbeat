@@ -6,7 +6,7 @@ module.exports = #(options) {
   var url    = URL.parse(options.url);
 
   var reqOptions = {
-    host:   url.host,
+    host:   url.hostname,
     method: method,
     port:   url.port,
     path:   url.path
