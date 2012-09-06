@@ -11,10 +11,8 @@ table.table.table-condensed.table-bordered
   - var i = 0;
   each service, name in server.services
     - var sname = name;
-    if i++ > 0
-      tr: td(colspan=5) &nbsp;
     tr(class=service.isHealthy ? 'success' : 'error')
-      td(colspan=6)
+      td.service(colspan=6, align="center")
         a(href="/services/#{sname}?time=min")
           != sname + ' (' + health(service.isHealthy) + ')'
     each sensor, name in service.sensors
