@@ -59,6 +59,7 @@ export class Server {
 
     this.buildServices(config.services);
     this.buildStats(config.stats);
+
     this.on('sensor', #(serviceName, sensorName, type, sensor, data1, data2) {
       if (self.trackedEvents[type]) self.log(serviceName, sensorName, type, sensor, data1, data2);
     });

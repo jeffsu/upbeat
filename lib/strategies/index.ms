@@ -1,19 +1,7 @@
 
 
 module.exports = {
-  http: #(options) {
-    var request = require('request');
-    var args = {
-      method: options.method || 'GET',
-      url: options.url,
-      timeout: (options.timeout || 3000) - 10 
-    };
-    
-    return #(cb) {
-      request(args, #(err, res, body) { cb(err || res.statusCode != 200); });
-    };
-  },
-
+  http: require('./http'),
   mysql: #(options) {
     var sql   = options.query || "SHOW TABLES";
     var mysql = require('mysql');

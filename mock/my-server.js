@@ -2,9 +2,9 @@ var express = require('express');
 var upbeat  = require('../lib/upbeat');
 
 var SPEEDS = {
-  'slow': 300,
+  'slow': 10,
   'fast': 10,
-  'average': 100
+  'average': 10
 };
 
 var UPTIME = {

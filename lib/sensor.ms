@@ -87,12 +87,13 @@ export class Sensor {
   function run() {
     if (this.status == 'running') return;
     this.status = 'running';
-    this.repeat(0);
-  }
 
-  function repeat(timeout) {
-    if (this.status == 'running')
-      setTimeout(#{ self.check(#{ self.repeat(self.interval) }) }, timeout);
+    function repeat() {
+      self.check();
+      setTimeout(repeat, self.interval);
+    }
+
+    repeat();
   }
 
   function pause() {
@@ -143,7 +144,7 @@ export class Sensor {
 
     this.lastHealth = passed;
 
-    cb(err);
+    if (cb) cb(err);
   }
 
   function perf(cc, time, cb) {
