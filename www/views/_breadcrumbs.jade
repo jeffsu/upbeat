@@ -1,0 +1,11 @@
+ul.breadcrumb
+  - var bcs = breadcrumbs(path)
+  - var bcsLen = bcs.length
+  each bc, i in bcs
+    li
+      if bc.linked == true
+        a(href=bc.href)= bc.name
+      else 
+        = bc.name
+      unless i == bcsLen - 1
+        span.divider /

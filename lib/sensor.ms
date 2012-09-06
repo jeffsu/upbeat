@@ -47,6 +47,14 @@ export class Sensor {
     this.isSlow      = null;
 
     this.setEvents();
+
+    var lastChange = null;
+    this.on('change', #(isHealthy) {
+      var now = (new Date).getTime();
+      if (!lastChange) 
+        this[isHealthy ? 'uptime' : 'downtime'] += lastChange - now;
+      lastChange = now;
+    });
   }
 
   function sync(redis, name, cb) {
@@ -63,6 +71,7 @@ export class Sensor {
 
   function setEvents() {
     this.on('fail', #(time) {
+      self.lastFailure = (new Date);
       self.stats.inc("fail");
       self.stats.inc("total");
       self.stats.inc("time", time);

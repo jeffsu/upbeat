@@ -3,35 +3,27 @@
  * Module dependencies.
  */
 
-var SUFFIXES = {
-  min: 'seconds ago',
-  hour: 'minutes ago',
-  day:  'hours ago',
-  week: 'days ago'
-};
-
-var LABELS = {
-  min:  [],
-  hour: [],
-  day:  [],
-  week: []
-};
-
-for (var i=12; i>0; i--) {
-  LABELS.min.push(i * 5);
-  LABELS.hour.push(i * 5);
-}
-
-for (var i=24; i>0; i--) LABELS.day.push(i);
-for (var i=7; i>0; i--) {
-  LABELS.week.push(i);
-  for (var j=0; j<5; j++) {
-    LABELS.week.push('');
-  }
-}
-
 
 module.exports = #(server, config) { 
+  var LABELS = {
+    min:  [],
+    hour: [],
+    day:  [],
+    week: []
+  };
+
+  for (var i=12; i>0; i--) {
+    LABELS.min.push(i * 5);
+    LABELS.hour.push(i * 5);
+  }
+
+  for (var i=24; i>0; i--) LABELS.day.push(i);
+  for (var i=7; i>0; i--) {
+    LABELS.week.push(i);
+    for (var j=0; j<5; j++) {
+      LABELS.week.push('');
+    }
+  }
 
   var express = require('express')
     , routes = require('./routes')
@@ -40,6 +32,8 @@ module.exports = #(server, config) {
     , path = require('path');
 
   var app = express();
+
+  require('./helpers')(app);
 
   function getResource(params) {
     if (params.service) {
@@ -54,14 +48,6 @@ module.exports = #(server, config) {
   jade.filters.mochi = #(block) {
     return '<script language="JavaScript">' + mochi.parse(block).replace(/\n/g, "\\n") + '</script>';
   };
-
-  app.locals.health = #(passed, up, down) {
-    return passed ?
-       '<span style="color: green">' + (up || 'up') + '</span>' :
-       '<span style="color: red">'   + (down || 'down') + '</span>';
-  };
-
-  app.locals.suffixes = SUFFIXES;
 
   app.configure(function(){
     app.set('port', process.env.PORT || 3000);
