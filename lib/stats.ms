@@ -4,11 +4,14 @@ var tempo = require('tempo');
 export class Stats {
   private {
     var HOUR = 1000 * 60 * 60;
+    var TIMES = [ 'min', 'hour', 'day', 'week' ];
   }
 
   function initialize(config) {
     this.config = config || {};
 
+
+    this.exclude = config.exclude || {};
     this.min  = tempo.min();
     this.hour = tempo.hour();
     this.day  = tempo.day();
@@ -16,23 +19,23 @@ export class Stats {
   }
 
   function inc(name, n) {
-    this.min.inc(name, n);
-    this.hour.inc(name, n);
-    this.day.inc(name, n);
-    this.week.inc(name, n);
+    foreach (var t in TIMES) 
+      if (!this.exclude[t]) this[t].inc(name, n);
   }
 
   function sync(redis, name, cb) {
-    var n = 3;
+    var n = 0;
 
     function onFin() {
       if (--n == 0 && cb) cb();
     }
 
-    this.min.sync(redis, name + ':min', onFin);
-    this.hour.sync(redis, name + ':hour', onFin);
-    this.day.sync(redis, name + ':day', onFin);
-    this.week.sync(redis, name + ':week', onFin);
+    foreach (var t in TIMES) {
+      if (!this.exclude[t]) {
+        this[t].sync(redis, name + ':' + t, onFin);
+        n++;
+      }
+    }
   }
 
   function getData(time, as) {
@@ -81,9 +84,8 @@ export class Stats {
 
   function counter(tempo) {
     var data = {};
-    foreach (var key in tempo.getKeys()) {
+    foreach (var key in tempo.getKeys()) 
       data[key] = tempo.getHistory(key);
-    }
 
     return { data: data };
   }

@@ -2,6 +2,9 @@ extends layout
 
 block content
 
+  - var todo = server.status == 'paused' ? 'run' : 'pause' 
+  form(action="/" + todo, method="post")
+    input.btn(type="submit", value=todo)
   include _services
   include _stats
 

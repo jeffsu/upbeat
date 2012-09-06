@@ -90,7 +90,8 @@ export class Sensor {
 
     function repeat() {
       self.check();
-      setTimeout(repeat, self.interval);
+      if (self.status == 'running') 
+        setTimeout(repeat, self.interval);
     }
 
     repeat();

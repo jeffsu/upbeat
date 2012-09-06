@@ -51,7 +51,9 @@ module.exports = #(server, config) {
   }
 
   var mochi = require('mochiscript').mochi;
-  mochi.setupJade(jade);
+  jade.filters.mochi = #(block) {
+    return '<script language="JavaScript">' + mochi.parse(block).replace(/\n/g, "\\n") + '</script>';
+  };
 
   app.locals.health = #(passed, up, down) {
     return passed ?
@@ -97,6 +99,17 @@ module.exports = #(server, config) {
   app.get('/', #(req, res, next) {
     res.render('index', {});
   });
+
+  app.post('/pause', #(req, res, next) {
+    server.pause();
+    res.redirect('/');
+  });
+
+  app.post('/run', #(req, res, next) {
+    server.run();
+    res.redirect('/');
+  });
+
 
   // Services
   app.get('/services/:service', #(req, res, next) {
