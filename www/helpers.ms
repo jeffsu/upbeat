@@ -15,9 +15,17 @@ module.exports = #(app) {
     var splitted = path.split('/');
     var bc = [];
     var last = "";
+    var linked = true;
     foreach (var ele:i in splitted) {
-      last += '/' + ele;
-      bc.push({ name: ele, href: last });
+      if (i !== 0) {
+        if (i==3 && ele == 'sensors') {
+          linked = false;
+        } else {
+          linked = true;
+        }
+        last += '/' + ele;
+        bc.push({ name: ele, href: last, linked: linked });
+      }
     }
     return bc;
   };
