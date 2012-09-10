@@ -69,7 +69,7 @@ $.elycharts.templates.sensor = {
       color: "red",
       type: 'line',
       plotProps: { "stroke-width": 0, opacity: 0.3 },
-      dotProps: { stroke: "red", "stroke-width": 2, opacity: 0.3 },
+      dotProps: { stroke: "red", "stroke-width": 2, opacity: 1 },
     },
     pass: { 
       type: 'line', 
@@ -90,8 +90,8 @@ $.elycharts.templates.sensor = {
       type: 'line',
       color: 'yellow', 
       dot: true,
-      plotProps: { "stroke-width": 0 },
-      dotProps:  { "stroke": "yellow", "stroke-width": 1, opacity: 0.3 }
+      plotProps: { "stroke-width": 2 },
+      dotProps:  { "stroke": "red", "stroke-width": 1, opacity: 1 }
     },
 
     fast: {
