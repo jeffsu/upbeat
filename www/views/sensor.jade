@@ -7,9 +7,9 @@ block breadcrumbs
 block content
   table.table.table-bordered.table-condensed
     tr
-      th Healthy
+      th Healthy?
       td= affirm(sensor.isHealthy)
-      th Slow
+      th Slow?
       td= affirm(sensor.isSlow)
     tr
       th Pass Count
@@ -20,13 +20,23 @@ block content
       th Status
       td= sensor.status
       th Last Failure
-      td= sensor.lastFailure
+      td
+        = sensor.lastFailure 
+        if typeof sensor.lastError  == 'string'
+          = " (" + sensor.lastError + ")";
     tr
-      th(colspan=4) Options
-    each val, name in sensor.options
-      tr
-        th= name 
-        td(colspan=3)= val
+      th Uptime
+      td
+        | Total: #{sensor.getUpTime()}ms
+        if sensor.isHealthy
+          |  since #{(new Date).getTime() - sensor.lastChange}ms ago
+      th Downtime
+      td
+        | Total: #{sensor.getDownTime()}ms
+        unless sensor.isHealthy
+          |  since #{(new Date).getTime() - sensor.lastChange}ms ago
+    tr
+      td(colspan=4)= "Options: " + JSON.stringify(sensor.options);
     
   include _time-nav 
   table(style="width: 100%")

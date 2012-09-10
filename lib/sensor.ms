@@ -49,14 +49,20 @@ export class Sensor {
 
     this.setEvents();
 
-    this.lastChange = null;
+    this.lastChange = (new Date).getTime();
+    var firstChange = true;
+
     this.on('change', #(isHealthy) {
       var now = (new Date).getTime();
+      var delta = now - self.lastChange;
 
-      if (!self.lastChange) 
-        this[isHealthy ? 'uptime' : 'downtime'] += self.lastChange - now;
-
-      self.lastChange = now;
+      if (firstChange) {
+        self[isHealthy ? 'upTime' : 'downTime'] += delta;
+        firstChange = false;
+      } else {
+        self[isHealthy ? 'downTime' : 'upTime'] += delta;
+        self.lastChange = now;
+      }
     });
   }
 
@@ -76,6 +82,17 @@ export class Sensor {
   function getData(time) {
     return this.stats.getData(time);
   }
+
+  function getUpTime() {
+    return this.upTime + 
+      (this.isHealthy ? (new Date).getTime()-this.lastChange : 0);
+  }
+  
+  function getDownTime() {
+    return this.downTime + 
+      (!this.isHealthy ? (new Date).getTime()-this.lastChange : 0);
+  }
+
 
   function setEvents() {
     this.on('fail', #(time) {
@@ -134,6 +151,7 @@ export class Sensor {
     }
 
     else {
+      this.lastError = err;
       this.failCount++;
       this.lastFail = now;
     }
