@@ -21,6 +21,12 @@ block content
       td= sensor.status
       th Last Failure
       td= sensor.lastFailure
+    tr
+      th(colspan=4) Options
+    each val, name in sensor.options
+      tr
+        th= name 
+        td(colspan=3)= val
     
   include _time-nav 
   table(style="width: 100%")

@@ -63,7 +63,8 @@ export class Stats {
       pass:     tempo.getHistory('pass'),
       fail:     tempo.getHistory('fail'),
       timeout:  tempo.getHistory('timeout'),
-      slow:     tempo.getHistory('slow')
+      slow:     tempo.getHistory('slow'),
+      fast:     tempo.getHistory('fast'),
     };
 
     return { data: data };

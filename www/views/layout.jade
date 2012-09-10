@@ -20,6 +20,7 @@ html
             ul.nav
               li: a(href="/services") Services
               li: a(href="/stats") Stats
+              li: a(href="#")= "Uptime: " + process.uptime() + " secs";
      
     .container-fluid
       block content

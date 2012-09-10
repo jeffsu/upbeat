@@ -17,6 +17,7 @@ export class Sensor {
   }
 
   function initialize(options) {
+    this.options  = options;
     this.strategy = options.strategy;
     if (typeof this.strategy == 'string') this.strategy = strategies[this.strategy](options);
 
@@ -24,7 +25,7 @@ export class Sensor {
     this.interval = options.interval || INTERVAL;
 
     this.slow = options.slow;
-
+    this.fast = options.fast;
 
     this.fall     = -1 * (options.fall || 1);
     this.up       = options.up || 1;
@@ -35,6 +36,7 @@ export class Sensor {
 
     this.downTime = 0;
     this.upTime   = 0;
+    this.runningTime = 0;
 
     this.stacked  = 0; // number of stacked up requests
 
@@ -48,12 +50,14 @@ export class Sensor {
 
     this.setEvents();
 
-    var lastChange = null;
+    this.lastChange = null;
     this.on('change', #(isHealthy) {
       var now = (new Date).getTime();
-      if (!lastChange) 
-        this[isHealthy ? 'uptime' : 'downtime'] += lastChange - now;
-      lastChange = now;
+
+      if (!self.lastChange) 
+        this[isHealthy ? 'uptime' : 'downtime'] += self.lastChange - now;
+
+      self.lastChange = now;
     });
   }
 
@@ -84,6 +88,8 @@ export class Sensor {
 
       self.isSlow = self.slow && time > self.slow;
       if (self.isSlow) self.stats.inc('slow');
+      self.isFast = self.fast && time < self.fast;
+      if (self.isFast) self.stats.inc('fast');
     });
 
     this.on('timeout', #{

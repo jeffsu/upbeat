@@ -80,7 +80,9 @@ export class Server {
   function buildRedis(config) {
     if (!config) return;
     var redis = require('redis').createClient(config);
-    redis.on('error',   #{ stop = true; }); 
+    this.redisConnected = false;
+    redis.on('error',   #{ self.redisConnected = false }); 
+    redis.on('connect', #{ self.redisConnected = true }); 
     
     var configIntervals = config.intervals || {};
 
@@ -98,7 +100,7 @@ export class Server {
   function setSyncInterval(time, interval, redis) {
     function run() {
       if (self.status != 'running') return;
-      self.sync(redis, time);
+      if (self.redisConnected) self.sync(redis, time);
     }
 
     self.toRun.push(run);

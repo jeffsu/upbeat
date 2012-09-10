@@ -17,9 +17,9 @@ export class Client {
 
     this.setInterval();
     if (config.redisClient) this.redis = config.redisClient;
-    else if (config.redis) this.redis = this.createRedisClient(config.redis);
+    else if (config.redis)  this.redis = this.createRedisClient(config.redis);
 
-    this.redis.on('error', #{ self.hasRedis = false });
+    this.redis.on('error',   #{ self.hasRedis = false });
     this.redis.on('connect', #{ self.hasRedis = true });
   }
 

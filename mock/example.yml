@@ -27,7 +27,7 @@ services:
   slow-www:
     http:
       strategy: http 
-      url: http://localhost:3001/slow/perfect
+      url: http://localhost:3001/slow/good
       timeout:  380
       interval: 450
       slow: 350
@@ -37,6 +37,7 @@ log: [ 'change', 'fail', 'pass', 'up', 'down' ]
 
 dashboard:
   port: 3000
+  memory: true
 
 stats:
   urls:

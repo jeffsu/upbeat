@@ -2,11 +2,11 @@ $.elycharts.templates.upbeat = {
   type : "line",
   margins : [20, 20, 25, 20],
   defaultSeries: {
-    plotProps: { "stroke-width" : 4 },
+    plotProps: { "stroke-width" : 2 },
     fill: true,
     fillProps: { opacity: .1 },
     dot:  true,
-    dotProps : { stroke : "white", "stroke-width" : 2 }
+    dotProps : { stroke : "black", "stroke-width": 1 }
   },
 
   defaultAxis: { 
@@ -79,18 +79,27 @@ $.elycharts.templates.sensor = {
 
     timeout: {
       type: 'line',
-      color: 'yellow',
+      color: 'black',
+      dot: true,
+      fill: false,
+      plotProps: { "stroke-width": 0 },
+      dotProps:  { "stroke": "black", "stroke-width": 1, opacity: 1 }
+    },
+
+    slow: {
+      type: 'line',
+      color: 'yellow', 
       dot: true,
       plotProps: { "stroke-width": 0 },
       dotProps:  { "stroke": "yellow", "stroke-width": 1, opacity: 0.3 }
     },
 
-    slow: {
+    fast: {
       type: 'line',
-      color: 'orange', 
+      color: 'purple', 
       dot: true,
-      plotProps: { "stroke-width": 0 },
-      dotProps:  { "stroke": "yellow", "stroke-width": 1, opacity: 0.3 }
+      plotProps: { "stroke-width": 2 },
+      dotProps:  { "stroke": "purple", "stroke-width": 1, opacity: 0.3 }
     },
 
     response: { 
