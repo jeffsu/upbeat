@@ -1,10 +1,10 @@
 extend layout
-block content
+block breadcrumbs
   include _breadcrumbs
-  h3
-    = params.stats || params.sensor + " "
-    small
-      a.btn.btn-mini(href="/services/#{params.service}/sensors/#{params.sensor}/test") Performance Test
+    li.performance.pull-right
+      small
+        a.btn.btn-mini(href="/services/#{params.service}/sensors/#{params.sensor}/test") Performance Test
+block content
   table.table.table-bordered.table-condensed
     tr
       th Healthy
