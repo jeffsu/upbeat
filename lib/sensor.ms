@@ -36,7 +36,6 @@ export class Sensor {
 
     this.downTime = 0;
     this.upTime   = 0;
-    this.runningTime = 0;
 
     this.stacked  = 0; // number of stacked up requests
 
