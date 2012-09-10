@@ -1,4 +1,5 @@
-
+var OK = 200;
+var NOTOK = 500;
 /*
  * GET home page.
  */
@@ -28,9 +29,9 @@ module.exports = #(app, upbeat) {
     var ratio = count + "/" + total;
 
     if (!healthy) {
-      res.send("Unhealthy (" + ratio + ")", 400);
+      res.send("Unhealthy (" + ratio + ")", NOTOK);
     } else {
-      res.send("Healthy (" + ratio + ")", 200);
+      res.send("Healthy (" + ratio + ")", OK);
     }
   });
 

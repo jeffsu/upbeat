@@ -1,3 +1,6 @@
+var OK = 200;
+var NOTOK = 500;
+
 module.exports = #(app, upbeat) {
   function getService(req, res, cb) {
     var service = upbeat.getService(req.params.service);
@@ -58,9 +61,9 @@ module.exports = #(app, upbeat) {
     var service = getService(req, res);
     if (service) {
       if (service.up) {
-        res.send("Healthy", 400);
+        res.send("Healthy", OK);
       } else {
-        res.send("Unhealthy", 400);
+        res.send("Unhealthy", NOTOK);
       }
     }
   });
