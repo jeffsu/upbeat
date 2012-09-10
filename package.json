@@ -16,7 +16,7 @@
     "mochiscript": ">=0.6.12",
     "js-yaml":     ">=0.3.1",
     "winston":     ">=0.6.2",
-    "tempo":       ">=0.1.0-pre8"
+    "tempo":       ">=0.1.0-pre9"
   },
   "repository":   {
     "type": "git",

@@ -2,6 +2,7 @@ var tempo = require('tempo');
 
 // TODO expand this out into other classes
 export class Stats {
+
   private {
     var HOUR = 1000 * 60 * 60;
     var TIMES = [ 'min', 'hour', 'day', 'week' ];
@@ -10,8 +11,7 @@ export class Stats {
   function initialize(config) {
     this.config = config || {};
 
-
-    this.exclude = config.exclude || {};
+    this.exclude = this.config.exclude || {};
     this.min  = tempo.min();
     this.hour = tempo.hour();
     this.day  = tempo.day();
@@ -32,10 +32,14 @@ export class Stats {
 
     foreach (var t in TIMES) {
       if (!this.exclude[t]) {
-        this[t].sync(redis, name + ':' + t, onFin);
+        this.syncTime(t, redis, name, onFin);
         n++;
       }
     }
+  }
+
+  function syncTime(time, redis, namespace, cb) {
+    this[time].sync(redis, namespace + ':' + time, cb);
   }
 
   function getData(time, as) {
@@ -71,9 +75,10 @@ export class Stats {
   }
 
   function pie(tempo) {
-    var keys = tempo.getKeys();
-    var data = [];
+    var keys   = tempo.getKeys();
+    var data   = [];
     var labels = [];
+
     foreach (var k in keys) {
       data.push(tempo.getCount(k));
       labels.push(k);

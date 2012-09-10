@@ -26,7 +26,7 @@ export class Client {
 
   function setInterval() {
     if (this.intervalId) return;
-    this.intervalId = setInterval(#{ self.sync() }, 1000);
+    this.intervalId = setInterval(#{ self.sync() }, this.interval);
   }
 
   function sync() {

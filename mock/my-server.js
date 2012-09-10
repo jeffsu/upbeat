@@ -2,14 +2,14 @@ var express = require('express');
 var upbeat  = require('../lib/upbeat');
 
 var SPEEDS = {
-  'slow': 10,
-  'fast': 10,
-  'average': 10
+  'slow':    300,
+  'fast':    100,
+  'average': 200
 };
 
 var UPTIME = {
   'perfect': 100,
-  'good': 80,
+  'good':    80,
   'average': 50,
   'bad':     30
 };
@@ -27,7 +27,10 @@ app.configure(function () {
 });
 
 app.get('/:speed/:uptime', function (req, res) {
-  var speed = SPEEDS[req.params.speed] || SPEEDS.average;
+  var shortest = (SPEEDS[req.params.speed] || SPEEDS.average) - 100;
+  var delta    = Math.round(Math.random() * 200);
+  var speed    = shortest + delta;
+
   var st    = (UPTIME[req.params.uptime] || UPTIME.average) >= (Math.random() * 100);
 
   urls.inc(req.path);

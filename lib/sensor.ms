@@ -57,8 +57,8 @@ export class Sensor {
     });
   }
 
-  function sync(redis, name, cb) {
-    this.stats.sync(redis, name, cb);
+  function sync(time, redis, name, cb) {
+    this.stats.syncTime(time, redis, name, cb);
   }
 
   function getTempo(time) {

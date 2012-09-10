@@ -25,20 +25,21 @@ export class Server {
     return services;
   }
 
-  function sync(redis) {
+  function sync(redis, time) {
     if (this.syncConfig.sensors) {
       for (var serviceName in this.services) {
         var service = this.services[serviceName];
         for (var sensorName in service.sensors) {
           var sensor = service.sensors[sensorName];
-          sensor.sync(redis, "upbeat:services:" + serviceName + ":" + sensorName);
+          sensor.sync(time, redis, "upbeat:services:" + serviceName + ":" + sensorName);
         }
       }
     }
 
     if (this.syncConfig.stats) {
-      for (var k in this.stats) 
-        this.stats[k].sync(redis, k);
+      for (var k in this.stats) {
+        this.stats[k].syncTime(time, redis, k);
+      }
     }
   }
 
@@ -46,6 +47,7 @@ export class Server {
     if (this.status == 'running') return;
     this.status = 'running';
     this.getServices().forEach(#{ $1.run() });
+    foreach (var run in this.toRun) run();
   }
 
   function pause() {
@@ -56,6 +58,7 @@ export class Server {
   function initialize(config) {
     this.services = {};
     this.stats    = {};
+    this.toRun    = [];
 
     this.buildServices(config.services);
     this.buildStats(config.stats);
@@ -77,14 +80,29 @@ export class Server {
   function buildRedis(config) {
     if (!config) return;
     var redis = require('redis').createClient(config);
-    var stop  = true;
-    redis.on('error', #{ stop = true; }); 
-    redis.on('connect', #{ stop = false; }); 
+    redis.on('error',   #{ stop = true; }); 
+    
+    var configIntervals = config.intervals || {};
 
-    setInterval(#{
-      if (stop) return;
-      self.sync(redis);
-    }, this.syncConfig.interval || 3000);
+    var intervals = {
+      min:  configIntervals.min  || 3000,
+      hour: configIntervals.hour || 30000,
+      day:  configIntervals.day  || 60000,
+      week: configIntervals.week || 360000
+    };
+
+    for (var k in intervals) 
+      this.setSyncInterval(k, intervals[k], redis);
+  }
+
+  function setSyncInterval(time, interval, redis) {
+    function run() {
+      if (self.status != 'running') return;
+      self.sync(redis, time);
+    }
+
+    self.toRun.push(run);
+    setInterval(run, interval);
   }
 
   function buildService(name, config) {
