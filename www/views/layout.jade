@@ -11,6 +11,7 @@ html
     script(src='/javascripts/elycharts.js')
     script(src='/javascripts/chart-styles.js')
     script(src='/javascripts/charts.js')
+    script(src='/javascripts/jquery.sparkline.min.js')
   body
     .navbar.navbar-inverse.navbar-fixed-top
       .navbar-inner
@@ -22,4 +23,6 @@ html
               li: a(href="/stats") Stats
      
     .container-fluid
+      block breadcrumbs
+        include _breadcrumbs
       block content

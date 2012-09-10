@@ -1,4 +1,5 @@
 ul.breadcrumb
+  yield
   - var bcs = breadcrumbs(path)
   - var bcsLen = bcs.length
   each bc, i in bcs
