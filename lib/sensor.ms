@@ -68,6 +68,11 @@ export class Sensor {
     return this.stats.getTempo(time);
   }
 
+  function getAvgResponse(timeframe) {
+    var tempo = this.getTempo(timeframe);
+    return tempo.getAverageHistory('total', 'time').reverse();
+  }
+
   function getData(time) {
     return this.stats.getData(time);
   }
