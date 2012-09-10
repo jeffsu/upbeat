@@ -59,6 +59,7 @@ export class Server {
     this.services = {};
     this.stats    = {};
     this.toRun    = [];
+    this.logger   = require('winston');
 
     this.buildServices(config.services);
     this.buildStats(config.stats);
@@ -67,6 +68,8 @@ export class Server {
       if (self.trackedEvents[type]) self.log(serviceName, sensorName, type, sensor, data1, data2);
     });
 
+    this.setupLogging(config.log);
+    
     if (config.dashboard)
       this.buildDash(config.dashboard);
 
@@ -125,11 +128,12 @@ export class Server {
   }
 
   function addEvents(sensor, eventName, serviceName, sensorName) {
+    var args = arguments;
     sensor.on(eventName, #{ self.emit('sensor', serviceName, sensorName, eventName, sensor, $1, $2) });
   }
 
   function log(serviceName, sensorName, eventType, sensor, data1, data2) {
-    console.log(serviceName + '/' + sensorName + ': ' + eventType + ' - ' + (new Date).toString());
+    this.logger.info(serviceName + '/' + sensorName + ': ' + eventType + ' - ' + (new Date).toString());
   }
 
   function buildStats(config) {
@@ -139,11 +143,15 @@ export class Server {
     }
   }
 
+  function setupLogging(logs) {
+    this.trackedEvents = {};
+    if (!logs) return;
+    foreach (var log in logs) 
+      this.trackedEvents[log] = true;
+  }
+
   function buildServices(config) {
     if (!config) return;
-    this.trackedEvents = {};
-    if (config.log) 
-      config.log.forEach(#{ self.trackedEvents[$1] = true });
 
     for (var k in config) 
       this.services[k] = this.buildService(k, config[k]);
