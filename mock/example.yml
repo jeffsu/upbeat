@@ -24,6 +24,11 @@ services:
       slow: 200
       fast: 100
 
+    tcp:
+      strategy: tcp
+      host: localhost
+      port: 3001
+
   slow-www:
     http:
       strategy: http 

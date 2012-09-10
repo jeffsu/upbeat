@@ -9,7 +9,7 @@ module.exports = #(options) {
 
     socket.connect(port, host, #{
       if (!returned) cb();
-      socket.detroy();
+      socket.destroy();
     });
 
     socket.on('error', #{

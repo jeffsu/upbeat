@@ -1,6 +1,10 @@
 $.elycharts.templates.upbeat = {
   type : "line",
   margins : [20, 20, 25, 20],
+  tooltips: function (serialId, valueIdx, allValues, singleValue) {
+    return Math.round(singleValue);
+  },
+
   defaultSeries: {
     plotProps: { "stroke-width" : 2 },
     fill: true,
