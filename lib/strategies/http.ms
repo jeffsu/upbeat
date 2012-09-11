@@ -1,30 +1,17 @@
-var http = require('http');
-var URL  = require('url');
+var request = require('request');
+var URL     = require('url');
 
 module.exports = #(options) {
-  var method = options.method || 'GET';
-  var url    = URL.parse(options.url);
-
-  var reqOptions = {
-    host:   url.hostname,
-    method: method,
-    port:   url.port,
-    path:   url.path
-  };
+  var newOpts = {};
+  newOpts.__proto__ = options;
+  newOpts.url = URL.parse(options.url);
 
   return #(cb) {
-    var req = http.request(reqOptions);
-
-    req.on('response', #(res) {
-      var code = res.statusCode;
-      var data = "";
-
-      res.on('data', #(chunk) { data += chunk.toString(); });
-      res.on('end', #{ cb(parseInt(code) >= 400, data) });
-      res.on('close', #(err) { cb(err) });
+    var req = request(newOpts, #(e, r, body) {
+      if (e) return cb(e);
+      var code = r.statusCode;
+      if (parseInt(code) >= 400) return cb('error status code ' + code);
+      cb();
     });
-
-    req.on('error', #(err) { cb(err) });
-    req.end();
   };
 };
