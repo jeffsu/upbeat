@@ -74,6 +74,9 @@ export class Server {
       this.buildRedis(config.sync.redis);
     }
 
+    process.on('uncaughtException', #{ 
+      console.log('uncaught exception:' + $1);
+    });
   }
 
   function buildRedis(config) {
