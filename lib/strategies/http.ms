@@ -20,7 +20,7 @@ module.exports = #(options) {
       var data = "";
 
       res.on('data', #(chunk) { data += chunk.toString(); });
-      res.on('end', #{ cb(code != 200, data) });
+      res.on('end', #{ cb(parseInt(code) >= 400, data) });
       res.on('close', #(err) { cb(err) });
     });
 

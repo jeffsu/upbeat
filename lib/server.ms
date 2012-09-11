@@ -26,20 +26,16 @@ export class Server {
   }
 
   function sync(redis, time) {
-    if (this.syncConfig.sensors) {
-      for (var serviceName in this.services) {
-        var service = this.services[serviceName];
-        for (var sensorName in service.sensors) {
-          var sensor = service.sensors[sensorName];
-          sensor.sync(time, redis, "upbeat:services:" + serviceName + ":" + sensorName);
-        }
+    for (var serviceName in this.services) {
+      var service = this.services[serviceName];
+      for (var sensorName in service.sensors) {
+        var sensor = service.sensors[sensorName];
+        sensor.sync(time, redis, "upbeat:services:" + serviceName + ":" + sensorName);
       }
     }
 
-    if (this.syncConfig.stats) {
-      for (var k in this.stats) {
-        this.stats[k].syncTime(time, redis, k);
-      }
+    for (var k in this.stats) {
+      this.stats[k].syncTime(time, redis, k);
     }
   }
 
