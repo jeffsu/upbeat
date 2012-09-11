@@ -1,4 +1,20 @@
 services:
+#  mysql:
+#    mysql:
+#      strategy: mysql
+#      sql: SHOW TABLES
+#      user: root
+#      password: root
+#      database: mysql
+       
+  google:
+    www:
+      strategy: http
+      url: http://www.google.com
+    connection:
+      strategy: tcp
+      host: google.com
+      port: 80
   fast-www:
     good:
       strategy: http 
@@ -57,8 +73,6 @@ sync:
     day:  60000
     week: 60000
 
-  stats: true
-  sensors: true
   redis:
     port: 6379
     host: localhost
