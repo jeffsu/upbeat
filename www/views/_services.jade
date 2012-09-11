@@ -6,7 +6,6 @@ table.table.table-condensed.table-bordered
     th Pass/Total
     th Last Pass
     th Last Failure
-    th Avg. Request Time
   - var i = 0;
   each service, name in server.services
     - var sname = name;
@@ -21,11 +20,12 @@ table.table.table-condensed.table-bordered
           - first = false
 
         td(style="padding-left: 20px"): a(href="/services/#{sname}/sensors/#{name}?time=min")= name
-        td!= health(sensor.isHealthy)
+        td
+          != health(sensor.isHealthy)
+          span.inlinesparkline= sensor.getAvgResponse('hour').join(',');
         td #{sensor.passCount}/#{sensor.totalCount}
-        td= humanTime(sensor.lastPass);
-        td= humanTime(sensor.lastFail);
-        td: span.inlinesparkline= sensor.getAvgResponse('hour').join(',');
+        td= htime.timeDistance(sensor.lastPass) + ' ago';
+        td= htime.timeDistance(sensor.lastFail) + ' ago';
 
 :mochi
   $(function() {

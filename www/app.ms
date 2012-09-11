@@ -29,7 +29,8 @@ module.exports = #(server, config) {
     , routes = require('./routes')
     , http = require('http')
     , jade = require('jade')
-    , path = require('path');
+    , path = require('path')
+    , HumanTime = require('./htime');
 
   var app = express();
 
@@ -70,6 +71,7 @@ module.exports = #(server, config) {
       locals.path     = req.path;
       locals.query    = req.query;
       locals.body     = req.body;
+      locals.htime = new HumanTime();
       next(); 
     });
 
