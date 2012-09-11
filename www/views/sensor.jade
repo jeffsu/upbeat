@@ -22,8 +22,8 @@ block content
       th Last Failure
       td
         = sensor.lastFailure 
-        if typeof sensor.lastError  == 'string'
-          = " (" + sensor.lastError + ")";
+        if sensor.lastError
+          = " (" + sensor.lastError.toString() + ")";
     tr
       th Uptime
       td

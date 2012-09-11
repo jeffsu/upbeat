@@ -1,4 +1,12 @@
 services:
+#  mysql:
+#    mysql:
+#      strategy: mysql
+#      sql: SHOW TABLES
+#      user: root
+#      password: root
+#      database: mysql
+       
   google:
     www:
       strategy: http

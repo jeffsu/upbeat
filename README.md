@@ -50,6 +50,7 @@ services:
 ```
 
 ### Services
+<<<<<<< Updated upstream
 
 Services are a way of grouping several sensor checks together.  In the example above, we have a "google" service w
 hich we check by making a get request to "http://www.google.com" and also seeing if we have a connection to port 8
