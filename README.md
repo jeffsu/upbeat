@@ -29,7 +29,7 @@ server.run();
 
 Quickstart config:
 
-```yaml
+```yml
 dashboard:
   port: 2468
 
@@ -70,21 +70,37 @@ Here are some
 examples of how you can use sensors and their strategies:
 
 *tcp*
-```yaml
+```yml
 strategy: tcp
 host: google.com
 port: 80
 ```
 
 *http*
-```yaml
+```yml
 strategy: http
 url: http://www.google.com
 ```
 
 *pidfile*
-```yaml
+```yml
 strategy: pidfile
 pidfile: /var/pids/mysql.pid
 ```
 
+*redis*
+```yml
+strategy: redis
+host: localhost # defaults to localhost
+port: 6379      # defaults to 6379
+command: [ 'exists', 'foo' ]
+```
+
+*mysql*
+```yml
+strategy: mysql
+host: host # required
+user: user # required
+password: pass # required
+sql: "SELECT * FROM users LIMIT 1" # defaults to "SHOW TABLES"
+```
