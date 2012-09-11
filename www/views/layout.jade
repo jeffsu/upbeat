@@ -13,19 +13,21 @@ html
     script(src='/javascripts/chart-styles.js')
     script(src='/javascripts/charts.js')
     script(src='/javascripts/jquery.sparkline.min.js')
-  body
-    .navbar.navbar-inverse.navbar-fixed-top
-      .navbar-inner
-        .container
-          a.brand(href="/", title="upbeat") 
-            img(src="/images/upbeat_small.png")
-          .nav-collapse.collapse
-            ul.nav
-              li: a(href="/services") Services
-              li: a(href="/stats") Stats
-              li: a(href="#")= "Uptime: " + process.uptime() + " secs";
+  body(class=query.plain ? 'plain' : '')
+    unless query.plain
+      .navbar.navbar-inverse.navbar-fixed-top
+        .navbar-inner
+          .container
+            a.brand(href="/", title="upbeat") 
+              img(src="/images/upbeat_small.png")
+            .nav-collapse.collapse
+              ul.nav
+                li: a(href="/services") Services
+                li: a(href="/stats") Stats
+                li: a(href="#")= "Uptime: " + process.uptime() + " secs";
      
     .container-fluid
-      block breadcrumbs
-        include _breadcrumbs
+      unless query.plain
+        block breadcrumbs
+          include _breadcrumbs
       block content

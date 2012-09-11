@@ -2,6 +2,11 @@ body {
   padding: 60px;
 }
 
+body.plain {
+  padding: 0px;
+}
+
+
 .chart { height: 300px; }
 .service a { 
   display: block;

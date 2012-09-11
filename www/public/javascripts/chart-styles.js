@@ -1,6 +1,6 @@
 $.elycharts.templates.upbeat = {
   type : "line",
-  margins : [20, 20, 25, 20],
+  margins : [25, 25, 25, 25],
   tooltips: function (serialId, valueIdx, allValues, singleValue) {
     return Math.round(singleValue);
   },
