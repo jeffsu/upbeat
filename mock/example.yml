@@ -54,7 +54,7 @@ services:
       slow: 350
       fast: 250
 
-log: [ 'change', 'fail', 'pass', 'up', 'down' ]
+#log: [ 'change', 'fail', 'pass', 'up', 'down' ]
 
 dashboard:
   port: 3000
