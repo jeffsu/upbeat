@@ -1,0 +1,17 @@
+extends layout
+block content
+  h3= params.service
+  include _time-nav 
+  - var i = 0;
+  each sensor, name in service.sensors
+    - i++;
+    table(style="width: 100%")
+      tr
+        td request&nbsp;count
+        th(width="100%"): a(href="/services/#{params.service}/sensors/#{name}")= name
+        td response&nbsp;times
+    .chart(id="chart-#{i}", data-url="/services/#{params.service}/sensors/#{name}.json?time=#{query.time}", style="height:300px", data-type="sensor")
+    div(style="text-align: center")= suffixes[query.time];
+    hr
+    :mochi
+      $(#{ startChart('#chart-#{i}') });

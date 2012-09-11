@@ -1,0 +1,9 @@
+body {
+  padding: 60px;
+}
+
+.chart { height: 300px; }
+.service a { 
+  display: block;
+  text-align: center; 
+}

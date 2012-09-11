@@ -1,0 +1,50 @@
+extend layout
+block breadcrumbs
+  include _breadcrumbs
+    li.performance.pull-right
+      small
+        a.btn.btn-mini(href="/services/#{params.service}/sensors/#{params.sensor}/test") Performance Test
+block content
+  table.table.table-bordered.table-condensed
+    tr
+      th Healthy?
+      td= affirm(sensor.isHealthy)
+      th Slow?
+      td= affirm(sensor.isSlow)
+    tr
+      th Pass Count
+      td= sensor.passCount
+      th Fail Count
+      td= sensor.failCount
+    tr
+      th Status
+      td= sensor.status
+      th Last Failure
+      td
+        = sensor.lastFailure 
+        if sensor.lastError
+          = " (" + sensor.lastError.toString() + ")";
+    tr
+      th Uptime
+      td
+        | Total: #{sensor.getUpTime()}ms
+        if sensor.isHealthy
+          |  since #{(new Date).getTime() - sensor.lastChange}ms ago
+      th Downtime
+      td
+        | Total: #{sensor.getDownTime()}ms
+        unless sensor.isHealthy
+          |  since #{(new Date).getTime() - sensor.lastChange}ms ago
+    tr
+      td(colspan=4)= "Options: " + JSON.stringify(sensor.options);
+    
+  include _time-nav 
+  table(style="width: 100%")
+    tr
+      td request&nbsp;count
+      th(width="100%")
+      td response&nbsp;times
+  #chart.chart(data-url="/services/#{params.service}/sensors/#{params.sensor}.json?time=#{query.time}", style="height:300px", data-type="sensor")
+  div(style="text-align: center")= suffixes[query.time];
+  :mochi
+    $(#{ startChart('#chart') });

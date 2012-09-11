@@ -1,0 +1,8 @@
+extend ../layout
+block content
+  include ../_time-nav
+  #chart.chart(data-url="/stats/#{params.stats}.json?time=#{query.time}&as=pie", data-type="upbeat-pie")
+  = suffixes[query.time];
+
+  :mochi
+    $(#{ startChart('#chart') });
