@@ -48,3 +48,43 @@ services:
       host: google.com
       port: 80
 ```
+
+### Services
+
+Services are a way of grouping several sensor checks together.  In the example above, we have a "google" service w
+hich we check by making a get request to "http://www.google.com" and also seeing if we have a connection to port 8
+0 on the "google.com" host.  In the yaml config, a service is a "hash" of sensors where the keys are the names of
+the sensors and the values are the configuration.
+
+### Sensors
+
+Sensors are a way of describing a health check.  Each sensor config MUST at least have a strategy.  Common configuration
+options accross all strategies are:
+
+  * timeout: number (milliseconds) to define how long it will allow a check before declaring it a failure
+  * interval: number (milliseconds) of time to wait between health checks (called after the result of a check)
+  * fall: number of fails to be considered down
+  * rise: number of passes to be considered up
+
+Here are some 
+examples of how you can use sensors and their strategies:
+
+*tcp*
+```yaml
+strategy: tcp
+host: google.com
+port: 80
+```
+
+*http*
+```yaml
+strategy: http
+url: http://www.google.com
+```
+
+*pidfile*
+```yaml
+strategy: pidfile
+pidfile: /var/pids/mysql.pid
+```
+
