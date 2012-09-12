@@ -2,8 +2,6 @@ extend layout
 block content
   - var con = parseInt(body.concurrency);
   - var t   = parseInt(body.time);
-  h3
-    a(href="/services/#{params.service}/sensors/#{params.sensor}")= params.sensor
 
   form.form-horizontal(action="/services/#{params.service}/sensors/#{params.sensor}/test", method="post", onSubmit="return checkForm()")
     select.input-medium(name="concurrency")

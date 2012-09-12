@@ -19,7 +19,7 @@ module.exports = #(app) {
     var linked = true;
     foreach (var ele:i in splitted) {
       if (i !== 0) {
-        if (i==3 && ele == 'sensors') {
+        if (i==3 && ele == 'sensors' || i == splitted.length - 1) {
           linked = false;
         } else {
           linked = true;
