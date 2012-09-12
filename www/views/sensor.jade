@@ -27,14 +27,10 @@ block content
     tr
       th Uptime
       td
-        | Total: #{sensor.getUpTime()}ms
-        if sensor.isHealthy
-          |  since #{(new Date).getTime() - sensor.lastChange}ms ago
+        | #{htime.humanize(sensor.getUpTime())}
       th Downtime
       td
-        | Total: #{sensor.getDownTime()}ms
-        unless sensor.isHealthy
-          |  since #{(new Date).getTime() - sensor.lastChange}ms ago
+        | #{htime.humanize(sensor.getDownTime())}
     tr
       td(colspan=4)= "Options: " + JSON.stringify(sensor.options);
     

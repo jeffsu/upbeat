@@ -30,7 +30,6 @@ export class HumanTime {
     var ret = [];
     foreach (var v:i in VALS) {
       var amount = Math.floor(ms / v);
-      console.log(UNITS[i], ms / v, ms, v);
       ms -= amount * v;
       if (amount > 0 || i == 3) ret.push(amount + UNITS[i]);
     }

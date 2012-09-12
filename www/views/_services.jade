@@ -2,7 +2,7 @@ table.table.table-condensed.table-bordered
   tr.success
     th Service
     th Sensor
-    th Status
+    th(colspan=2) Status
     th Pass/Total
     th Last Pass
     th Last Failure
@@ -22,6 +22,7 @@ table.table.table-condensed.table-bordered
         td(style="padding-left: 20px"): a(href="/services/#{sname}/sensors/#{name}?time=min")= name
         td
           != health(sensor.isHealthy)
+        td
           span.inlinesparkline= sensor.getAvgResponse('hour').join(',');
         td #{sensor.passCount}/#{sensor.totalCount}
         td= htime.humanizeAgo(sensor.lastPass);
