@@ -30,8 +30,9 @@ export class HumanTime {
     var ret = [];
     foreach (var v:i in VALS) {
       var amount = Math.floor(ms / v);
+      console.log(UNITS[i], ms / v, ms, v);
       ms -= amount * v;
-      if (amount > 0) ret.push(amount + UNITS[i]);
+      if (amount > 0 || i == 3) ret.push(amount + UNITS[i]);
     }
 
     return ret.join(' ');
@@ -41,9 +42,9 @@ export class HumanTime {
     return (n < 10 ? "0" : '') + n;
   }
 
-  function dateTime(t) {
-    if (typeof t != 'number') return '';
-    var d = new Date(t);
+  function dateTime(d) {
+    // if (typeof t != 'number') return '';
+    // var d = new Date(t);
     var date = [d.getMonth(), d.getDay(), d.getFullYear()].join('-');
     var minute = this.pad(d.getMinutes());
     var second = this.pad(d.getSeconds());

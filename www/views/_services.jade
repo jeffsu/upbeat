@@ -24,8 +24,8 @@ table.table.table-condensed.table-bordered
           != health(sensor.isHealthy)
           span.inlinesparkline= sensor.getAvgResponse('hour').join(',');
         td #{sensor.passCount}/#{sensor.totalCount}
-        td= htime.timeDistance(sensor.lastPass) + ' ago';
-        td= htime.timeDistance(sensor.lastFail) + ' ago';
+        td= htime.humanizeAgo(sensor.lastPass);
+        td= htime.humanizeAgo(sensor.lastFail);
 
 :mochi
   $(function() {

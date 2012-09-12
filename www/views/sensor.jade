@@ -21,7 +21,7 @@ block content
       td= sensor.status
       th Last Failure
       td
-        = sensor.lastFailure 
+        = htime.dateTime(sensor.lastFailure);
         if sensor.lastError
           = " (" + sensor.lastError.toString() + ")";
     tr
