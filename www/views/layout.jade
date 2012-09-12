@@ -4,7 +4,7 @@ html
     title Upbeat
     link(rel='stylesheet', href='/stylesheets/style.css')
     link(rel='stylesheet', href='/bootstrap/css/bootstrap.min.css')
-    link(rel='icon', href='/images/shortcut.ico')
+    link(rel='icon', href='/images/favicon.ico')
 
     script(src='/javascripts/jquery.js')
     script(src='/bootstrap/js/bootstrap.min.js')
@@ -21,10 +21,10 @@ html
             a.brand(href="/", title="upbeat") 
               img(src="/images/upbeat_small.png")
             .nav-collapse.collapse
+              .pull-right: span.nav-right.text-info= "Uptime: " + process.uptime() + " secs";
               ul.nav
                 li: a(href="/services") Services
                 li: a(href="/stats") Stats
-                li: a(href="#")= "Uptime: " + process.uptime() + " secs";
      
     .container-fluid
       unless query.plain

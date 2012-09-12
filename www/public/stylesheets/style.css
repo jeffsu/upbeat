@@ -12,3 +12,7 @@ body.plain {
   display: block;
   text-align: center; 
 }
+.nav-right {
+  padding: 10px 15px;
+  display: block;
+}
