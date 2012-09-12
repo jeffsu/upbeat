@@ -12,13 +12,13 @@ module.exports = #(server, config) {
     week: []
   };
 
-  for (var i=12; i>0; i--) {
+  for (var i=11; i>=0; i--) {
     LABELS.min.push(i * 5);
     LABELS.hour.push(i * 5);
   }
 
-  for (var i=24; i>0; i--) LABELS.day.push(i);
-  for (var i=7; i>0; i--) {
+  for (var i=23; i>=0; i--) LABELS.day.push(i);
+  for (var i=6; i>=0; i--) {
     LABELS.week.push(i);
     for (var j=0; j<5; j++) {
       LABELS.week.push('');
@@ -157,6 +157,7 @@ module.exports = #(server, config) {
 
   app.post('/stats/:stats', #(req, res, next) {
     var stats = getResource(req.params);
+    console.log(req.body);
     for (var k in req.body) {
       var val = parseInt(req.body[k]);
       if (val > 0) stats.inc(k, val);

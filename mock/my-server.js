@@ -18,12 +18,23 @@ var upbeatClient = new upbeat.Client({ redis: { port: 6379, host: '127.0.0.1' } 
 var urls    = upbeatClient.getStats('urls');
 var times   = upbeatClient.getStats('response-times');
 var success = upbeatClient.getStats('success');
+var request = require('request');
 
 var app = express();
 app.configure(function () {
   app.use(express.favicon());
   app.use(express.logger('dev'));
   app.use(app.router);
+});
+
+app.get('/', function (req, res) {
+  var btn = req.query.button;
+  var form = {};
+  form[btn] = 1;
+  if (btn) request.post('http://localhost:3000/stats/buttons').form(form);
+  res.end('<html><ol><li><a href="/?button=1">One</a></li>' +
+          '<li><a href="/?button=2">Two</a></li>' +
+          '<li><a href="/?button=3">Three</a></li></ol></html>');
 });
 
 app.get('/:speed/:uptime', function (req, res) {

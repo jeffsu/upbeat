@@ -25,6 +25,7 @@ function startChart(par) {
         }
       }
 
+
       if (!first) {
         return $div.chart({ values: payload.data });
       } else {

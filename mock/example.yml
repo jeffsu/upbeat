@@ -63,6 +63,9 @@ stats:
   urls:
     strategy: counter
 
+  buttons:
+    strategy: counter
+
   response-times:
     strategy: average
 
