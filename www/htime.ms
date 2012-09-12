@@ -42,8 +42,7 @@ export class HumanTime {
   }
 
   function dateTime(d) {
-    // if (typeof t != 'number') return '';
-    // var d = new Date(t);
+    if (!d) return '---';
     var date = [d.getMonth(), d.getDay(), d.getFullYear()].join('-');
     var minute = this.pad(d.getMinutes());
     var second = this.pad(d.getSeconds());
