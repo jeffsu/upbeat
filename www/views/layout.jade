@@ -21,7 +21,9 @@ html
             a.brand(href="/", title="upbeat") 
               img(src="/images/upbeat_small.png")
             .nav-collapse.collapse
-              .pull-right: span.nav-right.text-info= "Uptime: " + process.uptime() + " secs";
+              .pull-right.nav-right 
+                small upbeat has been up for: 
+                small.text-info= process.uptime() + " secs";
               ul.nav
                 li: a(href="/services") Services
                 li: a(href="/stats") Stats
