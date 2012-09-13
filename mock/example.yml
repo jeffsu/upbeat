@@ -16,7 +16,7 @@ services:
       host: google.com
       port: 80
   fast-www:
-    good:
+    reliable:
       strategy: http 
       url: http://localhost:3001/fast/good
       timeout: 200
@@ -24,7 +24,7 @@ services:
       slow: 150
       fast: 50
 
-    average:
+    unreliable:
       strategy: http 
       url: http://localhost:3001/fast/average
       timeout: 200
@@ -32,7 +32,7 @@ services:
       slow: 150
       fast: 50
 
-    perfect:
+    very-reliable:
       strategy: http 
       url: http://localhost:3001/fast/perfect
       timeout: 400
