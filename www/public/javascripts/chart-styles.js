@@ -10,7 +10,8 @@ $.elycharts.templates.upbeat = {
     fill: true,
     fillProps: { opacity: .1 },
     dot:  true,
-    dotProps : { stroke : "black", "stroke-width": 1 }
+    dotProps : { stroke : "black", "stroke-width": 1 },
+    stepAnimation: { type: 'reg', delay: 0, speed: 1, easing: 'bounce' }
   },
 
   defaultAxis: { 
