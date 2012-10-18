@@ -25,17 +25,24 @@ export class Server {
     return services;
   }
 
-  function sync(redis, time) {
+  function sync(redis, time, cb) {
+    var count = 0;
+    function fin() {
+      if (--count == 0) return cb ? cb() : null;
+    }
+
     for (var serviceName in this.services) {
       var service = this.services[serviceName];
       for (var sensorName in service.sensors) {
         var sensor = service.sensors[sensorName];
-        sensor.sync(time, redis, "upbeat:services:" + serviceName + ":" + sensorName);
+        count++;
+        sensor.sync(time, redis, "upbeat:services:" + serviceName + ":" + sensorName, fin);
       }
     }
 
     for (var k in this.stats) {
-      this.stats[k].syncTime(time, redis, k);
+      count++;
+      this.stats[k].syncTime(time, redis, k, fin);
     }
   }
 
@@ -102,11 +109,15 @@ export class Server {
   function setSyncInterval(time, interval, redis) {
     function run() {
       if (self.status != 'running') return;
-      if (self.redisConnected) self.sync(redis, time);
+      if (self.redisConnected) self.sync(redis, time, beat);
+      else beat();
+    }
+
+    function beat() {
+      setTimeout(run, interval);
     }
 
     self.toRun.push(run);
-    setInterval(run, interval);
   }
 
   function buildService(name, config) {

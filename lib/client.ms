@@ -43,12 +43,6 @@ export class Client {
     return redis.createClient(config);
   }
 
-  function inc(name, n) {
-    n = n || 1;
-    var data = this.getData(name);
-    data.inc(name, n);
-  }
-
   function getStats(name) {
     return this.stats[name] || (this.stats[name] = new Stats());
   }
