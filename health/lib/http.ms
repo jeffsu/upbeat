@@ -7,7 +7,9 @@ module.exports = #(options) {
     throw e;
   }
 
-  var URL     = require('url');
+  var URL  = require('url');
+
+  if (typeof options == 'string') options = { url: options };
 
   var newOpts = {};
   newOpts.__proto__ = options;
