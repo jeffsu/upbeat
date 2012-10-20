@@ -1,0 +1,25 @@
+{
+  "name": "upbeat-health",
+  "version": "0.0.0",
+  "description": "Health check strategies for upbeat",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com:jeffsu/upbeat"
+  },
+  "keywords": [
+    "health",
+    "check",
+    "uptime",
+    "upbeat",
+    "strategy",
+    "http",
+    "tcp",
+    "mysql"
+  ],
+  "author": "Jeff Su",
+  "license": "BSD"
+}

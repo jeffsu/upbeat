@@ -11,8 +11,9 @@ export class Stats {
   function initialize(config) {
     this.config = config || {};
 
-    this.exclude = this.config.exclude || {};
-    this.min  = tempo.min();
+    this.exclude = this.config.exclude || { hour: true, day: true, week: true };
+    this.min  = new tempo.TimedCounter({ per: 10, buckets: 1000 });
+    //this.min  = tempo.min();
     this.hour = tempo.hour();
     this.day  = tempo.day();
     this.week = new tempo.TimedCounter({ per: HOUR * 4, buckets: 7 * 6 });
