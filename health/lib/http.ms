@@ -18,9 +18,9 @@ module.exports = #(options) {
   return #(cb) {
     var req = request(newOpts, #(e, r, body) {
       if (e) return cb(e);
+
       var code = r.statusCode;
-      if (parseInt(code) >= 400) return cb('error status code ' + code);
-      cb();
+      return cb((parseInt(code) >= 400) ? code : null);
     });
   };
 };
