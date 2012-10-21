@@ -1,3 +1,4 @@
+require('mochiscript');
 module.exports = {
   Service: require('./lib/service'),
   Sensor:  require('./lib/sensor'),

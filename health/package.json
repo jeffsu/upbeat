@@ -4,11 +4,17 @@
   "description": "Health check strategies for upbeat",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "whiskey 'test/http.js test/checker.js'"
   },
+
   "dependencies": {
     "mochiscript": ">=0.6.15"
   },
+
+  "devDependencies": {
+    "expresso":  ""
+  },
+
   "repository": {
     "type": "git",
     "url": "https://github.com:jeffsu/upbeat"

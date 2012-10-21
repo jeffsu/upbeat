@@ -9,7 +9,7 @@ export class Checker {
 
   function initialize(strategy, options) {
     this.strategy = strategy;
-    this.options  = options;
+    this.options  = options || {};
     this.running  = false;
     this.stat     = null;
   }
@@ -42,10 +42,10 @@ export class Checker {
     if (err) self.emit('error', err);
     if (err) {
       if (stat != UNHEALTHY) this.emit(UNHEALTHY, err);
-      stat = UNHEALTHY;
+      this.stat = UNHEALTHY;
     } else {
       if (stat != HEALTHY) this.emit(HEALTHY);
-      stat = HEALTHY;
+      this.stat = HEALTHY;
     }
   }
 

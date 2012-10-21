@@ -1,9 +1,17 @@
 var health  = require('../');
 
-var http = health.http("http://adsfadsf.adsfasfd.com:3000");
-http(function (err) { console.log(err); });
+exports['test http not ok'] = function (test, assert) {
+  var http = health.http("http://adsfadsf.adsfasfd.com:3000");
+  http(function (err) { 
+    assert.ok(err); 
+    test.finish();
+  });
+};
 
-var checker = health.checker(http);
-checker.start();
-checker.on('error', #{ console.log('error') });
-checker.on('error', #{ console.log('error') });
+exports['test http ok'] = function (test, assert) {
+  var http = health.http("http://www.google.com");
+  http(function (err) { 
+    assert.ok(!err); 
+    test.finish();
+  });
+};
