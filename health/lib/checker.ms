@@ -29,6 +29,7 @@ export class Checker {
     function beat(err) {
       time = (new Date).getTime() - startTime;
       self.emit('beat', err, time);
+      if (err == 'timeout') self.emit('timeout', time);
       self.handle(err);
       if (self.running) setTimeout(run, interval);
     }
@@ -39,7 +40,6 @@ export class Checker {
   function handle(err) {
     var stat = this.stat;
 
-    if (err) self.emit('error', err);
     if (err) {
       if (stat != UNHEALTHY) this.emit(UNHEALTHY, err);
       this.stat = UNHEALTHY;

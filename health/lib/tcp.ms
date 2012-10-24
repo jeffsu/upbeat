@@ -6,34 +6,27 @@ module.exports = #(options) {
 
   var host = options.host;
   var port = options.port;
+  var timeout = options.timeout || 10000;
 
-  var noDelay = options.noDelay;
-  var timeout = options.setTimeout;
-
-  var net  = require('net');
+  var net = require('net');
 
   return #(cb) {
-    var socket = new net.Socket();
     var returned = false;
 
-    var error = null;
+    function fin(err) {
+      if (returned) return;
+      returned = true;
 
-    function onError(err) {
-      cb(error = err || true);
-      socket.destroy();
+      if (err) socket.destroy();
+      socket.end();
+
       socket = null;
+      if (cb) cb(err);
+      clearTimeout(id);
     }
 
-    if (noDelay) socket.setNoDelay(true);
-    if (timeout) 
-      socket.setTimeout(timeout, onError);
-
-    socket.on('error', onError);
-
-    socket.connect(port, host, #{
-      if (!error) cb();
-      socket.end();
-      socket = null;
-    });
+    var id = setTimeout(#{ fin('timeout') }, timeout);
+    var socket = net.connect({ port: port, host: host }, fin);
+    socket.on('error', fin);
   };
 };

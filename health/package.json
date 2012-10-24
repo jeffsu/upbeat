@@ -1,10 +1,10 @@
 {
   "name": "upbeat-health",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "description": "Health check strategies for upbeat",
   "main": "index.js",
   "scripts": {
-    "test": "whiskey 'test/http.js test/checker.js test/tcp.js'"
+    "test": "whiskey 'tests/http.js tests/checker.js tests/tcp.js'"
   },
 
   "dependencies": {
@@ -12,13 +12,15 @@
   },
 
   "devDependencies": {
-    "whiskey":  ""
+    "whiskey":  "",
+    "request":  ""
   },
 
   "repository": {
     "type": "git",
     "url": "https://github.com:jeffsu/upbeat"
   },
+
   "keywords": [
     "health",
     "check",
@@ -29,6 +31,7 @@
     "tcp",
     "mysql"
   ],
+
   "author": "Jeff Su",
   "license": "BSD"
 }

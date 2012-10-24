@@ -1,6 +1,7 @@
 var strategies = require('./strategies');
 var tempo      = require('tempo');
 var Stats      = require('./stats');
+var health     = require('upbeat-health')
 
 export class Sensor {
   include $m.EventEmitter;
@@ -19,16 +20,15 @@ export class Sensor {
   function initialize(options) {
     this.options  = options;
     this.strategy = options.strategy;
-    if (typeof this.strategy == 'string') this.strategy = strategies[this.strategy](options);
 
-    this.timeout  = options.timeout  || TIMEOUT;
-    this.interval = options.interval || INTERVAL;
+    if (typeof this.strategy == 'string') this.strategy = health[this.strategy](options);
+    this.checker = health.checker(this.strategy, { interval: options.interval })
 
     this.slow = options.slow;
     this.fast = options.fast;
 
-    this.fall     = -1 * (options.fall || 1);
-    this.up       = options.up || 1;
+    this.fall = -1 * (options.fall || 1);
+    this.up   = options.up || 1;
 
     this.totalCount = 0; // total requests
     this.passCount  = 0; // total passed requests
@@ -95,54 +95,48 @@ export class Sensor {
 
 
   function setEvents() {
-    this.on('fail', #(time) {
-      self.lastFailure = (new Date);
-      self.stats.inc("fail");
-      self.stats.inc("total");
-      self.stats.inc("time", time);
-    });
+    this.checker.on('beat', #(err, time) {
+      if (err) {
+        self.lastFailure = (new Date);
+        self.stats.inc('fail');
+      } 
+      
+      else {
+        self.stats.inc('pass');
+        self.isSlow = self.slow && time > self.slow;
+        if (self.isSlow) self.stats.inc('slow');
+        self.isFast = self.fast && time < self.fast;
+        if (self.isFast) self.stats.inc('fast');
+      }
 
-    this.on('pass', #(time) {
-      self.stats.inc("pass");
-      self.stats.inc("total");
-      self.stats.inc("time", time);
-
-      self.isSlow = self.slow && time > self.slow;
-      if (self.isSlow) self.stats.inc('slow');
-      self.isFast = self.fast && time < self.fast;
-      if (self.isFast) self.stats.inc('fast');
+      self.stats.inc('total');
+      self.stats.inc('time', time);
+      self.respond(err, time);
     });
 
     this.on('timeout', #{
-      self.stats.inc("timeout");
+      self.stats.inc('timeout');
       self.isSlow = true;
       self.stats.inc('slow');
+      self.emit('timeout');
     });
   }
 
   function run() {
-    if (this.status == 'running') return;
     this.status = 'running';
-
-    function repeat() {
-      self.check();
-      if (self.status == 'running') 
-        setTimeout(repeat, self.interval);
-    }
-
-    repeat();
+    this.checker.start();
   }
 
   function pause() {
     this.status = 'paused';
+    this.checker.stop();
   }
 
-  function respond(err, meta, time, cb) {
+  function respond(err, time) {
     var passed = !err;
     if (err == 'timeout') this.emit('timeout');
 
     var now = (new Date).getTime();
-
     this.totalCount++;
 
     if (passed) {
@@ -156,7 +150,7 @@ export class Sensor {
       this.lastFail = now;
     }
 
-    this.emit(passed ? 'pass' : 'fail', now - time, err || meta);
+    this.emit(passed ? 'pass' : 'fail', now - time);
 
     if (passed != this.lastHealth) {
       this.healthCount = 0;
@@ -181,8 +175,7 @@ export class Sensor {
     }
 
     this.lastHealth = passed;
-
-    if (cb) cb(err);
+    this.emit('beat', err, time);
   }
 
   function perf(cc, time, cb) {
@@ -198,39 +191,13 @@ export class Sensor {
     var start = (new Date).getTime();
     if (stopAt <= start) return;
 
-    this.strategy(#(err, meta) {
+    this.strategy(#(err) {
       if (err) results.fail++;
       else {
         results.pass++;
         results.time += (new Date).getTime() - start;
       }
       self.checkSimple(results, stopAt);
-    });
-  }
-
-  function check(cb) {
-    if (this.stacked > 5) {
-      this.isHealthy = false;
-      this.emit('message', "Too many requests stacked up with no response");
-      return;
-    }
-
-    this.emit('check');
-
-    var startTime = (new Date).getTime();
-    var stopped   = false;
-    this.stacked++;
-
-    setTimeout(#{ 
-      if (stopped) return;
-      self.respond('timeout', null, startTime, cb);
-      stopped = true;
-    }, this.timeout);
-
-    this.strategy(#(err, meta) {
-      self.stacked--;
-      if (!stopped) self.respond(err, meta, startTime, cb);
-      stopped = true;
     });
   }
 }

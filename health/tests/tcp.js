@@ -16,9 +16,17 @@ exports['test tcp not ok'] = function (test, assert) {
 };
 
 exports['test tcp ok'] = function (test, assert) {
-  var tcp = health.tcp("127.0.0.1:4023");
+  var tcp = health.tcp({ host: 'www.google.com', port: 80, timeout: 10000 });
   tcp(function (err) { 
     assert.ok(!err); 
+    test.finish();
+  });
+};
+
+exports['test tcp timeout'] = function (test, assert) {
+  var tcp = health.tcp({ host: 'www.google.com', port: 80, timeout: 1 });
+  tcp(function (err) { 
+    assert.equal(err, 'timeout');
     test.finish();
   });
 };

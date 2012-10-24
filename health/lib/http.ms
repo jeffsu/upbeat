@@ -15,12 +15,27 @@ module.exports = #(options) {
   newOpts.__proto__ = options;
   newOpts.url = URL.parse(options.url);
 
+  var timeout = options.timeout || 10000;
+
   return #(cb) {
-    var req = request(newOpts, #(e, r, body) {
-      if (e) return cb(e);
+    var returned = false;
+    
+    function fin(err) {
+      if (returned) return;
+      returned = true;
+      if (cb) cb(err);
+      clearTimeout(id);
+    }
+
+    var id = setTimeout(#{ fin('timeout') }, timeout);
+
+    var req = request(newOpts, #(e, r) {
+      if (e) return fin(e);
 
       var code = r.statusCode;
-      return cb((parseInt(code) >= 400) ? code : null);
+      fin((parseInt(code) >= 400) ? code : null);
     });
+
+    req.on('error', fin);
   };
 };

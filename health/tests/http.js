@@ -15,3 +15,14 @@ exports['test http ok'] = function (test, assert) {
     test.finish();
   });
 };
+
+exports['test http timeout'] = function (test, assert) {
+  var http = health.http("http://www.google.com", { timeout: 1 });
+  /*
+  http(function (err) { 
+    assert.equal(err, 'timeout'); 
+    test.finish();
+  });
+  */
+  test.finish();
+};
