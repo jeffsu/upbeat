@@ -1,7 +1,0 @@
-- selected = query.time || 'min'
-ul.nav.nav-tabs
-  each time in [ 'min', 'hour', 'day', 'week' ]
-    if selected == time
-      li.active: a(href="#")= time
-    else
-      li: a(href="#{path}?time=#{time}")= time
