@@ -1,0 +1,9 @@
+extend ../layout
+block content
+  h5= params.stats
+  include ../_time-nav
+  #chart.chart(data-url="/stats/#{params.stats}.json?time=#{query.time}", data-type="upbeat")
+  = suffixes[query.time];
+
+  :mochi
+    $(#{ startChart('#chart') });
