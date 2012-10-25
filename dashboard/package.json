@@ -1,11 +1,12 @@
 {
-  "name": "application-name",
+  "name": "upbeat-dashboard",
   "version": "0.0.1",
   "private": true,
   "scripts": {
     "start": "node app"
   },
   "dependencies": {
+    "mochiscript": "0.6.15",
     "express": "3.0.0rc2",
     "jade": "*"
   }

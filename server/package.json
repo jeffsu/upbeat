@@ -4,7 +4,7 @@
   "description": "Server for running upbeat.",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "whiskey 'tests/sensor.js tests/service.js tests/stats.js'"
   },
   "repository": {
     "type": "git",
@@ -13,13 +13,13 @@
   "dependencies": {
     "mochiscript": "0.6.15",
     "upbeat-health": "",
-    "tempo": "~0.2.0-pre2"
+    "tempo": "~0.2.0-pre3",
+    "winston": "~0.6.2",
+    "redis": "~0.8.1"
   },
-
   "devDependencies": {
     "request": ""
   },
-
   "keywords": [
     "health",
     "monitoring",

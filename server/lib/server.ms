@@ -73,17 +73,10 @@ export class Server {
 
     this.setupLogging(config.log);
     
-    if (config.dashboard)
-      this.buildDash(config.dashboard);
-
     if (config.sync) {
       this.syncConfig = config.sync;
       this.buildRedis(config.sync.redis);
     }
-
-    process.on('uncaughtException', #{ 
-      console.log('uncaught exception:' + $1);
-    });
   }
 
   function buildRedis(config) {
@@ -166,9 +159,4 @@ export class Server {
     for (var k in config) 
       this.services[k] = this.buildService(k, config[k]);
   }
-
-  function buildDash(config) {
-    this.app = require('../www/app')(this, config);
-  }
-
 }

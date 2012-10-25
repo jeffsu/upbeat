@@ -1,19 +1,21 @@
 
 module.exports = #(options) {
-  try {
-    var request = require('request');
-  } catch (e) {
-    console.log('Please install "request" package.'); 
-    throw e;
-  }
-
+  var http = require('http');
   var URL  = require('url');
 
   if (typeof options == 'string') options = { url: options };
 
-  var newOpts = {};
-  newOpts.__proto__ = options;
-  newOpts.url = URL.parse(options.url);
+  var url = URL.parse(options.url);
+
+  var httpOptions = {
+    method: options.method || 'GET',
+    hostname: url.hostname,
+    path:     url.pathname,
+    port:     url.port,
+    headers:  options.headers,
+    auth:     options.auth,
+    agent:    options.agent || false
+  };
 
   var timeout = options.timeout || 10000;
 
@@ -23,19 +25,21 @@ module.exports = #(options) {
     function fin(err) {
       if (returned) return;
       returned = true;
+
+      if (id) clearTimeout(id);
+      id = null;
+
       if (cb) cb(err);
-      clearTimeout(id);
     }
 
     var id = setTimeout(#{ fin('timeout') }, timeout);
 
-    var req = request(newOpts, #(e, r) {
-      if (e) return fin(e);
-
-      var code = r.statusCode;
-      fin((parseInt(code) >= 400) ? code : null);
+    var req = http.request(httpOptions, #(res) {
+      var code = res.statusCode;
+      fin(parseInt(code) >= 400 ? code : null);
     });
 
     req.on('error', fin);
+    req.end();
   };
 };

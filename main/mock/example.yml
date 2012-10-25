@@ -1,0 +1,81 @@
+services:
+#  mysql:
+#    mysql:
+#      strategy: mysql
+#      sql: SHOW TABLES
+#      user: root
+#      password: root
+#      database: mysql
+       
+#  google:
+#    www:
+#      strategy: http
+#      url: http://www.google.com
+#    connection:
+#      strategy: tcp
+#      host: google.com
+#      port: 80
+  fast-www:
+    reliable:
+      strategy: http 
+      url: http://localhost:3001/fast/good
+      timeout: 200
+      interval: 200
+      slow: 150
+      fast: 50
+
+#    unreliable:
+#      strategy: http 
+#      url: http://localhost:3001/fast/bad
+#      timeout: 200
+#      interval: 200
+#      slow: 150
+#      fast: 50
+#
+#    very-reliable:
+#      strategy: http 
+#      url: http://localhost:3001/fast/perfect
+#      timeout: 400
+#      interval: 200
+#      slow: 200
+#      fast: 100
+#
+#    tcp:
+#      strategy: tcp
+#      host: localhost
+#      port: 3001
+#
+#  slow-www:
+#    http:
+#      strategy: http 
+#      url: http://localhost:3001/slow/good
+#      timeout:  380
+#      interval: 200
+#      slow: 350
+#      fast: 250
+
+#log: [ 'change', 'fail', 'pass', 'up', 'down' ]
+
+dashboard:
+  port: 3000
+
+stats:
+  urls:
+    strategy: counter
+
+  buttons:
+    strategy: counter
+
+  response-times:
+    strategy: average
+
+sync:
+  intervals: 
+    min:  3000
+    hour: 60000
+    day:  60000
+    week: 60000
+
+  redis:
+    port: 6379
+    host: localhost

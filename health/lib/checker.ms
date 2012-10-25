@@ -28,9 +28,10 @@ export class Checker {
 
     function beat(err) {
       time = (new Date).getTime() - startTime;
+      self.handle(err) 
       self.emit('beat', err, time);
       if (err == 'timeout') self.emit('timeout', time);
-      self.handle(err);
+
       if (self.running) setTimeout(run, interval);
     }
 

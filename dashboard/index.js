@@ -1,2 +1,2 @@
 require('mochiscript');
-require('./app');
+module.exports.setup = require('./app');

@@ -26,7 +26,7 @@ module.exports.unhealthySensor = function (cb) {
 
   setTimeout(function () {
     sensor.pause();
-    cb(count);
+    cb(count, sensor);
   }, 2000);
 }
 
@@ -52,6 +52,6 @@ module.exports.healthySensor = function (cb) {
   setTimeout(function () {
     sensor.pause();
     server.close();
-    cb(count);
+    cb(count, sensor);
   }, 2000);
 }
