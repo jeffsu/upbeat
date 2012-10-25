@@ -1,0 +1,5 @@
+* 0.4.0
+  * took 0.3 and separated concerns
+    1. health checks
+    1. server
+    1. dashboard

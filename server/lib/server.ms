@@ -58,25 +58,16 @@ export class Server {
     this.getServices().forEach(#{ $1.pause() });
   }
 
-  function initialize(config) {
+  function initialize() {
     this.services = {};
     this.stats    = {};
     this.toRun    = [];
     this.logger   = require('winston');
-
-    this.buildServices(config.services);
-    this.buildStats(config.stats);
+    this.trackedEvents = {};
 
     this.on('sensor', #(serviceName, sensorName, type, sensor, data1, data2) {
       if (self.trackedEvents[type]) self.log(serviceName, sensorName, type, sensor, data1, data2);
     });
-
-    this.setupLogging(config.log);
-    
-    if (config.sync) {
-      this.syncConfig = config.sync;
-      this.buildRedis(config.sync.redis);
-    }
   }
 
   function buildRedis(config) {
@@ -113,21 +104,17 @@ export class Server {
     self.toRun.push(run);
   }
 
-  function buildService(name, config) {
-    var service = new Service();
-    for (var k in config) {
-      service.addSensor(k, this.buildSensor(name, k, config[k]));
-    }
-
-    return service;
+  function addStats(name, stats) {
+    this.stats[name] = stats;
   }
 
-  function buildSensor(serviceName, sensorName, config) {
-    var sensor = new Sensor(config);
-    foreach (var event in EVENTS) {
-      this.addEvents(sensor, event, serviceName, sensorName);
+  function addService(name, service) {
+    this.services[name] = service;
+    for (var k in service.sensors) {
+      var sensor = service.sensors[k];  
+      for (var e in EVENTS) 
+        this.addEvents(sensor, e, name, k);
     }
-    return sensor;
   }
 
   function addEvents(sensor, eventName, serviceName, sensorName) {
@@ -139,24 +126,4 @@ export class Server {
     this.logger.info(serviceName + '/' + sensorName + ': ' + eventType + ' - ' + (new Date).toString());
   }
 
-  function buildStats(config) {
-    if (!config) return;
-    for (var k in config) {
-      this.stats[k] = new Stats(config[k]); 
-    }
-  }
-
-  function setupLogging(logs) {
-    this.trackedEvents = {};
-    if (!logs) return;
-    foreach (var log in logs) 
-      this.trackedEvents[log] = true;
-  }
-
-  function buildServices(config) {
-    if (!config) return;
-
-    for (var k in config) 
-      this.services[k] = this.buildService(k, config[k]);
-  }
 }
