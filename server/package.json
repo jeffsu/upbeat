@@ -1,25 +1,30 @@
 {
   "name": "upbeat-server",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "description": "Server for running upbeat.",
   "main": "index.js",
+
   "scripts": {
     "test": "whiskey 'tests/sensor.js tests/service.js tests/stats.js'"
   },
+
   "repository": {
     "type": "git",
     "url": "https://github.com/jeffsu/upbeat"
   },
+
   "dependencies": {
     "mochiscript": "0.6.15",
-    "upbeat-health": "",
+    "upbeat-health": "0.0.2",
     "tempo": "~0.2.0-pre3",
     "winston": "~0.6.2",
     "redis": "~0.8.1"
   },
+
   "devDependencies": {
     "request": ""
   },
+
   "keywords": [
     "health",
     "monitoring",
@@ -30,6 +35,7 @@
     "redis",
     "mysql"
   ],
+
   "author": "Jeff Su",
   "license": "BSD"
 }
