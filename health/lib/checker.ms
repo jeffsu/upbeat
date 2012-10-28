@@ -40,13 +40,12 @@ export class Checker {
 
   function handle(err) {
     var stat = this.stat;
+    this.stat = err ? UNHEALTHY : HEALTHY;
 
     if (err) {
       if (stat != UNHEALTHY) this.emit(UNHEALTHY, err);
-      this.stat = UNHEALTHY;
     } else {
       if (stat != HEALTHY) this.emit(HEALTHY);
-      this.stat = HEALTHY;
     }
   }
 
