@@ -1,3 +1,5 @@
+var Sensor = require('./sensor');
+
 export class Service {
   include $m.EventEmitter;
 
