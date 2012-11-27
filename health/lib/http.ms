@@ -8,7 +8,7 @@ module.exports = #(options) {
   var url = URL.parse(options.url);
 
   var httpOptions = {
-    method: options.method || 'GET',
+    method:   options.method || 'GET',
     hostname: url.hostname,
     path:     url.pathname,
     port:     url.port,

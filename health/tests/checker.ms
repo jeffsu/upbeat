@@ -1,6 +1,6 @@
 var health = require('../');
 
-exports['test interval'] = function (test, assert) {
+exports['test interval'] = function (test) {
   var http = health.http("http://www.google.com");
   var checker = health.checker(http, { interval: 100 });
   checker.start();
@@ -13,11 +13,11 @@ exports['test interval'] = function (test, assert) {
 
   setTimeout(function () { 
     checker.stop(); 
-  }, 500);
+  }, 600);
 
   setTimeout(function () {
-    assert.ok(beat > 2);
-    assert.equal(healthy, 1);
-    test.finish();
+    test.ok(beat > 2);
+    test.equal(healthy, 1);
+    test.done();
   }, 1000);
 };
