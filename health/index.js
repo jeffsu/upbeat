@@ -12,3 +12,4 @@ var strategies = {};
 
 module.exports.register = function (name, funct) { module.exports[name] = funct; }
 module.exports.checker  = function (strategy, options) { return new Checker(strategy, options) }
+module.exports.Checker = Checker;

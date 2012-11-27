@@ -1,12 +1,12 @@
 module.exports = #(options) {
   if (typeof options == 'string') {
     var splitted = options.split(':');
-    options = { host: splitted[0], port: parseInt(splitted[1]) };
+    options = { hostname: splitted[0], port: parseInt(splitted[1]) };
   }
 
-  var host = options.host;
+  var host = options.hostname || options.host;
   var port = options.port;
-  var timeout = options.timeout || 10000;
+  var timeout = options.timeout || 2000;
 
   var net = require('net');
 

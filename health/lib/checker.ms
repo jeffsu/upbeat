@@ -30,6 +30,7 @@ export class Checker {
       time = (new Date).getTime() - startTime;
       self.handle(err) 
       self.emit('beat', err, time);
+      self.emit('check', err, time);
       if (err == 'timeout') self.emit('timeout', time);
 
       if (self.running) setTimeout(run, interval);
