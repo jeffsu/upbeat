@@ -1,40 +1,16 @@
 {
   "name": "upbeat-dashboard",
-  "version": "0.0.1",
+  "version": "0.0.0",
+  "description": "Dashboard UI for upbeat",
   "main": "index.js",
-  "bin": {
-    "upbeat": "./bin/upbeat"
-  },
-
   "scripts": {
-    "start": "node app"
+    "test": "echo \"Error: no test specified\" && exit 1"
   },
-
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/jeffsu/upbeat"
-  },
-
-
+  "repository": "",
+  "author": "",
+  "license": "BSD",
   "dependencies": {
-    "upbeat-server": "0.0.1",
-    "mochiscript": "0.6.15",
-    "express": "3.0.0rc2",
-    "jade": "*"
-  },
-
-  "keywords": [
-    "health",
-    "monitoring",
-    "upbeat",
-    "server",
-    "http",
-    "tcp",
-    "redis",
-    "mysql"
-  ],
-
-  "author": "Jeff Su",
-  "license": "BSD"
-
+    "mochiscript": "~0.6.15",
+    "express": "~3.0.3"
+  }
 }

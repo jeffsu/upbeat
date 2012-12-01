@@ -10,11 +10,11 @@ module.exports.unhealthySensor = function (cb) {
   server.listen(PORT);
 
   var sensor = new upbeat.Sensor({ strategy: 'http', url: 'http://localhost:' + PORT, interval: 500 });
-  sensor.run();
+  sensor.start();
 
-  var count = { beat: 0, pass: 0, fail: 0, up: 0, down: 0 };
+  var count = { check: 0, pass: 0, fail: 0, up: 0, down: 0 };
 
-  sensor.on('beat', function () { count.beat++; });
+  sensor.on('check', function () { count.check++; });
   sensor.on('pass', function () { count.pass++; });
   sensor.on('fail', function () { count.fail++; });
   sensor.on('up',   function () { count.up++; });
@@ -39,11 +39,11 @@ module.exports.healthySensor = function (cb) {
   server.listen(PORT);
 
   var sensor = new upbeat.Sensor({ strategy: 'http', url: 'http://localhost:' + PORT, interval: 500 });
-  sensor.run();
+  sensor.start();
 
-  var count = { beat: 0, pass: 0, fail: 0, up: 0, down: 0 };
+  var count = { check: 0, pass: 0, fail: 0, up: 0, down: 0 };
 
-  sensor.on('beat', function () { count.beat++; });
+  sensor.on('check', function () { count.check++; });
   sensor.on('pass', function () { count.pass++; });
   sensor.on('fail', function () { count.fail++; });
   sensor.on('up',   function () { count.up++; });
