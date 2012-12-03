@@ -11,6 +11,7 @@
   "license": "BSD",
   "dependencies": {
     "mochiscript": "~0.6.15",
-    "express": "~3.0.3"
+    "express": "~3.0.3",
+    "jade": "~0.27.7"
   }
 }

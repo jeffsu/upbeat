@@ -3,23 +3,34 @@
  * Module dependencies.
  */
 
-module.exports = #(server, options) {
+module.exports.setup = #(server, options) {
+  options = options || {};
+
   var express = require('express')
     , routes = require('./routes')
-    , user = require('./routes/user')
     , http = require('http')
     , path = require('path');
 
   var app = express();
 
+  app.locals.color = #(model) {
+    return model.isHealthy() ? 'green' : 'red';
+  };
+
   app.configure(function(){
-    app.set('port', process.env.PORT || 3000);
+    app.set('port', options.port || process.env.PORT || 2468);
     app.set('views', __dirname + '/views');
     app.set('view engine', 'jade');
     app.use(express.favicon());
     app.use(express.logger('dev'));
     app.use(express.bodyParser());
     app.use(express.methodOverride());
+
+    app.use(function (req, res, next) {
+      res.locals.server = server;
+      next();
+    });
+
     app.use(app.router);
     app.use(express.static(path.join(__dirname, 'public')));
   });

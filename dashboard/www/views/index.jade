@@ -1,5 +1,8 @@
 extends layout
-
 block content
-  h1= title
-  p Welcome to #{title}
+  h1 Upbeat  
+  table.table
+    each service, serviceName in server.services
+      tr: td: a(href="/services/#{serviceName}", style="color:#{color(service)}")= serviceName
+      each sensor, sensorName in service.sensors
+        tr: td: a(href="/services/#{serviceName}/sensors/#{sensorName}", style="color:#{color(sensor)}")= sensorName

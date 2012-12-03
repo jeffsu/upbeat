@@ -1,7 +1,6 @@
 var Service = require('./service');
 var Sensor  = require('./sensor');
 var Stats   = require('./stats');
-var Syncer  = require('./syncer');
 
 var Base   = require('./base');
 
