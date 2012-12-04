@@ -11,6 +11,13 @@ export class Sensor {
     this.options  = options || {};
     this.strategy = options.strategy;
 
+    this.lastPassTime = null;
+    this.lastFailTime = null;
+    this.lastFailMessage = null;
+
+    this.downTime = 0;
+    this.upTime   = 0;
+
     if (typeof this.strategy == 'string') this.strategy = health[this.strategy](options);
     this.checker = health.checker(this.strategy, { interval: options.interval })
 
@@ -26,7 +33,29 @@ export class Sensor {
       self.emit('down', $1);
     });
 
+    var firstTime = true;
+    var lastErr  = null;
+    var lastTime = null;
     this.checker.on('check', #(err, time) { 
+      var now = Date.now();
+
+      if (firstTime) {
+        firstTime = false;
+      } else {
+        self[lastErr ? 'downTime' : 'upTime'] += now - lastTime;
+      }
+
+      lastErr  = err;
+      lastTime = now;
+
+      if (err) {
+        self.lastFailTime = now;
+        self.lastFailMessage = err.toString();
+      } else {
+        if (self.lastPassTime
+        self.lastPassTime = now;
+      }
+
       self.emit((err ? 'fail' : 'pass'), time);
       self.emit('check', err, time); 
     });
