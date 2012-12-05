@@ -2,7 +2,7 @@
 /**
  * Module dependencies.
  */
-
+var mochi = require('mochiscript');
 module.exports.setup = #(server, options) {
   options = options || {};
 
@@ -17,6 +17,12 @@ module.exports.setup = #(server, options) {
     return model.isHealthy() ? 'green' : 'red';
   };
 
+  var jade = require('jade');
+  jade.filters.mochi = #(text) {
+    text = mochi.compile(text).replace(/\\/g, '\\\\').replace(/\n/g, '\\n');
+    return "<script type='text/JavaScript'>\\n" + mochi.compile(text) + "</script>";
+  };
+
   app.configure(function(){
     app.set('port', options.port || process.env.PORT || 2468);
     app.set('views', __dirname + '/views');
@@ -26,13 +32,19 @@ module.exports.setup = #(server, options) {
     app.use(express.bodyParser());
     app.use(express.methodOverride());
 
-    app.use(function (req, res, next) {
+
+    app.use(#(req, res, next) {
       res.locals.server = server;
       next();
     });
 
     app.use(app.router);
     app.use(express.static(path.join(__dirname, 'public')));
+
+    app.use(mochi.middleware({
+      src: path.join(__dirname, "public", "javascripts"),
+      prefix: "javascripts"
+    }));
   });
 
   app.configure('development', function(){
