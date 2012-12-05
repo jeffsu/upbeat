@@ -36,6 +36,7 @@ export class Sensor {
     var firstTime = true;
     var lastErr  = null;
     var lastTime = null;
+
     this.checker.on('check', #(err, time) { 
       var now = Date.now();
 
@@ -52,7 +53,6 @@ export class Sensor {
         self.lastFailTime = now;
         self.lastFailMessage = err.toString();
       } else {
-        if (self.lastPassTime
         self.lastPassTime = now;
       }
 

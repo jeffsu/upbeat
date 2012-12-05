@@ -16,7 +16,7 @@ export class Store {
 
     this.counters = {};
 
-    if (redis) this.redis = redis.createClient(options.redis);
+    if (options.redis) this.redis = redis.createClient(options.redis);
 
     for (var time in TIMES) {
       var counter = this.counters[time] = tempo[time]();
@@ -34,12 +34,13 @@ export class Store {
     server.eachService(#(serviceName, service) {
       service.eachSensor(#(sensorName, sensor) {
         var name = serviceName + '/' + sensorName;
-        sensor.on('check', #{ self.check(name, $1, $2); });
+        sensor.on('check', #{ self.handleCheck(name, $1, $2); });
       });
     });
   }
 
   function handleCheck(pre, sensor, err, time) {
+    console.log('check');
     this.inc(pre + (err ? '/failures' : '/passes'));
     this.inc(pre + '/response-times', time);
     this.inc(pre + '/total');
