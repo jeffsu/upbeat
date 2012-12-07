@@ -1,5 +1,4 @@
 var tempo = require('tempo');
-var redis = require('redis');
 
 export class Store {
   private {
@@ -15,19 +14,52 @@ export class Store {
     options = options || {};
 
     this.counters = {};
-
-    if (options.redis) this.redis = redis.createClient(options.redis);
-
-    for (var time in TIMES) {
-      var counter = this.counters[time] = tempo[time]();
-      if (this.redis) {
-        var syncer = new tempo.Syncer(this.redis);
-        syncer.addCounter(counter);
-        syncer.start(TIMES[time]);
-      }
-    }
+    for (var time in TIMES) this.counters[time] = tempo[time]();
     
     this.setEvents(server);
+  }
+
+  function getHistoricalPayload(service, sensor) {
+
+  }
+
+  function getPayload(service, sensor, time) {
+    var pre = service + '/' + sensor;
+    var counter = this.counters[time];
+    var data = [];
+    counter.eachCount(
+      pre + '/responseTime',
+      pre + '/passes',
+      pre + '/failures',
+      pre + '/total',
+    #(rt, p, f, t, time) {
+        data.push({ 
+          responseTime: (t == 0) ? null : Math.round(rt / t),
+          total:    t,
+          passes:   p,
+          failures: f,
+          time:     time
+        });
+    });
+
+    return data;
+  }
+
+  function start(redis) {
+    if (!this.syncers) {
+      this.syncers = {};
+      for (var time in TIMES) {
+        var counter = this.counters[time];
+        var syncer = new tempo.Syncer(redis);
+        syncer.addCounter(counter);
+        syncer.start(TIMES[time]);
+        this.syncers[time] = syncer;
+      }
+    }
+  }
+
+  function stop() {
+    for (var k in this.syncers) this.syncers[k].stop();
   }
 
   function setEvents(server) {
@@ -40,9 +72,8 @@ export class Store {
   }
 
   function handleCheck(pre, sensor, err, time) {
-    console.log('check');
     this.inc(pre + (err ? '/failures' : '/passes'));
-    this.inc(pre + '/response-times', time);
+    this.inc(pre + '/responseTime', time);
     this.inc(pre + '/total');
   }
 
@@ -50,4 +81,5 @@ export class Store {
     for (var name in this.counters) 
       this.counters[name].inc(key, n || 1)
   }
+
 }

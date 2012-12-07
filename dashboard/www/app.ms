@@ -4,6 +4,8 @@
  */
 var mochi = require('mochiscript');
 module.exports.setup = #(server, options) {
+  var store = server.store();
+
   options = options || {};
 
   var express = require('express')
