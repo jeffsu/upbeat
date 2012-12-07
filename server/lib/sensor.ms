@@ -18,6 +18,8 @@ export class Sensor {
     this.downTime = 0;
     this.upTime   = 0;
 
+    this.responseTime = 0;
+
     if (typeof this.strategy == 'string') this.strategy = health[this.strategy](options);
     this.checker = health.checker(this.strategy, { interval: options.interval })
 
@@ -39,6 +41,7 @@ export class Sensor {
 
     this.checker.on('check', #(err, time) { 
       var now = Date.now();
+      self.responseTime = time;
 
       if (firstTime) {
         firstTime = false;

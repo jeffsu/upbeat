@@ -21,7 +21,6 @@ export class Base {
     this.start();
   }
 
-
   function run() {
     /* stub */
   }
@@ -44,7 +43,9 @@ export class Base {
   }
 
   function addChild(klass, name, options) {
+    if (!this.childList) this.childList = []
     var child = this.children[name] = new klass(options);
+    this.childList.push(child);
     return child;
   }
 
