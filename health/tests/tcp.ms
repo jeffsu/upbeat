@@ -23,6 +23,14 @@ exports['test tcp ok'] = function (test) {
   });
 };
 
+exports['test local tcp'] = function (test) {
+  var tcp = health.tcp({ host: 'localhost', port: 4023, timeout: 10000 });
+  tcp(function (err) { 
+    test.ok(!err); 
+    test.done();
+  });
+};
+
 exports['test tcp timeout'] = function (test) {
   var tcp = health.tcp({ host: 'www.google.com', port: 80, timeout: 1 });
   tcp(function (err) { 

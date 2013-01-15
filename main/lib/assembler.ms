@@ -1,4 +1,3 @@
-
 class Assembler {
   private {
     var required = false;
@@ -12,9 +11,9 @@ class Assembler {
 
     var server = new upbeat.Server();
 
-    this.buildStats(server, config.stats);
-    this.buildLogging(server, config.log);
-    this.buildSync(server, config.sync);
+    //this.buildStats(server, config.stats);
+    //this.buildLogging(server, config.log);
+    //this.buildSync(server, config.sync);
     this.buildServices(server, config.services);
 
     if (config.dashboard) 
@@ -40,13 +39,13 @@ class Assembler {
 
   function buildServices(server, config) {
     if (!config) return;
-    for (var k in config) server.addService(k, this.buildService(config[k]));
+    for (var k in config) server.service(k, this.buildService(config[k]));
   }
 
   function buildService(config) {
     var service = new upbeat.Service();
     for (var k in config) 
-      service.addSensor(k, this.buildSensor(config[k]));
+      service.sensor(k, this.buildSensor(config[k]));
 
     return service;
   }
