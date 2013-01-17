@@ -12,6 +12,10 @@ export class Server extends Base {
     this.services = this.children = {};
   }
 
+  function run() {
+    this.start();
+  }
+
   function service(name, options) {
     return this.addChild(Service, name, options);
   }

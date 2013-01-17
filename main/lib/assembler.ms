@@ -38,20 +38,17 @@ class Assembler {
   }
 
   function buildServices(server, config) {
-    if (!config) return;
-    for (var k in config) server.service(k, this.buildService(config[k]));
+    for (var k in config) {
+      var service = server.service(k, config[k]);
+      this.buildSensors(service, config[k]);
+    }
   }
 
-  function buildService(config) {
-    var service = new upbeat.Service();
-    for (var k in config) 
-      service.sensor(k, this.buildSensor(config[k]));
-
-    return service;
-  }
-
-  function buildSensor(config) {
-    return new Sensor(config);
+  function buildSensors(service, config) {
+    for (var k in config) {
+      service.sensor(k, config[k]);
+    }
+    console.log(service.sensors);
   }
 
   function buildLogging(server, config) {

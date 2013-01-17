@@ -9,7 +9,7 @@ export class Base {
   function start() {
     if (this.isRunning) return;
     this.isRunning = true;
-    this.run();
+    //this.run();
     this.eachChild(#(name, child) { child.start(); });
   }
 

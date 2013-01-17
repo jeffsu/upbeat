@@ -7,7 +7,12 @@ var Base       = require('./base');
 export class Sensor {
   include $m.EventEmitter;
 
-  function initialize(options) {
+  function initialize(name, options) {
+    this.name     = name;
+    if ('object' == typeof name) { 
+      options   = name;
+      this.name = '';
+    }
     this.options  = options || {};
     this.strategy = options.strategy;
 
