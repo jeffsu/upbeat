@@ -1,0 +1,17 @@
+extends layout
+
+block content
+  table.table.table-bordered
+    - var sensorCount = 1
+    - for (var k in service.sensors) sensorCount++;
+    tr
+      td(rowspan=sensorCount, style="color: #{hcolor(service)}")= name
+      td Sensor
+    each sensor, name in service.sensors
+      tr
+        td(style="color: #{hcolor(sensor)}")
+          if sensor.isHealthy()
+            = name
+          else
+            = name + ': ' + sensor.lastFailMessage
+

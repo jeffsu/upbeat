@@ -24,5 +24,18 @@ module.exports.setup = #(server, app) {
 
     res.json(ret);
   });
+
+  app.get('/services/:service', #(req, res) {
+    var name    = req.params.service;
+    var service = server.services[name];
+    res.render('services', {
+      serviceName: name,
+      service:     service
+    });
+  });
+
+  app.get('/services/:service/:sensor', #(req, res) {
+    //TODO
+  });
 };
 

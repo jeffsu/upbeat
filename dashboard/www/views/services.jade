@@ -1,14 +1,12 @@
 extends layout
 
 block content
-  each service, serviceName in server.services
-    h3
-      a(href="/services/#{serviceName}")= serviceName
+  h3
+    a(href="/services/#{serviceName}")= serviceName
 
-    dl.dl-horizontal: each sensor, sensorName in service.sensors
-      dt: .canvas(data-name="#{serviceName}/#{sensorName}")
-      dd: a(href="/services/#{serviceName}/sensors/#{sensorName}", style="color:#{color(sensor)}", style="line-height: 55px;")= sensorName
-
+  dl.dl-horizontal: each sensor, sensorName in service.sensors
+    dt: .canvas(data-name="#{serviceName}/#{sensorName}")
+    dd: a(href="/services/#{serviceName}/sensors/#{sensorName}", style="color:#{color(sensor)}", style="line-height: 55px;")= sensorName
 
   :mochi
     var svgs = {};
@@ -54,5 +52,3 @@ block content
           .attr('fill', 'green')
           .attr('r', 10);
     }
-
-
