@@ -1,8 +1,7 @@
-var strategies = require('./strategies');
-var tempo      = require('tempo');
-var Stats      = require('./stats');
-var health     = require('upbeat-health')
-var Base       = require('./base');
+var tempo  = require('tempo');
+var Stats  = require('./stats');
+var health = require('upbeat-health')
+var Base   = require('./base');
 
 export class Sensor {
   include $m.EventEmitter;

@@ -10,7 +10,7 @@ module.exports = #(options) {
   var httpOptions = {
     method:   options.method || 'GET',
     hostname: url.hostname,
-    path:     url.pathname,
+    path:     url.path,
     port:     url.port,
     headers:  options.headers,
     auth:     options.auth,
