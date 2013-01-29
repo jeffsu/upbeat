@@ -12,7 +12,7 @@
   },
   "dependencies": {
     "mochiscript": "0.6.15",
-    "upbeat-health": "0.0.4",
+    "upbeat-health": "0.0.5",
     "tempo": "~0.2.6",
     "winston": "~0.6.2",
     "redis": "~0.8.1"
