@@ -1,3 +1,7 @@
+*0.0.6*
+  * included mysql strategy
+  * fixed mysql strategy connection code
+
 *0.0.5*
   * fixed http sensor path parse problem
 
