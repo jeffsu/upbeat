@@ -15,7 +15,7 @@ export class Store {
 
     this.counters = {};
     for (var time in TIMES) this.counters[time] = tempo[time]();
-    
+
     this.setEvents(server);
   }
 
@@ -33,7 +33,7 @@ export class Store {
       pre + '/failures',
       pre + '/total',
     #(rt, p, f, t, time) {
-        data.push({ 
+        data.push({
           responseTime: (t == 0) ? null : Math.round(rt / t),
           total:    t,
           passes:   p,
@@ -78,7 +78,7 @@ export class Store {
   }
 
   function inc(key, n) {
-    for (var name in this.counters) 
+    for (var name in this.counters)
       this.counters[name].inc(key, n || 1)
   }
 

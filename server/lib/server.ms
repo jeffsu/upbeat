@@ -30,6 +30,6 @@ export class Server extends Base {
   }
 
   function eachService(cb) {
-    for (var k in this.services) cb(k, this.services[k]); 
+    for (var k in this.services) cb(k, this.services[k]);
   }
 }

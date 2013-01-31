@@ -8,7 +8,7 @@ export class Sensor {
 
   function initialize(name, options) {
     this.name     = name;
-    if ('object' == typeof name) { 
+    if ('object' == typeof name) {
       options   = name;
       this.name = '';
     }
@@ -27,13 +27,13 @@ export class Sensor {
     if (typeof this.strategy == 'string') this.strategy = health[this.strategy](options);
     this.checker = health.checker(this.strategy, { interval: options.interval })
 
-    this.checker.on('healthy', #{ 
-      self._health = true 
+    this.checker.on('healthy', #{
+      self._health = true
       self.emit('healthy');
       self.emit('up');
     });
 
-    this.checker.on('unhealthy', #{ 
+    this.checker.on('unhealthy', #{
       self._health = false
       self.emit('unhealthy', $1);
       self.emit('down', $1);
@@ -43,7 +43,7 @@ export class Sensor {
     var lastErr  = null;
     var lastTime = null;
 
-    this.checker.on('check', #(err, time) { 
+    this.checker.on('check', #(err, time) {
       var now = Date.now();
       self.responseTime = time;
 
@@ -64,7 +64,7 @@ export class Sensor {
       }
 
       self.emit((err ? 'fail' : 'pass'), time);
-      self.emit('check', err, time); 
+      self.emit('check', err, time);
     });
   }
 

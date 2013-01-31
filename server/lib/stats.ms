@@ -19,7 +19,7 @@ export class Stats {
   }
 
   function inc(name, n) {
-    foreach (var t in TIMES) 
+    foreach (var t in TIMES)
       if (!this.exclude[t]) this[t].inc(name, n);
   }
 
@@ -90,7 +90,7 @@ export class Stats {
 
   function counter(tempo) {
     var data = {};
-    foreach (var key in tempo.getKeys()) 
+    foreach (var key in tempo.getKeys())
       data[key] = tempo.getHistory(key);
 
     return { data: data };

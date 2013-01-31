@@ -2,7 +2,7 @@ export class Base {
   include $m.EventEmitter;
 
   function eachChild(cb) {
-    for (var name in this.children) 
+    for (var name in this.children)
       cb(name, this.children[name]);
   }
 
@@ -37,14 +37,14 @@ export class Base {
   }
 
   function isHealthy() {
-    for (var name in this.children) 
+    for (var name in this.children)
       if (!this.children[name].isHealthy()) return false;
     return true;
   }
 
   function addChild(klass, name, options) {
     if (!this.childList) this.childList = []
-    var child = this.children[name] = new klass(options);
+    var child = this.children[name] = new klass(name, options);
     this.childList.push(child);
     return child;
   }
