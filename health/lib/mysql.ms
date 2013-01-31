@@ -7,7 +7,7 @@ module.exports = #(options) {
     throw e;
   }
 
-  var conn  = mysql.createClient(options);
+  var conn  = mysql.createConnection(options);
 
   return #(cb) {
     conn.query(sql, #(err, rows, fields) { 

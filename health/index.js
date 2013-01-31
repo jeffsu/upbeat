@@ -1,7 +1,7 @@
 require('mochiscript');
 var Checker = require('./lib/checker');
 var strategies = {};
-[ 'http', 'tcp', 'pidfile', 'redis', 'tcp' ].forEach(function (strategy) {
+[ 'http', 'tcp', 'pidfile', 'redis', 'tcp', 'mysql' ].forEach(function (strategy) {
   module.exports[strategy] = function (options) {
     if (!strategies[strategy]) 
       strategies[strategy] = require('./lib/' + strategy);
