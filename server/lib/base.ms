@@ -46,7 +46,7 @@ export class Base {
     if (!this.childList) this.childList = []
     var child = this.children[name] = new klass(name, options);
     this.childList.push(child);
+    this.emit("childAdded", child);
     return child;
   }
-
 }
