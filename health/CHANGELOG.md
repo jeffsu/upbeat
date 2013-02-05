@@ -1,3 +1,6 @@
+*0.0.7*
+  * added redis strategy
+
 *0.0.6*
   * included mysql strategy
   * fixed mysql strategy connection code
