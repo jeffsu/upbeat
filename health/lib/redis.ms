@@ -1,7 +1,9 @@
 module.exports = #(options) {
   try {
-    var redis  = require('redis');
-    var client = redis.createClient(options);
+    var redis = require('redis');
+    var port  = options.port || 6379;
+    var host  = options.host || '127.0.0.1';
+    var client = redis.createClient(port, host, options);
   } catch (e) {
     console.log('Please install the "redis" module.');
     throw e;
@@ -15,6 +17,6 @@ module.exports = #(options) {
 
   return #(cb) {
     if (error) return cb("connection error");
-    client.exec(command, cb); 
+    client.mset(command, cb); 
   };
 };
