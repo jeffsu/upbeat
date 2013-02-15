@@ -10,6 +10,7 @@ export class Server extends Base {
 
   function initialize(options) {
     this.services = this.children = {};
+    this.options = options || {};
   }
 
   function run() {
@@ -17,6 +18,8 @@ export class Server extends Base {
   }
 
   function service(name, options) {
+    if (!options.interval && this.options.interval)
+      options.interval = this.options.interval;
     return this.addChild(Service, name, options);
   }
 

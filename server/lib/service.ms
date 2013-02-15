@@ -6,10 +6,13 @@ export class Service extends Base {
 
   function initialize(name, options) {
     this.name     = name;
+    this.options  = options || {};
     this.children = this.sensors = {};
   }
 
   function sensor(name, options) {
+    if (!options.interval && this.options.interval)
+      options.interval = this.options.interval;
     return this.addChild(Sensor, name, options);
   }
 
