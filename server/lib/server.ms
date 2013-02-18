@@ -18,6 +18,7 @@ export class Server extends Base {
   }
 
   function service(name, options) {
+    options = options || {};
     if (!options.interval && this.options.interval)
       options.interval = this.options.interval;
     return this.addChild(Service, name, options);
