@@ -1,3 +1,6 @@
+*0.0.10*
+  * added metadata for sensor
+
 *0.0.9*
   * fixed options underfine bug in server#service
 

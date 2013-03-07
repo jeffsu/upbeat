@@ -14,6 +14,7 @@ export class Sensor {
     }
     this.options  = options || {};
     this.strategy = options.strategy;
+    this.metadata = options.metadata || {};
 
     this.lastPassTime = null;
     this.lastFailTime = null;

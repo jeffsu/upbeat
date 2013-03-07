@@ -1,6 +1,6 @@
 {
   "name": "upbeat-server",
-  "version": "0.0.9",
+  "version": "0.0.10",
   "description": "Server for running upbeat.",
   "main": "index.js",
   "scripts": {
