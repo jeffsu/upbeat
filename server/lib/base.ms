@@ -49,4 +49,12 @@ export class Base {
     this.emit("childAdded", child);
     return child;
   }
+
+  function toHash() {
+    console.log("Haven't been Implemented");
+  }
+
+  function toJSON() {
+    return JSON.stringify(this.toHash());
+  }
 }

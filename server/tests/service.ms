@@ -25,4 +25,3 @@ exports['test service not healthy'] = function (test) {
     test.done();
   }, 1000);
 }
-

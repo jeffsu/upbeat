@@ -19,4 +19,19 @@ export class Service extends Base {
   function eachSensor(cb) {
     for (var k in this.sensors) cb(k, this.sensors[k]);
   }
+
+  function toHash() {
+    var childrenHash = {};
+
+    for (var key in this.children) {
+      childrenHash[key] = this.children[key].toHash();
+    }
+
+    return {
+      name:    this.name,
+      healthy: this.isHealthy(),
+      running: this.isRunning,
+      sensors: childrenHash
+    };
+  }
 }

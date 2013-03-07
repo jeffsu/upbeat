@@ -1,3 +1,6 @@
+*0.0.11*
+  * added toJSON/toHash for server/service/sensor
+
 *0.0.10*
   * added metadata for sensor
 

@@ -2,8 +2,7 @@ var Service = require('./service');
 var Sensor  = require('./sensor');
 var Stats   = require('./stats');
 var Store   = require('./store');
-
-var Base   = require('./base');
+var Base    = require('./base');
 
 export class Server extends Base {
   include $m.EventEmitter;
@@ -35,5 +34,13 @@ export class Server extends Base {
 
   function eachService(cb) {
     for (var k in this.services) cb(k, this.services[k]);
+  }
+
+  function toHash() {
+    var hash = {};
+    for (var key in this.children) {
+      hash[key] = this.children[key].toHash();
+    }
+    return hash;
   }
 }

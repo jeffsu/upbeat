@@ -14,5 +14,3 @@ exports['test sensor'] = function (test) {
   });
 
 }
-
-

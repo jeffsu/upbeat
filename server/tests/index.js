@@ -1,3 +1,7 @@
 require('mochiscript');
 var reporter = require('nodeunit').reporters.default;
-reporter.run([ 'tests/service.ms', 'tests/sensor.ms' ]);
+reporter.run([
+  'tests/service.ms',
+  'tests/sensor.ms',
+  'tests/output.ms'
+]);

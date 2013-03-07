@@ -92,4 +92,20 @@ export class Sensor {
   function isHealthy() {
     return this._health;
   }
+
+  function toHash() {
+    return {
+      name:            this.name,
+      healthy:         this.isHealthy(),
+      running:         this.isRunning,
+      responseTime:    this.responseTime,
+      lastPassTime:    this.lastPassTime,
+      lastFailTime:    this.lastFailTime,
+      lastFailMessage: this.lastFailMessage
+    };
+  }
+
+  function toJSON() {
+    return JSON.stringify(this.toHash());
+  }
 }
