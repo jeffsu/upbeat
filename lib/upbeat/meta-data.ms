@@ -83,11 +83,11 @@ export class MetaData {
   }
 
   function uptime(period) {
-    return tempos.get(period).getTotal(this.id, 'uptime');
+    return tempos.get(period).getCount(this.id + ':uptime');
   }
 
   function downtime(period) {
-    return tempos.get(period).getTotal(this.id, 'downtime');
+    return tempos.get(period).getCount(this.id + ':downtime');
   }
 
   function getHistory(period) {
@@ -102,15 +102,15 @@ export class MetaData {
   }
 
   function averageResponseTime() {
-    var totalResp  = tempos.day.getTotal(this.id, 'passed-resp');
-    var totalCount = tempos.day.getTotal(this.id, 'passed-count');
+    var totalResp  = tempos.day.getCount(this.id + ':passed-resp');
+    var totalCount = tempos.day.getCount(this.id + ':passed-count');
 
     if (this.totalCount == 0) return null;
     return Math.round(totalResp / totalCount);
   }
 
   function total(attr, period) {
-    return tempos.get(period).getTotal(this.id, attr);
+    return tempos.get(period).getCount(this.id + ":" + attr);
   }
 
   function mark(passed, time) {

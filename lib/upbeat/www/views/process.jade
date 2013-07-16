@@ -1,32 +1,33 @@
+extend layout
+block content
+  h1= process.name
+  h5 Details
+  table.table.table-bordered
+    tr
+      th Command
+      td= process.command.join(' ');
+    tr
+      th Status
+      td= process.isUp() ? 'Up' : 'Down'
+    tr
+      th PID
+      td= process.getPid()
+    tr
+      th CTIME
+      td= process.child.ctime
+    tr
+      th Running
+      td= process.child.running ? 'Yes' : 'No'
 
-h1= process.name
-h5 Details
-table.table.table-bordered
-  tr
-    th Command
-    td= process.command.join(' ');
-  tr
-    th Status
-    td= process.isUp() ? 'Up' : 'Down'
-  tr
-    th PID
-    td= process.getPid()
-  tr
-    th CTIME
-    td= process.child.ctime
-  tr
-    th Running
-    td= process.child.running ? 'Yes' : 'No'
+  - if (process.service)
+    h5 Health Check Service
+    a(href="/services/#{process.service.name}")= process.service.name
 
-- if (process.service)
-  h5 Health Check Service
-  a(href="/services/#{process.service.name}")= process.service.name
+  h5 Stdout
+  pre.stdout!= process.stdout.join("")
 
-h5 Stdout
-pre.stdout!= process.stdout.join("")
+  h5 Stderr
+  pre.stderr!= process.stderr.join("")
 
-h5 Stderr
-pre.stderr!= process.stderr.join("")
-
-h5 Errors
-pre.stderr!= process.errors.join("")
+  h5 Errors
+  pre.stderr!= process.errors.join("")

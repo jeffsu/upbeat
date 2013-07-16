@@ -1,0 +1,11 @@
+services:
+  pg:
+    actions:
+      default:
+        strategy: pg
+        username: honghao
+        host:     localhost
+        port:     5432
+        db:       template1
+        sql:      "SELECT * FROM pg_database"
+        lambda:   "function (res) { try { return res.rows.length > 0 } catch (e) { return false; } }"

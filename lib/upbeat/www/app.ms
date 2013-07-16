@@ -1,5 +1,3 @@
-
-
 var TIME = {};
 TIME.sec  = 1000;
 TIME.min  = 60 * TIME.sec;
@@ -56,18 +54,16 @@ export class WebApp {
 
   function start() {
     var express = require('express');
-    var app = express.createServer();
+    var app = express();
 
     app.configure(#{
       app.set('views', __dirname + '/views');
       app.set('view engine', 'jade');
 
-      app.set('view options', { 
-        server: self.server, 
-        humanTime: humanTime,
-        percentage: percentage,
-        categories: categories
-      });
+      app.locals.server = self.server;
+      app.locals.humanTime = humanTime;
+      app.locals.percentage = percentage;
+      app.locals.categories = categories;
 
       app.use(express.bodyParser());
       app.use(express.methodOverride());
@@ -77,11 +73,13 @@ export class WebApp {
     });
 
     require('./routes')(app, this.server)
-    this.app = app;
-    console.log('starting web app on port: ' + this.port);
-    this.app.listen(this.port, this.address);
 
-    return app;
+    this.app = app;
+
+    this.app.listen(this.port, this.address);
+    console.log('starting web app on port: ' + this.port);
+
+    return this.app;
   }
 
   function stop() {

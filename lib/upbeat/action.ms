@@ -8,8 +8,10 @@ export class Action {
       redis:   './strategies/redis',
       process: './strategies/process',
       mysql:   './strategies/mysql',
+      pg:      './strategies/pg',
       tcp:     './strategies/tcp',
       upbeat:  './strategies/upbeat',
+      json:    './strategies/json',
       oauth:   './strategies/oauth'
     };
 
@@ -74,7 +76,7 @@ export class Action {
     this.meta.setStatus(error, resTime);
   }
 
-  function check() {
+  function check(cb) {
     if (this.checking) return;
 
     var timeoutId = null;
@@ -87,6 +89,7 @@ export class Action {
         self.processCheck(startTime, "Timed Out");
         self.checking = false;
         timeoutId = null;
+        if (cb) cb();
       }, this.timeout);
     }
 
@@ -100,6 +103,7 @@ export class Action {
           clearTimeout(timeoutId);
           timeoutId = null;
           self.processCheck(startTime, passed ? false : (errorMsg || 'Failed'));
+          if (cb) cb();
         } 
       });
     } 
@@ -116,8 +120,11 @@ export class Action {
   function start() {
     if (this.running) return;
     this.running = true;
-    this.intervalId = setInterval(#{ self.check() }, this.interval);
-    this.check();
+
+    var run  = #{ self.check(beat) };
+    var beat = #{ if (self.running) setTimeout(run, self.interval); }
+
+    run();
   }
 
   function stop() {

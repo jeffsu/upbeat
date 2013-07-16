@@ -5,7 +5,7 @@ require('mochiscript');
 var upbeat  = require('../lib/upbeat');
 
 if (process.argv.length <= 2) {
-  console.log("Upbeat 0.3.0");
+  console.log("Upbeat 0.2.3");
   console.log("USAGE: upbeat <config file>");
   process.exit(0);
 }
@@ -13,6 +13,6 @@ if (process.argv.length <= 2) {
 var file = process.argv[process.argv.length-1];
 if (! file.match(/^\//)) file = process.cwd() + '/' + file;
 
-var config = require(file)[0];
+var config = require(file);
 var c = new upbeat.Config(config);
 c.start();

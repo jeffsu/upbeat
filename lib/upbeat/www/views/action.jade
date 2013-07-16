@@ -1,76 +1,77 @@
-
-ul.breadcrumb
-  li
-    a(href="/services/#{service.name}")= service.name
-    span.divider / 
-  li.active= action.name
-
-
-h3 Attributes
-table.table.table-condensed.table-bordered.table-striped
-  tr
-    th Uptime Today
-    td#uptime
-  tr
-    th Downtime Today
-    td#downtime
-  tr
-    th Average Response Time
-    td#avgRespTime
-  tr
-    th Interval
-    td#interval
-  tr
-    th Timeout
-    td#timeout
-  tr
-    th Failed Count
-    td#failures
-  tr
-    th Passed Count
-    td#passes
+extend layout
+block content
+  ul.breadcrumb
+    li
+      a(href="/services/#{service.name}")= service.name
+      span.divider / 
+    li.active= action.name
 
 
-h3 Performance
-#container(style="width:100%;height:500px")
+  h3 Attributes
+  table.table.table-condensed.table-bordered.table-striped
+    tr
+      th Uptime Today
+      td#uptime
+    tr
+      th Downtime Today
+      td#downtime
+    tr
+      th Average Response Time
+      td#avgRespTime
+    tr
+      th Interval
+      td#interval
+    tr
+      th Timeout
+      td#timeout
+    tr
+      th Failed Count
+      td#failures
+    tr
+      th Passed Count
+      td#passes
 
-script
-  $(function () { getData(); });
 
-  function getData() {
-    $.get(location.href + '.json', updateData);
-    setInterval(function () { $.get(location.href + '.json', updateData) }, 2000);
-  }
+  h3 Performance
+  #container(style="width:100%;height:500px")
 
-  var chart = null;
-  function updateData(payload) {
-    var meta = payload.meta;
-    var data = payload.responseTimes;
+  script.
+    $(function () { getData(); });
 
-    for (var k in meta) $('#' + k).html(meta[k]);
-
-    if (chart) {
-      chart.series[0].setData(data, true);
-      return;
+    function getData() {
+      $.get(location.href + '.json', updateData);
+      setInterval(function () { $.get(location.href + '.json', updateData) }, 2000);
     }
 
-    chart = new Highcharts.Chart({
-      chart: { 
-        renderTo: 'container',
-        type: 'line'
-      }, 
+    var chart = null;
+    function updateData(payload) {
+      var meta = payload.meta;
+      var data = payload.responseTimes;
 
-      xAxis: { 
-        title: { text: 'Seconds Ago' },
-        categories: #{categories.min.data}
-      },
-      yAxis: { title: { text: 'Time in Milliseconds' } },
+      for (var k in meta) $('#' + k).html(meta[k]);
 
-      title: { text: '' },
-      plotOptions: {
-        pointInterval: 2000
-      },
+      if (chart) {
+        chart.series[0].setData(data, true);
+        return;
+      }
 
-      series: [ { name: 'action', data: data, connectNulls: true } ]
-    });
-  }
+      chart = new Highcharts.Chart({
+        chart: { 
+          renderTo: 'container',
+          type: 'line'
+        }, 
+
+        xAxis: { 
+          title: { text: 'Seconds Ago' },
+          categories: #{categories.min.data}
+        },
+        yAxis: { title: { text: 'Time in Milliseconds' } },
+
+        title: { text: '' },
+        plotOptions: {
+          pointInterval: 2000
+        },
+
+        series: [ { name: 'action', data: data, connectNulls: true } ]
+      });
+    }

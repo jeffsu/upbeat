@@ -1,5 +1,3 @@
-require('js-yaml');
-
 var express = require('express');
 var Service = require('./service');
 var http    = require('http');

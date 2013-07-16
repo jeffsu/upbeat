@@ -1,8 +1,6 @@
 var Service = require('./service');
 var Server  = require('./server');
 
-require('js-yaml');
-
 export class Config {
   function initialize(config) {
     this.config = config;
