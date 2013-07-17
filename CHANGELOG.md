@@ -3,6 +3,8 @@
   * fixed process pidfile checking.
   * adding different syntax config file
   * fixing tempo executable
+  * added pg/json strategies
+  * upgraded express/jade/js-yaml
 
 ** 0.2.2 **
   
