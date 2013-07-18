@@ -13,7 +13,7 @@ export class Service {
 
     for (var name in config.actions) {
       var aconfig  = config.actions[name];
-      aconfig.name = name;
+      aconfig.name = aconfig.name || name;
       aconfig.service = this;
       this.addAction(new Action(aconfig));
     }
