@@ -91,14 +91,31 @@ export class MetaData {
   }
 
   function getHistory(period) {
-    var args  = [ this.id ];
-    for (var i=1; i<arguments.length; i++) args.push(arguments[i]);
+    var history = [];
+    var keys    = [];
+
+    for (var i=1; i<arguments.length; i++) {
+      keys.push(this.id + ':' + arguments[i]);
+    }
+
     var tempo = tempos.get(period);
-    return tempo.getHistory.apply(tempo, args);
+    var tempHistory = keys.map(function (key) { return tempo.getHistory(key) });
+
+    if (keys.length > 0) {
+      for (var i=0, len=tempHistory[0].length; i<len; i++) {
+        var cell = [];
+        foreach (var key:j in keys) {
+          cell.push(tempHistory[j][i]);
+        }
+        history.push(cell);
+      }
+    }
+
+    return history;
   }
 
   function plotResponseTimes(period) {
-    return this.getHistory(period, 'passed-count', 'passed-resp').map(#(row) { => row[1] ? Math.round(row[2] / row[1]) : null });
+    return this.getHistory(period, 'passed-count', 'passed-resp').map(#(row) { => row[0] ? Math.round(row[1] / row[0]) : null });
   }
 
   function averageResponseTime() {

@@ -3,7 +3,7 @@
   "description":  "Fast health and performance monitoring with process handling",
   "keywords":     ["javascript", "performance", "health", "monitoring", "monit", "haproxy", "forever", "process", "systems"],
   "author":       "Jeff Su <me@jeffsu.com>",
-  "version":      "0.2.3-pre6",
+  "version":      "0.2.3-pre7",
   "licenses":     [{ "type": "MIT" }],
   "engines":      { "node":  ">=0.5.0" },
   "directories" : { "lib" : "./lib/upbeat" },

@@ -4,183 +4,144 @@
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 		<title>Highcharts Example</title>
 
-		<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+		<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
 		<script type="text/javascript">
-var chart;
-$(document).ready(function() {
+$(function () {
 
-	// define the options
-	var options = {
+    // Register a parser for the American date format used by Google
+    Highcharts.Data.prototype.dateFormats['m/d/Y'] = {
+        regex: '^([0-9]{1,2})\/([0-9]{1,2})\/([0-9]{2})$',
+        parser: function (match) {
+            return Date.UTC(+('20' + match[3]), match[1] - 1, +match[2]);
+        }
+    };
 
-		chart: {
-			renderTo: 'container'
-		},
+    // Get the CSV and create the chart
+    $.get('/samples/highcharts/demo/line-ajax/analytics.csv', function (csv) {
+        
+        $('#container').highcharts({
 
-		title: {
-			text: 'Daily visits at www.highcharts.com'
-		},
+            data: {
+                csv: csv
+            },
 
-		subtitle: {
-			text: 'Source: Google Analytics'
-		},
+            title: {
+                text: 'Daily visits at www.highcharts.com'
+            },
 
-		xAxis: {
-			type: 'datetime',
-			tickInterval: 7 * 24 * 3600 * 1000, // one week
-			tickWidth: 0,
-			gridLineWidth: 1,
-			labels: {
-				align: 'left',
-				x: 3,
-				y: -3
-			}
-		},
+            subtitle: {
+                text: 'Source: Google Analytics'
+            },
 
-		yAxis: [{ // left y axis
-			title: {
-				text: null
-			},
-			labels: {
-				align: 'left',
-				x: 3,
-				y: 16,
-				formatter: function() {
-					return Highcharts.numberFormat(this.value, 0);
-				}
-			},
-			showFirstLabel: false
-		}, { // right y axis
-			linkedTo: 0,
-			gridLineWidth: 0,
-			opposite: true,
-			title: {
-				text: null
-			},
-			labels: {
-				align: 'right',
-				x: -3,
-				y: 16,
-				formatter: function() {
-					return Highcharts.numberFormat(this.value, 0);
-				}
-			},
-			showFirstLabel: false
-		}],
+            xAxis: {
+                type: 'datetime',
+                tickInterval: 7 * 24 * 3600 * 1000, // one week
+                tickWidth: 0,
+                gridLineWidth: 1,
+                labels: {
+                    align: 'left',
+                    x: 3,
+                    y: -3
+                }
+            },
 
-		legend: {
-			align: 'left',
-			verticalAlign: 'top',
-			y: 20,
-			floating: true,
-			borderWidth: 0
-		},
+            yAxis: [{ // left y axis
+                title: {
+                    text: null
+                },
+                labels: {
+                    align: 'left',
+                    x: 3,
+                    y: 16,
+                    formatter: function() {
+                        return Highcharts.numberFormat(this.value, 0);
+                    }
+                },
+                showFirstLabel: false
+            }, { // right y axis
+                linkedTo: 0,
+                gridLineWidth: 0,
+                opposite: true,
+                title: {
+                    text: null
+                },
+                labels: {
+                    align: 'right',
+                    x: -3,
+                    y: 16,
+                    formatter: function() {
+                        return Highcharts.numberFormat(this.value, 0);
+                    }
+                },
+                showFirstLabel: false
+            }],
 
-		tooltip: {
-			shared: true,
-			crosshairs: true
-		},
+            legend: {
+                align: 'left',
+                verticalAlign: 'top',
+                y: 20,
+                floating: true,
+                borderWidth: 0
+            },
 
-		plotOptions: {
-			series: {
-				cursor: 'pointer',
-				point: {
-					events: {
-						click: function() {
-							hs.htmlExpand(null, {
-								pageOrigin: {
-									x: this.pageX,
-									y: this.pageY
-								},
-								headingText: this.series.name,
-								maincontentText: Highcharts.dateFormat('%A, %b %e, %Y', this.x) +':<br/> '+
-									this.y +' visits',
-								width: 200
-							});
-						}
-					}
-				},
-				marker: {
-					lineWidth: 1
-				}
-			}
-		},
+            tooltip: {
+                shared: true,
+                crosshairs: true
+            },
 
-		series: [{
-			name: 'All visits',
-			lineWidth: 4,
-			marker: {
-				radius: 4
-			}
-		}, {
-			name: 'New visitors'
-		}]
-	};
+            plotOptions: {
+                series: {
+                    cursor: 'pointer',
+                    point: {
+                        events: {
+                            click: function() {
+                                hs.htmlExpand(null, {
+                                    pageOrigin: {
+                                        x: this.pageX,
+                                        y: this.pageY
+                                    },
+                                    headingText: this.series.name,
+                                    maincontentText: Highcharts.dateFormat('%A, %b %e, %Y', this.x) +':<br/> '+
+                                        this.y +' visits',
+                                    width: 200
+                                });
+                            }
+                        }
+                    },
+                    marker: {
+                        lineWidth: 1
+                    }
+                }
+            },
 
+            series: [{
+                name: 'All visits',
+                lineWidth: 4,
+                marker: {
+                    radius: 4
+                }
+            }, {
+                name: 'New visitors'
+            }]
+        });
+    });
 
-	// Load data asynchronously using jQuery. On success, add the data
-	// to the options and initiate the chart.
-	// This data is obtained by exporting a GA custom report to TSV.
-	// http://api.jquery.com/jQuery.get/
-	jQuery.get('analytics.tsv', null, function(tsv, state, xhr) {
-		var lines = [],
-			listen = false,
-			date,
-
-			// set up the two data series
-			allVisits = [],
-			newVisitors = [];
-
-		// inconsistency
-		if (typeof tsv !== 'string') {
-			tsv = xhr.responseText;
-		}
-
-		// split the data return into lines and parse them
-		tsv = tsv.split(/\n/g);
-		jQuery.each(tsv, function(i, line) {
-
-			// listen for data lines between the Graph and Table headers
-			if (tsv[i - 3] == '# Graph') {
-				listen = true;
-			} else if (line == '' || line.charAt(0) == '#') {
-				listen = false;
-			}
-
-			// all data lines start with a double quote
-			if (listen) {
-				line = line.split(/\t/);
-				date = Date.parse(line[0] +' UTC');
-
-				allVisits.push([
-					date,
-					parseInt(line[1].replace(',', ''), 10)
-				]);
-				newVisitors.push([
-					date,
-					parseInt(line[2].replace(',', ''), 10)
-				]);
-			}
-		});
-
-		options.series[0].data = allVisits;
-		options.series[1].data = newVisitors;
-
-		chart = new Highcharts.Chart(options);
-	});
 });
+
 
 		</script>
 	</head>
 	<body>
-<script type="text/javascript" src="../../js/highcharts.js"></script>
-<script type="text/javascript" src="../../js/modules/exporting.js"></script>
+<script src="../../js/highcharts.js"></script>
+<script src="../../js/modules/data.js"></script>
+<script src="../../js/modules/exporting.js"></script>
 
 <!-- Additional files for the Highslide popup effect -->
 <script type="text/javascript" src="http://www.highcharts.com/highslide/highslide-full.min.js"></script>
 <script type="text/javascript" src="http://www.highcharts.com/highslide/highslide.config.js" charset="utf-8"></script>
 <link rel="stylesheet" type="text/css" href="http://www.highcharts.com/highslide/highslide.css" />
 
-<div id="container" style="width: 800px; height: 400px; margin: 0 auto"></div>
+<div id="container" style="min-width: 400px; height: 400px; margin: 0 auto"></div>
 
 	</body>
 </html>

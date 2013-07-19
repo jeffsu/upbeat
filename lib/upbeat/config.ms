@@ -40,7 +40,7 @@ export class Config {
 
     for (var name in services) {
       var config = services[name];
-      config.name = name;
+      config.name = config.name || name;
       this.addService(config);
     }
   }

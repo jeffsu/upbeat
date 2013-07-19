@@ -40,7 +40,7 @@ block content
 
               each action, i in service.actions
                 tr
-                  td(width="50%"): a(href="/services/#{service.name}/actions/#{action.name}")= action.name
+                  td(width="50%"): a(href="/services/#{service.name}/actions/#{action.name}")= action.id
                   td
                     = humanTime(action.meta.uptime()) + ' Up'
                     = ' (' + percentage(action.meta.uptime(), action.meta.downtime() + action.meta.uptime()) + ')'

@@ -37,7 +37,7 @@ export class Action {
 
     this.maxResponse = config['max-response-time'] || this.timeout;
     this.name = config.name;
-    this.id   = this.service.name + ':' + this.name;
+    this.id   = this.strategy.id || this.service.name + ':' + this.name;
     this.meta = new MetaData(config, this.id);
   }
 

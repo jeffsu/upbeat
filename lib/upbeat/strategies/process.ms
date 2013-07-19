@@ -17,7 +17,7 @@ export class Process extends Base {
       if (err) {
         callback(false);
       } else {
-        var pid = data.replace(/\s+/g);
+        var pid = data.replace(/\s+/g, '');
         var filename = '/proc/' + pid + '/exe';
         fs.readlink(filename, #(err, linkString) {
           if (err) {
