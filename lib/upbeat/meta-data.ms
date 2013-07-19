@@ -99,15 +99,15 @@ export class MetaData {
     }
 
     var tempo = tempos.get(period);
-    var tempHistory = keys.map(function (key) { return tempo.getHistory(key) });
+    var tempHistory = keys.map(function (key) {
+      return tempo.getHistory(key)
+    });
 
-    if (keys.length > 0) {
-      for (var i=0, len=tempHistory[0].length; i<len; i++) {
-        var cell = [];
-        foreach (var key:j in keys) {
-          cell.push(tempHistory[j][i]);
-        }
-        history.push(cell);
+    foreach (var row in tempHistory) {
+      var length = row.length;
+      foreach (var bucket:j in row) {
+        history[j] = history[j] || [];
+        history[j].push(row[length - j - 1]);
       }
     }
 
@@ -115,7 +115,9 @@ export class MetaData {
   }
 
   function plotResponseTimes(period) {
-    return this.getHistory(period, 'passed-count', 'passed-resp').map(#(row) { => row[0] ? Math.round(row[1] / row[0]) : null });
+    return this.getHistory(period, 'passed-count', 'passed-resp').map(#(row) {
+      return row[0] && row[1] ? Math.round(row[1] / row[0]) : null;
+    });
   }
 
   function averageResponseTime() {
