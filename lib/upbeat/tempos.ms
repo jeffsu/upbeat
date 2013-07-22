@@ -11,10 +11,10 @@ class Tempos {
   function increment(key, attr, val) {
     var newKey = key + ":" + attr;
 
-    this.min.increment(newKey, val); 
-    this.day.increment(newKey, val); 
-    this.hour.increment(newKey, val); 
-    this.week.increment(newKey, val); 
+    this.min.increment(newKey, val);
+    this.day.increment(newKey, val);
+    this.hour.increment(newKey, val);
+    this.week.increment(newKey, val);
   }
 
   function get(period) {

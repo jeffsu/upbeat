@@ -8,7 +8,7 @@ export class Process extends Base {
 
   function initialize(config) {  
     this.pidfile = config.pidfile;
-    this.id      = this.pidfile;
+    this.desc    = this.pidfile;
   }
 
   function check(callback) {

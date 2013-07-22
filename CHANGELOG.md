@@ -5,6 +5,7 @@
   * fixing tempo executable
   * added pg/json strategies
   * upgraded express/jade/js-yaml
+  * support function for lambda
 
 ** 0.2.2 **
   

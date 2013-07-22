@@ -37,7 +37,8 @@ export class Action {
 
     this.maxResponse = config['max-response-time'] || this.timeout;
     this.name = config.name;
-    this.id   = this.strategy.id || this.service.name + ':' + this.name;
+    this.id   = this.service.name + ':' + this.name;
+    this.desc = this.config.desc || this.strategy.desc || this.name;
     this.meta = new MetaData(config, this.id);
   }
 
@@ -56,7 +57,7 @@ export class Action {
 
       return strategy;
     }
-    
+
     else if (typeof config.strategy == 'object') {
       return config.strategy;
     }
@@ -84,7 +85,7 @@ export class Action {
     var startTime = (new Date()).getTime();
 
     if (this.timeout) {
-      timeoutId = this.timeoutId = setTimeout(#{ 
+      timeoutId = this.timeoutId = setTimeout(#{
         self.strategy.clear();
         self.processCheck(startTime, "Timed Out");
         self.checking = false;
@@ -93,7 +94,7 @@ export class Action {
       }, this.timeout);
     }
 
-    try { 
+    try {
       this.checking = true;
       this.strategy.check(#(passed, errorMsg) {
         self.checking = false;
@@ -104,12 +105,12 @@ export class Action {
           timeoutId = null;
           self.processCheck(startTime, passed ? false : (errorMsg || 'Failed'));
           if (cb) cb();
-        } 
+        }
       });
-    } 
-    
+    }
+
     catch(e) {
-       
+
     }
   }
 

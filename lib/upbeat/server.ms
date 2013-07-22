@@ -49,7 +49,7 @@ export class Server {
       this.services[name].stop();
     }
 
-    if (this.checkIntervalId) clearInterval(this.checkIntervalId); 
+    if (this.checkIntervalId) clearInterval(this.checkIntervalId);
   }
 
   function start() {

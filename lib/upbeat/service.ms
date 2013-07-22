@@ -50,14 +50,14 @@ export class Service {
     action.on('fail', #{ self.emit('fail', evt); });
     action.on('pass', #{ self.emit('pass', evt); });
 
-    action.on('down', #{ 
+    action.on('down', #{
       var wasUp = self.up;
       self.up = false;
-      self.emit('down', evt, $1); 
+      self.emit('down', evt, $1);
       if (wasUp) self.emit('change', evt);
     });
 
-    action.on('up', #{ 
+    action.on('up', #{
       var changed = false;
       if (!self.up) {
         foreach (var a in self.actions) {
@@ -68,7 +68,7 @@ export class Service {
         changed = true;
       }
 
-      self.emit('up', evt) 
+      self.emit('up', evt)
       if (changed) self.emit('change', evt);
     });
   }
@@ -107,7 +107,7 @@ export class Service {
 
     foreach (var action:i in this.actions) {
       if (i!=0) res.write(',');
-      res.write(action.toJSON()); 
+      res.write(action.toJSON());
     }
 
     res.end(']');

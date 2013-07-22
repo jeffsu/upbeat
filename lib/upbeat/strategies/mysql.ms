@@ -8,7 +8,7 @@ export class Mysql extends Base {
   function initialize(config) {
     this.sql    = config.sql || "SHOW DATABASES LIMIT 1";
     this.config = config;
-    this.id     = this.sql;
+    this.desc   = this.sql;
     this.connect();
   }
 

@@ -114,7 +114,7 @@ export class Process {
         this.state = "Error reading pidfile: " + this.pidFile;
         cb(err);
       } else {
-        cb(false, parseInt(data)); 
+        cb(false, parseInt(data));
       }
     });
   }

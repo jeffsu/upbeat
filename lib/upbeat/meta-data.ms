@@ -48,7 +48,7 @@ export class MetaData {
       } else {
         tempos.increment(this.id, 'downtime', delta);
       }
-    } 
+    }
 
     this.lastTime = now;
     this.totalCount++;
@@ -141,7 +141,7 @@ export class MetaData {
     this.totalResTime    += time;
     this.lastResponseTime = time;
 
-    this.times.push([ passed, time ]); 
+    this.times.push([ passed, time ]);
     if (this.times.length > HISTORICAL_COUNT) this.times.shift();
   }
 

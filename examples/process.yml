@@ -5,7 +5,7 @@ processes:
       - /home/jeffsu/workspace/upbeat/examples/server.js
     pidFile: ./foo.pid
     actions:
-      http: 
+      http:
         strategy: tcp
         host: localhost
         port: 1337

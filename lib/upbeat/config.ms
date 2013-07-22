@@ -9,7 +9,7 @@ export class Config {
 
   function configure(config, server) {
     var server = this.server = new Server();
-   
+
     if (config.checkInterval) {
       server.checkInterval = parseInt(config.checkInterval);
     }
@@ -26,7 +26,7 @@ export class Config {
 
 
     this.addProcesses(config);
-    this.addServices(config); 
+    this.addServices(config);
   }
 
   function addService(config) {

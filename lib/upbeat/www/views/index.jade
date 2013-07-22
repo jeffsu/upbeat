@@ -33,14 +33,14 @@ block content
           td(style="padding: 0")
             table(width="100%")
               thead
-                th ID
+                th Desc
                 th Uptime
                 th Downtime
                 th Status
 
               each action, i in service.actions
                 tr
-                  td(width="50%"): a(href="/services/#{service.name}/actions/#{action.name}")= action.id
+                  td(width="50%"): a(href="/services/#{service.name}/actions/#{action.name}")= action.desc
                   td
                     = humanTime(action.meta.uptime()) + ' Up'
                     = ' (' + percentage(action.meta.uptime(), action.meta.downtime() + action.meta.uptime()) + ')'

@@ -11,7 +11,7 @@ export class Redis extends Base {
 
     this.running = false;
     this.createClient();
-    this.id = 'redis://' + this.host + ':' + this.port;
+    this.desc = 'redis://' + this.host + ':' + this.port;
   }
 
   function createClient() {

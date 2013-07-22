@@ -1,6 +1,6 @@
-
 var Base = require('./base-strategy');
 var net = require('net');
+
 export class Tcp extends Base {
   static var TIMEOUT  = 2000;
   static var INTERVAL = 3000;
@@ -8,7 +8,7 @@ export class Tcp extends Base {
   function initialize(config) {
     this.port = config.port || 80;
     this.host = config.host || '127.0.0.1';
-    this.id = this.host + ':' + this.port;
+    this.desc = this.host + ':' + this.port;
   }
 
   function check(callback) {

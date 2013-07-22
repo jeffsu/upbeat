@@ -1,4 +1,5 @@
 var Base = require('./base-strategy');
+
 try {
 	var pg = require('pg');
 } catch (err) {
@@ -6,7 +7,6 @@ try {
 }
 
 export class Pg extends Base {
-
   static var TIMEOUT  = 5000;
   static var INTERVAL = 10000;
 
@@ -47,21 +47,6 @@ export class Pg extends Base {
         callback(passedLambda);
       });
     });
-  }
-
-  function getLambdas(lambdaStrings) {
-    if (lambdaStrings == null) return [];
-    if (typeof lambdaStrings == 'string') lambdaStrings = [ lambdaStrings ];
-
-    var ret = [];
-    foreach (var s in lambdaStrings) {
-      try {
-        eval("var l = " + s + "; ret.push(l)");
-      } catch(e) {
-        throw "Error evaluating lambda: \n" + s;
-      }
-    }
-    return ret;
   }
 
   function clear() {

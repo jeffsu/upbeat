@@ -4,7 +4,6 @@ var URL  = require('url');
 var http = require('http');
 
 export class Http extends Base {
-
   static var TIMEOUT  = 10000;
   static var INTERVAL = 10000;
 
@@ -15,7 +14,7 @@ export class Http extends Base {
       method = 'post';
     } else if (config.put) {
       method = 'put';
-    } 
+    }
 
     // setup data
     var params = config[method];
@@ -29,8 +28,8 @@ export class Http extends Base {
     var url  = config.url;
 
     if (method == 'get' && data) {
-      url = url + '?' + data; 
-    } 
+      url = url + '?' + data;
+    }
 
     var parsedUrl = URL.parse(url, false);
     var host = config.host || parsedUrl.host || '127.0.0.1';
@@ -51,14 +50,15 @@ export class Http extends Base {
     this.timeout  = config.timeout  || 1000;
     this.method   = 'get';
     this.status   = config.status || '200';
-    
+
     this.matches  = this.getRegexes(config.matches);
     this.lambdas  = this.getLambdas(config.lambda);
+    console.log(this.lambdas)
 
     this.options = KLASS.getRequestOptions(config);
     this.url = "http://" + this.options.host + ':' + this.options.port + this.options.path;
 
-    this.id = this.url;
+    this.desc = this.url;
   }
 
   function getRegexes(regexStrings) {
@@ -77,29 +77,14 @@ export class Http extends Base {
     return ret;
   }
 
-  function getLambdas(lambdaStrings) {
-    if (lambdaStrings == null) return [];
-    if (typeof lambdaStrings == 'string') lambdaStrings = [ lambdaStrings ];
-
-    var ret = [];
-    foreach (var s in lambdaStrings) {
-      try {
-        eval("var l = " + s + "; ret.push(l)");
-      } catch(e) {
-        throw "Error evaluating lambda: \n" + s;
-      }
-    }
-    return ret;
-  }
-
   function getRequest(callback) {
     return http.request(this.options, callback);
   }
 
   function check(callback) {
     var $this = this;
-    
-    this.req = this.getRequest(#(resp) { 
+
+    this.req = this.getRequest(#(resp) {
       var data = [];
       $this.resp = resp;
       resp.on('data', #{ data.push($1) });
@@ -107,7 +92,7 @@ export class Http extends Base {
         $this.calculatePass(resp, data.join(''), #(passed) {
           callback(passed);
         });
-      }); 
+      });
     });
 
     if (this.data) this.req.write(this.data + "\n");

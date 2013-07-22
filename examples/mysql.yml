@@ -2,9 +2,9 @@ services:
   mysql:
     actions:
       users:
-        strategy: mysql 
+        strategy: mysql
         sql: "SELECT * FROM USERS"
         socket: /tmp/mysql.sock
       default:
-        strategy: mysql 
+        strategy: mysql
         socket: /tmp/mysql.sock

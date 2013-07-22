@@ -15,13 +15,13 @@ services:
         status: 200
         interval: 5000
 
-      lambda2: 
+      lambda2:
         strategy: http
         url: http://www.google.com
-        lambda: 
+        lambda:
           - "function (data) { return data.match(/html/) }"
           - "function (data) { return data.match(/html/) }"
-        matches: 
+        matches:
           - html
           - html
         status: 200

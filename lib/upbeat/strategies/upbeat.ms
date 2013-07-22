@@ -1,4 +1,3 @@
-
 var Http = require('./http');
 
 export class Upbeat extends Http {
@@ -13,7 +12,7 @@ export class Upbeat extends Http {
       method: "GET"
     };
 
-    this.id = "http://" + this.options.host + ':' + this.options.port + this.options.path;
+    this.desc = "http://" + this.options.host + ':' + this.options.port + this.options.path;
   }
 
   function calculatePass(resp, data, callback) {
