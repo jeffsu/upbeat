@@ -53,8 +53,6 @@ export class MetaData {
     this.lastTime = now;
     this.totalCount++;
 
-    var wasUp = this.up;
-
     if (passed) {
       this.passCount++;
     } else {
@@ -65,7 +63,7 @@ export class MetaData {
     this.emit((passed ? 'pass' : 'fail'), error);
     this.lastCheck = passed;
 
-    if (wasUp == passed) {
+    if (this.wasUp == passed) {
       this.runningCount++;
     } else {
       this.runningCount = 1;
@@ -80,6 +78,8 @@ export class MetaData {
       this.emit('down', error);
       this.emit('change');
     }
+
+    this.wasUp = passed;
   }
 
   function uptime(period) {
