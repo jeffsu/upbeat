@@ -23,6 +23,9 @@ export class MetaData {
 
     this.totalResTime = 0;
     this.totalCount   = 0;
+
+    this.errorHistory = [];
+
     this.lastErrorMessage = null;
     this.lastResponseTime = null;
 
@@ -77,6 +80,10 @@ export class MetaData {
       this.up = passed;
       this.emit('down', error);
       this.emit('change');
+      this.errorHistory.push({
+        error: error,
+        timestamp: now
+      });
     }
 
     this.wasUp = passed;

@@ -6,7 +6,7 @@ module.exports = #(app, upbeat) {
     var service = upbeat.getService(req.params.service);
     if (! service) {
       res.send("Service not found", 404);
-      return false; 
+      return false;
     } else {
       return service
     }
@@ -41,23 +41,24 @@ module.exports = #(app, upbeat) {
             avgRespTime: action.meta.averageResponseTime(period),
             interval: action.interval,
             timeout:  action.timeout,
-            passes: action.meta.total('passed-count'), 
-            failures: action.meta.total('failed-count')
+            passes: action.meta.total('passed-count'),
+            failures: action.meta.total('failed-count'),
+            errorHistory: action.meta.errorHistory
           },
 
           responseTimes: action.meta.plotResponseTimes('min')
         };
 
         res.send(JSON.stringify(ret));
-      } 
-      
+      }
+
       else {
         res.render('action', { action: action, service: service });
       }
     }
   });
 
-  app.get('/services/:service/health', #(req, res, next) { 
+  app.get('/services/:service/health', #(req, res, next) {
     var service = getService(req, res);
     if (service) {
       if (service.up) {
